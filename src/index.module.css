@@ -1,7 +1,15 @@
-.header {
+.layout {
+    height: 100vh;
+  }
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: #ffffff;
     padding: 1rem;
-}
+  }
+  .content {
+    margin: 24px 16px;
+    padding: 24px;
+    min-height: 280px;
+  }

@@ -31,11 +31,7 @@ const App: FC = () => {
 
   if (signIn) {
     return (
-      <Layout
-        style={{
-          height: "100vh",
-        }}
-      >
+      <Layout className={module.layout}>
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
           <Menu
             theme="dark"
@@ -69,18 +65,15 @@ const App: FC = () => {
               onClick={() => setSignIn(false)}
             />
           </Layout.Header>
-          <Layout.Content
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-            }}
-          >
+          <Layout.Content className={module.content}>
             <Routes>
               {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route path="*" element={<Navigate replace to="/products" />} />
+              <Route
+                path="*"
+                element={<Navigate replace to={SIGN_IN_ROUTES[0].path} />}
+              />
             </Routes>
           </Layout.Content>
         </Layout>
