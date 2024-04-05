@@ -6,7 +6,7 @@ interface UserStore {
 }
 
 const useUserStore = create<UserStore>((set) => ({
-  signIn: true,
+  signIn: false,
   setSignIn: (signIn) => set(() => ({ signIn })),
 }));
 

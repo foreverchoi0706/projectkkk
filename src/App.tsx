@@ -1,6 +1,10 @@
 import { FC, useState } from "react";
 import { Button, Layout, Menu } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import {
   Navigate,
   Route,
@@ -16,13 +20,14 @@ import useUserStore from "@/hooks/store/useUserStore.ts";
 const App: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { signIn, setSignIn } = useUserStore(({ signIn, setSignIn }) => ({
+    signIn,
+    setSignIn,
+  }));
   const [selectedKey, setSelectedKey] = useState<string>(
-    SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
+    SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0"
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const { signIn } = useUserStore(({ signIn }) => ({
-    signIn,
-  }));
 
   if (signIn) {
     return (
@@ -57,7 +62,11 @@ const App: FC = () => {
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setCollapsed(!collapsed)}
-              className={module.fold_button}
+            />
+            <Button
+              type="text"
+              icon={<LogoutOutlined />}
+              onClick={() => setSignIn(false)}
             />
           </Layout.Header>
           <Layout.Content
