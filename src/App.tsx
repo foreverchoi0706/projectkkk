@@ -15,12 +15,12 @@ import {
 import module from "./index.module.css";
 import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
-import useUserStore from "@/hooks/store/useUserStore.ts";
+import useStore from "@/hooks/useStore";
 
 const App: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { signIn, setSignIn } = useUserStore(({ signIn, setSignIn }) => ({
+  const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({
     signIn,
     setSignIn,
   }));

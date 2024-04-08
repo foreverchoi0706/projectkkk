@@ -1,4 +1,4 @@
-import useUserStore from "@/hooks/store/useUserStore";
+import useStore from "@/hooks/useStore";
 import { Layout, Form, FormProps, Input, Checkbox, Button } from "antd";
 import { FC } from "react";
 type FieldType = {
@@ -8,7 +8,7 @@ type FieldType = {
 };
 
 const SignIn: FC = () => {
-  const { setSignIn } = useUserStore(({ setSignIn }) => ({
+  const { setSignIn } = useStore(({ setSignIn }) => ({
     setSignIn,
   }));
 
