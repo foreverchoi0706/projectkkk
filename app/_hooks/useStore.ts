@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 interface Store {
-  signIn: boolean;
   setSignIn: (isSignIn: boolean) => void;
+  signIn: boolean;
 }
 
 const useStore = create<Store>((set) => ({
-  signIn: false,
   setSignIn: (signIn) => set(() => ({ signIn })),
+  signIn: false,
 }));
 
 export default useStore;
