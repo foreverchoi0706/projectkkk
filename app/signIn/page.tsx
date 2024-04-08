@@ -1,3 +1,4 @@
+"use client";
 import { Layout, Form, FormProps, Input, Checkbox, Button } from "antd";
 import { FC } from "react";
 
