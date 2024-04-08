@@ -1,7 +1,8 @@
-import { FC } from "react";
+"use client";
 import { Table, TableProps } from "antd";
-import useFetch from "@/hooks/useFetch.ts";
-import { getProducts } from "@/utils/apis.ts";
+import { FC } from "react";
+
+import useFetch from "@/app/_hooks/useFetch";
 
 interface DataType {
   id: number;
@@ -15,42 +16,48 @@ interface DataType {
 
 const columns: TableProps<DataType>["columns"] = [
   {
-    title: "id",
     dataIndex: "id",
     key: "id",
+    title: "id",
   },
   {
-    title: "brand",
     dataIndex: "brand",
     key: "brand",
+    title: "brand",
   },
   {
-    title: "selledcount",
     dataIndex: "selledcount",
     key: "selledcount",
     render: (value) => <>{value ?? "-"}</>,
+    title: "selledcount",
   },
   {
-    title: "category",
-    key: "category",
     dataIndex: "category",
+    key: "category",
+    title: "category",
   },
   {
-    title: "name",
-    key: "name",
     dataIndex: "name",
+    key: "name",
+    title: "name",
   },
   {
-    title: "stock",
-    key: "stock",
     dataIndex: "stock",
+    key: "stock",
+    title: "stock",
   },
 ];
 
-const Products: FC = () => {
-  const { data: products, isLoading } = useFetch(getProducts);
+const View: FC = () => {
+  const { data: products, isLoading } = useFetch(() => {
+    return fetch("/api/products")
+      .then((response) => response.json())
+      .then((jsonResponse) => jsonResponse)
+      .catch(console.error);
+  });
+  console.log(products);
   if (isLoading) return null;
   return <Table columns={columns} dataSource={products.listProduct} />;
 };
 
-export default Products;
+export default View;

@@ -1,0 +1,27 @@
+{
+  "extends": "next/core-web-vitals",
+    "plugins": ["sort-keys"],
+    "rules": {
+  "react-hooks/exhaustive-deps": 0,
+      "import/order": [
+    "error",
+    {
+      "groups": ["builtin", "external", ["parent", "sibling"], "index"],
+      "pathGroups": [
+        {
+          "pattern": "angular",
+          "group": "external",
+          "position": "before"
+        }
+      ],
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      },
+      "newlines-between": "always"
+    }
+  ],
+      "sort-keys": 0, // disable default eslint sort-keys
+      "sort-keys/sort-keys-fix": 1
+}
+}

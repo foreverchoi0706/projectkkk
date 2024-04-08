@@ -1,6 +1,7 @@
-import useStore from "@/hooks/useStore";
 import { Layout, Form, FormProps, Input, Checkbox, Button } from "antd";
 import { FC } from "react";
+
+import useStore from "@/app/_hooks/useStore";
 type FieldType = {
   username?: string;
   password?: string;
@@ -17,17 +18,17 @@ const SignIn: FC = () => {
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
+    errorInfo,
   ) => {
     console.log("Failed:", errorInfo);
   };
   return (
     <Layout
       style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
         alignItems: "center",
+        display: "flex",
+        height: "100vh",
+        justifyContent: "center",
       }}
     >
       <Form
@@ -43,7 +44,7 @@ const SignIn: FC = () => {
         <Form.Item<FieldType>
           label="Username"
           name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ message: "Please input your username!", required: true }]}
         >
           <Input />
         </Form.Item>
@@ -51,7 +52,7 @@ const SignIn: FC = () => {
         <Form.Item<FieldType>
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[{ message: "Please input your password!", required: true }]}
         >
           <Input.Password />
         </Form.Item>
