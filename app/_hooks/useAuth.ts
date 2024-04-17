@@ -3,7 +3,7 @@ import { ACCESS_TOKEN } from "@/app/_utils/constants";
 import { deleteCookie, setCookie } from "@/app/_utils/cookie";
 
 const useAuth = () => {
-  const urlSearchParams = new URLSearchParams();
+  const urlSearchParams = new URLSearchParams(location.search);
   const [isSignIn, setIsSignIn] = useStore(({ signIn, setSignIn }) => [
     signIn,
     setSignIn,
