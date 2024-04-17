@@ -1,11 +1,9 @@
-import { useSearchParams } from "next/navigation";
-
 import useStore from "@/app/_hooks/useStore";
 import { ACCESS_TOKEN } from "@/app/_utils/constants";
 import { deleteCookie, setCookie } from "@/app/_utils/cookie";
 
 const useAuth = () => {
-  const searchParams = useSearchParams();
+  const urlSearchParams = new URLSearchParams();
   const [isSignIn, setIsSignIn] = useStore(({ signIn, setSignIn }) => [
     signIn,
     setSignIn,
@@ -21,7 +19,7 @@ const useAuth = () => {
         today.getDate() + 1,
       ),
     });
-    window.location.href = searchParams.get("callbackUrl") ?? "/";
+    window.location.href = urlSearchParams.get("callbackUrl") ?? "/";
   };
 
   const signOut = () => {
