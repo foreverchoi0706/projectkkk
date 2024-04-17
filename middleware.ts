@@ -8,13 +8,16 @@ const middleware = (nextRequest: NextRequest) => {
   const { pathname } = nextRequest.nextUrl;
 
   if (hasAccessToken) {
-    if (pathname === "/signIn") {
-      return NextResponse.redirect(new URL("/", nextRequest.url));
+    if (["/", "/signIn"].includes(pathname)) {
+      return NextResponse.redirect(new URL("/products", nextRequest.url));
     }
   } else {
     if (pathname !== "/signIn") {
       return NextResponse.redirect(
-        new URL(`/signIn?callbackUrl=${nextRequest.url}`, nextRequest.url),
+        new URL(
+          `/signIn?callbackUrl=${encodeURIComponent(nextRequest.url)}`,
+          nextRequest.url,
+        ),
       );
     }
   }
@@ -24,5 +27,5 @@ const middleware = (nextRequest: NextRequest) => {
 
 export default middleware;
 export const config = {
-  matcher: ["/signIn", "/post/create", "/post/update/:id*"],
+  matcher: ["/signIn", "/members", "/products", "/"],
 };

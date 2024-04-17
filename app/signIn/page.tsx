@@ -2,7 +2,7 @@
 import { Layout, Form, FormProps, Input, Checkbox, Button } from "antd";
 import { FC } from "react";
 
-import useStore from "@/app/_hooks/useStore";
+import useAuth from "@/app/_hooks/useAuth";
 type FieldType = {
   username?: string;
   password?: string;
@@ -10,12 +10,10 @@ type FieldType = {
 };
 
 const SignIn: FC = () => {
-  const { setSignIn } = useStore(({ setSignIn }) => ({
-    setSignIn,
-  }));
+  const { signIn } = useAuth();
 
-  const onFinish: FormProps<FieldType>["onFinish"] = () => {
-    setSignIn(true);
+  const onFinish: FormProps<FieldType>["onFinish"] = (field) => {
+    signIn(JSON.stringify(field));
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
