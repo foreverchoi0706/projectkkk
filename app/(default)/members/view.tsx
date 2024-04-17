@@ -50,11 +50,11 @@ const columns: TableProps<DataType>["columns"] = [
 ];
 
 const View: FC = () => {
-  const { data: products, isLoading } = useQuery({
-    ...queryKeyStore.products.all(),
+  const { data: members, isLoading } = useQuery({
+    ...queryKeyStore.members.all(),
   });
   if (isLoading) return null;
-  return <Table columns={columns} dataSource={products.listProduct} />;
+  return <Table columns={columns} dataSource={members.listMember} />;
 };
 
 export default View;

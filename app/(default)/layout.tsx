@@ -5,21 +5,26 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
-import { usePathname } from "next/navigation";
-import { FC, PropsWithChildren, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { FC, PropsWithChildren, useMemo, useState } from "react";
 
 import module from "./index.module.css";
 
 import useUserStore from "@/app/_hooks/useStore";
+import { SIGN_IN_ROUTES } from "@/app/_utils/constants";
 
 const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
+  const { push } = useRouter();
   const pathname = usePathname();
-
   const { setSignIn } = useUserStore(({ signIn, setSignIn }) => ({
     setSignIn,
     signIn,
   }));
-  const [selectedKey, setSelectedKey] = useState<string>("0");
+  const selectedKey = useMemo<string>(() => {
+    const ROUTE = SIGN_IN_ROUTES.find((ROUTE) => ROUTE.path === pathname);
+    if (ROUTE) return ROUTE.key;
+    return "0";
+  }, [pathname]);
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   return (
@@ -30,9 +35,14 @@ const DefaultLayout: FC<PropsWithChildren> = ({ children }) => {
           mode="inline"
           defaultSelectedKeys={[selectedKey]}
           selectedKeys={[selectedKey]}
-          items={[]}
+          items={SIGN_IN_ROUTES.map(({ key, Icon, label }) => ({
+            icon: <Icon />,
+            key,
+            label,
+          }))}
           onSelect={({ key }) => {
-            console.log(pathname, setSelectedKey, key);
+            const ROUTE = SIGN_IN_ROUTES.find((ROUTE) => ROUTE.key === key);
+            if (ROUTE) push(ROUTE.path);
           }}
         />
       </Layout.Sider>
