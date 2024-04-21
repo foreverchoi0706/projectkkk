@@ -1,12 +1,21 @@
 "use client";
-import { Layout, Form, FormProps, Input, Checkbox, Button } from "antd";
+import {
+  Layout,
+  Form,
+  FormProps,
+  Input,
+  Checkbox,
+  Button,
+  Flex,
+  Typography,
+} from "antd";
+import Link from "next/link";
 import { FC } from "react";
 
 import useAuth from "@/app/_hooks/useAuth";
 type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
+  username: string;
+  password: string;
 };
 
 const SignIn: FC = () => {
@@ -30,44 +39,39 @@ const SignIn: FC = () => {
         justifyContent: "center",
       }}
     >
+      <Typography.Title>로그인</Typography.Title>
       <Form
         name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<FieldType>
-          label="Username"
           name="username"
-          rules={[{ message: "Please input your username!", required: true }]}
+          rules={[{ message: "필수입력 필드입니다", required: true }]}
         >
-          <Input />
+          <Input placeholder="아이디" />
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Password"
           name="password"
-          rules={[{ message: "Please input your password!", required: true }]}
+          rules={[{ message: "비밀번호는 필수입니다", required: true }]}
         >
-          <Input.Password />
+          <Input.Password placeholder="비밀번호" />
         </Form.Item>
 
-        <Form.Item<FieldType>
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            로그인
-          </Button>
+        <Form.Item>
+          <Flex gap="small">
+            <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
+              로그인
+            </Button>
+            <Link href="/signUp" style={{ flexGrow: "1" }}>
+              <Button style={{ width: "100%" }} htmlType="button">
+                회원가입
+              </Button>
+            </Link>
+          </Flex>
         </Form.Item>
       </Form>
     </Layout>
