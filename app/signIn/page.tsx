@@ -56,7 +56,7 @@ const SignIn: FC = () => {
 
         <Form.Item<FieldType>
           name="password"
-          rules={[{ message: "비밀번호는 필수입니다", required: true }]}
+          rules={[{ message: "필수입력 필드입니다", required: true }]}
         >
           <Input.Password placeholder="비밀번호" />
         </Form.Item>

@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Table, TableProps } from "antd";
+import { Button, Table, TableProps } from "antd";
 import { FC } from "react";
 
 import queryKeyStore from "@/app/_utils/queryKeyStore";
@@ -46,6 +46,12 @@ const columns: TableProps<DataType>["columns"] = [
     dataIndex: "stock",
     key: "stock",
     title: "stock",
+  },
+  {
+    dataIndex: "update",
+    key: "update",
+    render: (value) => <Button type="primary">수정</Button>,
+    title: "수정",
   },
 ];
 

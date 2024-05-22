@@ -1,6 +1,15 @@
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
+import fetcher from "@/app/_utils/fetcher";
+import { Product } from "@/app/_utils/types";
+
 const queryKeyStore = createQueryKeyStore({
+  brands: {
+    all: () => ({
+      queryFn: () => fetcher.get<string[]>("/api/brands"),
+      queryKey: [""],
+    }),
+  },
   members: {
     all: (memberId?: string) => ({
       queryFn: () =>
@@ -14,10 +23,7 @@ const queryKeyStore = createQueryKeyStore({
   products: {
     all: (productId?: string) => ({
       queryFn: () =>
-        fetch("/api/products")
-          .then((response) => response.json())
-          .then((jsonResponse) => jsonResponse)
-          .catch(console.error),
+        fetcher.get<Product[]>("/api/products?page=0&size=10&sort=id"),
       queryKey: [productId],
     }),
   },

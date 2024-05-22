@@ -65,17 +65,11 @@ const SignIn: FC = () => {
           <Input placeholder="전화번호" />
         </Form.Item>
 
-        <Form.Item<SignUpParams>
-          name="password"
-          rules={[{ message: "필수입력 필드입니다", required: true }]}
-        >
+        <Form.Item<SignUpParams> name="password" rules={[{ required: true }]}>
           <Input.Password placeholder="비밀번호" />
         </Form.Item>
 
-        <Form.Item<SignUpParams>
-          name="rePassword"
-          rules={[{ message: "필수입력 필드입니다", required: true }]}
-        >
+        <Form.Item<SignUpParams> name="rePassword" rules={[{ required: true }]}>
           <Input.Password placeholder="비밀번호 확인" />
         </Form.Item>
 

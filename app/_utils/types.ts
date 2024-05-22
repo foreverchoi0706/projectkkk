@@ -1,3 +1,9 @@
+export interface Response<T> {
+  result: T;
+  ResponseMessage: string;
+  status: number;
+}
+
 export interface SignUpParams {
   id: number;
   email: string;
@@ -5,4 +11,14 @@ export interface SignUpParams {
   rePassword: string;
   name: string;
   phone: string;
+}
+
+export interface Product {
+  id: number;
+  brand: string;
+  selledcount: any;
+  name: string;
+  category: string;
+  stock: number;
+  image: string;
 }
