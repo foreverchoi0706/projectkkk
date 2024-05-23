@@ -22,3 +22,10 @@ export interface Product {
   stock: number;
   image: string;
 }
+
+export interface Member {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+}

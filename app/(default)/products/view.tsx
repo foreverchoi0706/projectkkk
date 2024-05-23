@@ -21,9 +21,15 @@ import { Response } from "@/app/_utils/types";
 const columns: TableProps<Product>["columns"] = [
   {
     align: "center",
+    dataIndex: "No.",
+    key: "No.",
+    title: "No.",
+  },
+  {
+    align: "center",
     dataIndex: "id",
     key: "id",
-    title: "아이디",
+    title: "상품번호",
   },
   {
     align: "center",

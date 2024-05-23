@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
-  return fetch("http://projectkkk.com/api/member/FindAllMember")
-    .then((response) => response.json())
-    .then((jsonResponse) => NextResponse.json(jsonResponse))
-    .catch((reason) => NextResponse.json(reason));
+import fetcher from "@/app/_utils/fetcher";
+import { Product } from "@/app/_utils/types";
+
+export const GET = async (request: NextRequest) => {
+  console.log(`/member/FindAllMember${request.nextUrl.search}`);
+  const response = await fetcher.get<Product[]>(
+    `/member/FindAllMember${request.nextUrl.search}`,
+  );
+  return NextResponse.json(response);
 };
 
 export const POST = async (nextRequest: NextRequest) => {

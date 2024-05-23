@@ -1,7 +1,7 @@
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 import fetcher from "@/app/_utils/fetcher";
-import { Product } from "@/app/_utils/types";
+import { Member, Product } from "@/app/_utils/types";
 
 const queryKeyStore = createQueryKeyStore({
   brands: {
@@ -12,11 +12,12 @@ const queryKeyStore = createQueryKeyStore({
   },
   members: {
     all: (memberId?: string) => ({
-      queryFn: () =>
-        fetch("/api/members")
-          .then((response) => response.json())
-          .then((jsonResponse) => jsonResponse)
-          .catch(console.error),
+      queryFn: async () => {
+        const { result } = await fetcher.get<Member[]>(
+          "/api/members?page=0&size=10&sort=id",
+        );
+        return result;
+      },
       queryKey: [memberId],
     }),
   },
