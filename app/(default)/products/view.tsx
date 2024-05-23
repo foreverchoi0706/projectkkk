@@ -1,20 +1,22 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
   Flex,
   Form,
   FormProps,
-  Grid,
   Input,
   Modal,
+  Select,
   Table,
   TableProps,
 } from "antd";
 import { FC, useState } from "react";
 
+import fetcher from "@/app/_utils/fetcher";
 import queryKeyStore from "@/app/_utils/queryKeyStore";
 import { Product } from "@/app/_utils/types";
+import { Response } from "@/app/_utils/types";
 
 const columns: TableProps<Product>["columns"] = [
   {
@@ -68,20 +70,28 @@ const columns: TableProps<Product>["columns"] = [
 
 const View: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data: products = [], isLoading } = useQuery({
-    ...queryKeyStore.products.all(),
-    select: ({ result }) => result,
+
+  const { mutate } = useMutation<Response<Product>, Error, Product>({
+    mutationFn: (product) =>
+      fetcher.post<Product>("/api/products", {
+        ...product,
+      }),
   });
+
+  const { data: products = [], isLoading } = useQuery(
+    queryKeyStore.products.all(),
+  );
 
   const { data: brands = [] } = useQuery({
     ...queryKeyStore.brands.all(),
     enabled: isOpen,
+    gcTime: Infinity,
     select: ({ result }) => result,
+    staleTime: Infinity,
   });
 
-  console.log(brands);
-  const onFinish: FormProps<Product>["onFinish"] = (values) => {
-    console.log("Success:", values);
+  const onFinish: FormProps<Product>["onFinish"] = (product) => {
+    mutate(product);
   };
 
   if (isLoading) return null;
@@ -100,13 +110,21 @@ const View: FC = () => {
               <Input placeholder="이름" />
             </Form.Item>
             <Form.Item<Product> name="brand" rules={[{ required: true }]}>
-              <Input placeholder="브랜드" />
+              <Select placeholder="브랜드">
+                {brands.map((brand) => (
+                  <Select.Option key={brand}>{brand}</Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item<Product> name="category" rules={[{ required: true }]}>
               <Input placeholder="카테고리" />
             </Form.Item>
             <Form.Item<Product> name="image" rules={[{ required: true }]}>
-              <Input placeholder="이미지" type="file" />
+              <Input
+                placeholder="이미지"
+                type="file"
+                accept=".png,.jpg,.jpeg,.png,.webp"
+              />
             </Form.Item>
             <Form.Item<Product> name="stock" rules={[{ required: true }]}>
               <Input placeholder="수량" type="number" />

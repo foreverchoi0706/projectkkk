@@ -10,7 +10,13 @@ export const GET = async (request: NextRequest) => {
   return NextResponse.json(response);
 };
 
-export const POST = async () => {
-  const response = await fetcher.post("/product/CreateProduct");
+export const POST = async (request: NextRequest) => {
+  console.log("dsaddsa");
+  const json = await request.json();
+  console.log(json);
+  const response = await fetcher.post<Product, Product>(
+    "/product/CreateProduct",
+    json,
+  );
   return NextResponse.json(response);
 };

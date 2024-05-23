@@ -4,8 +4,7 @@ import fetcher from "@/app/_utils/fetcher";
 
 export const GET = async () => {
   const response = await fetcher.get<string[]>(
-    "http://projectkkk.com/api/product/brandList",
+    "/product/brandList?page=0&size=100&sort=id",
   );
-  console.log("res:::", response);
   return NextResponse.json(response);
 };

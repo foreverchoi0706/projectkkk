@@ -22,8 +22,12 @@ const queryKeyStore = createQueryKeyStore({
   },
   products: {
     all: (productId?: string) => ({
-      queryFn: () =>
-        fetcher.get<Product[]>("/api/products?page=0&size=10&sort=id"),
+      queryFn: async () => {
+        const { result } = await fetcher.get<Product[]>(
+          "/api/products?page=0&size=10&sort=id",
+        );
+        return result;
+      },
       queryKey: [productId],
     }),
   },
