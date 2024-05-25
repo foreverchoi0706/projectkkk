@@ -23,6 +23,7 @@ const columns: TableProps<Product>["columns"] = [
     align: "center",
     dataIndex: "No.",
     key: "No.",
+    render: (_, __, index) => <>{index + 1}</>,
     title: "No.",
   },
   {
@@ -68,9 +69,9 @@ const columns: TableProps<Product>["columns"] = [
     key: "detailButton",
     render: (value) => {
       console.log(value);
-      return <Button type="primary">상세</Button>;
+      return <Button type="primary">수정</Button>;
     },
-    title: "상세",
+    title: "수정",
   },
 ];
 
@@ -84,9 +85,11 @@ const View: FC = () => {
       }),
   });
 
-  const { data: products = [], isLoading } = useQuery(
-    queryKeyStore.products.all(),
-  );
+  const { data: products = [], isLoading } = useQuery({
+    ...queryKeyStore.products.all(),
+    gcTime: Infinity,
+    staleTime: Infinity,
+  });
 
   const { data: brands = [] } = useQuery({
     ...queryKeyStore.brands.all(),
@@ -147,11 +150,18 @@ const View: FC = () => {
         </Modal>
       )}
       <Flex gap="middle">
+        <Input />
+        <Input />
+        <Input />
+        <Input />
         <Button type="primary" onClick={() => setIsOpen(true)}>
-          등록
+          검색
+        </Button>
+        <Button type="default" onClick={() => setIsOpen(true)}>
+          상품 추가
         </Button>
       </Flex>
-      <Table columns={columns} dataSource={products} />
+      <Table rowKey={({ id }) => id} columns={columns} dataSource={products} />
     </Flex>
   );
 };

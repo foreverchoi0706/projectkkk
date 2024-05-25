@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Flex, Modal, Table, TableProps } from "antd";
+import { Button, Flex, Input, Modal, Table, TableProps } from "antd";
 import { FC, useState } from "react";
 
 import queryKeyStore from "@/app/_utils/queryKeyStore";
@@ -11,6 +11,7 @@ const columns: TableProps<Member>["columns"] = [
     align: "center",
     dataIndex: "No.",
     key: "No.",
+    render: (_, __, index) => <>{index + 1}</>,
     title: "No.",
   },
   {
@@ -40,6 +41,11 @@ const columns: TableProps<Member>["columns"] = [
   {
     dataIndex: "update",
     key: "update",
+    onCell: ({ id }) => ({
+      onClick: (e) => {
+        console.log(id);
+      },
+    }),
     render: () => <Button type="primary">수정</Button>,
     title: "수정",
   },
@@ -50,7 +56,10 @@ const View: FC = () => {
 
   const { data: members, isLoading } = useQuery({
     ...queryKeyStore.members.all(),
+    gcTime: Infinity,
+    staleTime: Infinity,
   });
+
   if (isLoading) return null;
   return (
     <Flex vertical gap="middle">
@@ -64,11 +73,18 @@ const View: FC = () => {
         ></Modal>
       )}
       <Flex gap="middle">
+        <Input />
+        <Input />
+        <Input />
+        <Input />
         <Button type="primary" onClick={() => setIsOpen(true)}>
-          등록
+          검색
+        </Button>
+        <Button type="default" onClick={() => setIsOpen(true)}>
+          멤버 추가
         </Button>
       </Flex>
-      <Table columns={columns} dataSource={members} />
+      <Table rowKey={({ id }) => id} columns={columns} dataSource={members} />
     </Flex>
   );
 };
