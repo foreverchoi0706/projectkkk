@@ -1,9 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useLayoutEffect, useState } from "react";
 import { Button, Layout, Menu } from "antd";
 import {
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  LogoutOutlined,
 } from "@ant-design/icons";
 import {
   Navigate,
@@ -13,9 +13,11 @@ import {
   useNavigate,
 } from "react-router-dom";
 import module from "./index.module.css";
-import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
 import useStore from "@/hooks/useStore";
+import SignUp from "@/pages/signUp";
+import { hasCookie } from "@/utils/cookie.ts";
 
 const App: FC = () => {
   const { pathname } = useLocation();
@@ -25,9 +27,14 @@ const App: FC = () => {
     setSignIn,
   }));
   const [selectedKey, setSelectedKey] = useState<string>(
-    SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0"
+    SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (!hasCookie(ADMIN_ACCESS_TOKEN)) return;
+    setSignIn(true);
+  }, []);
 
   if (signIn) {
     return (
@@ -83,6 +90,7 @@ const App: FC = () => {
   return (
     <Routes>
       <Route path="/signIn" element={<SignIn />} />
+      <Route path="/signUp" element={<SignUp />} />
       <Route path="*" element={<Navigate replace to="/signIn" />} />
     </Routes>
   );

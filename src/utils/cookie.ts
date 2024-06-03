@@ -10,7 +10,7 @@ export interface CookieOptions {
 export const setCookie = (
   name: string,
   value: string,
-  options?: CookieOptions
+  options?: CookieOptions,
 ) => {
   document.cookie = `${name}=${value}; ${options ? serializeOptions(options) : ""}`;
 };
@@ -28,6 +28,10 @@ export const getCookie = (name: string): string | undefined => {
 
 export const deleteCookie = (name: string) => {
   setCookie(name, "", { expires: new Date(0) });
+};
+
+export const hasCookie = (name: string) => {
+  return getCookie(name) !== undefined;
 };
 
 const serializeOptions = (options: CookieOptions): string => {

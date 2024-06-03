@@ -1,8 +1,8 @@
-import Products from "@/pages/procuts";
-import Categories from "@/pages/categories";
+import Products from "../pages/products";
+import Categories from "../pages/members";
 import { ProductFilled, UserOutlined } from "@ant-design/icons";
 
-export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
+export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 
 export const SAVE_ID = "SAVE_ID" as const;
 
@@ -18,7 +18,7 @@ export const SIGN_IN_ROUTES = [
     key: "1",
     Icon: UserOutlined,
     Page: Categories,
-    path: "/categories",
-    label: "카테고리관리",
+    path: "/members",
+    label: "멤버관리",
   },
 ];
