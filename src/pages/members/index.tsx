@@ -1,12 +1,10 @@
-"use client";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Input, Modal, Table, TableProps } from "antd";
 import { FC, useState } from "react";
+import { IMember } from "@/utils/types.ts";
+import queryKeys from "@/utils/queryKeys.ts";
 
-import queryKeyStore from "@/app/_utils/queryKeyStore";
-import { Member } from "@/app/_utils/types";
-
-const columns: TableProps<Member>["columns"] = [
+const columns: TableProps<IMember>["columns"] = [
   {
     align: "center",
     dataIndex: "No.",
@@ -42,7 +40,7 @@ const columns: TableProps<Member>["columns"] = [
     dataIndex: "update",
     key: "update",
     onCell: ({ id }) => ({
-      onClick: (e) => {
+      onClick: () => {
         console.log(id);
       },
     }),
@@ -51,16 +49,10 @@ const columns: TableProps<Member>["columns"] = [
   },
 ];
 
-const View: FC = () => {
+const Page: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const { data: members, isLoading } = useQuery({
-    ...queryKeyStore.members.all(),
-    gcTime: Infinity,
-    staleTime: Infinity,
-  });
-
-  if (isLoading) return null;
+  const { data: members } = useQuery(queryKeys.members.all());
+  if (!members) return null;
   return (
     <Flex vertical gap="middle">
       {isOpen && (
@@ -84,9 +76,13 @@ const View: FC = () => {
           멤버 추가
         </Button>
       </Flex>
-      <Table rowKey={({ id }) => id} columns={columns} dataSource={members} />
+      <Table
+        rowKey={({ id }) => id}
+        columns={columns}
+        dataSource={members.result.content}
+      />
     </Flex>
   );
 };
 
-export default View;
+export default Page;
