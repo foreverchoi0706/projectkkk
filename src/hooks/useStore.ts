@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { hasCookie } from "@/utils/cookie.ts";
+import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
 
 interface Store {
   signIn: boolean;
@@ -6,7 +8,7 @@ interface Store {
 }
 
 const useStore = create<Store>((set) => ({
-  signIn: false,
+  signIn: hasCookie(ADMIN_ACCESS_TOKEN),
   setSignIn: (signIn) => set(() => ({ signIn })),
 }));
 

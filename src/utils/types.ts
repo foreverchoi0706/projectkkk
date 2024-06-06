@@ -4,6 +4,12 @@ export interface IResponse<T = unknown> {
   status: number;
 }
 
+export interface ISignInParams {
+  username: string;
+  password: string;
+  remember: string;
+}
+
 export interface ISignUpParams {
   id: number;
   email: string;
@@ -27,6 +33,10 @@ export interface IProduct {
   category: string;
   stock: number;
   image: string;
+}
+
+export interface IProductSearchParams {
+  page: number;
 }
 
 export interface IMember {

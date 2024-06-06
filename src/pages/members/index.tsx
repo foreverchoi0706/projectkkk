@@ -44,8 +44,8 @@ const columns: TableProps<IMember>["columns"] = [
         console.log(id);
       },
     }),
-    render: () => <Button type="primary">수정</Button>,
-    title: "수정",
+    render: () => <Button type="primary">상세</Button>,
+    title: "상세",
   },
 ];
 

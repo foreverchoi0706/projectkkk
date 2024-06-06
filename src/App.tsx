@@ -1,4 +1,4 @@
-import { FC, useLayoutEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Button, Layout, Menu } from "antd";
 import {
   LogoutOutlined,
@@ -13,11 +13,10 @@ import {
   useNavigate,
 } from "react-router-dom";
 import module from "./index.module.css";
-import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
 import useStore from "@/hooks/useStore";
 import SignUp from "@/pages/signUp";
-import { hasCookie } from "@/utils/cookie.ts";
 
 const App: FC = () => {
   const { pathname } = useLocation();
@@ -30,11 +29,6 @@ const App: FC = () => {
     SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
-
-  useLayoutEffect(() => {
-    if (!hasCookie(ADMIN_ACCESS_TOKEN)) return;
-    setSignIn(true);
-  }, []);
 
   if (signIn) {
     return (

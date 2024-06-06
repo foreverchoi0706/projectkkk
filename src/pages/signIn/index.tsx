@@ -4,11 +4,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "@/utils/cookie.ts";
 import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
+import { ISignInParams } from "@/utils/types.ts";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -16,16 +12,11 @@ const Page: FC = () => {
     setSignIn,
   }));
 
-  const onFinish: FormProps<FieldType>["onFinish"] = () => {
+  const handleFinish: FormProps<ISignInParams>["onFinish"] = () => {
     setSignIn(true);
     setCookie(ADMIN_ACCESS_TOKEN, ADMIN_ACCESS_TOKEN);
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo,
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
   return (
     <Layout
       style={{
@@ -37,19 +28,18 @@ const Page: FC = () => {
     >
       <Form
         initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+        onFinish={handleFinish}
         autoComplete="off"
       >
-        <Form.Item<FieldType> name="username" rules={[{ required: true }]}>
+        <Form.Item<ISignInParams> name="username" rules={[{ required: true }]}>
           <Input placeholder="username" />
         </Form.Item>
 
-        <Form.Item<FieldType> name="password" rules={[{ required: true }]}>
+        <Form.Item<ISignInParams> name="password" rules={[{ required: true }]}>
           <Input.Password placeholder="password" />
         </Form.Item>
 
-        <Form.Item<FieldType> name="remember" valuePropName="checked">
+        <Form.Item<ISignInParams> name="remember" valuePropName="checked">
           <Checkbox>Remember me</Checkbox>
         </Form.Item>
 
