@@ -3,7 +3,10 @@ import { IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL:
+    import.meta.env.MODE === "development"
+      ? "/api"
+      : "https://projectkkk.com/api/",
 });
 
 const queryKeys = createQueryKeyStore({
