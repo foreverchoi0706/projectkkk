@@ -3,7 +3,7 @@ import { IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://projectkkk.com/api",
+  baseURL: "/api",
 });
 
 const queryKeys = createQueryKeyStore({
@@ -12,7 +12,7 @@ const queryKeys = createQueryKeyStore({
       queryFn: async () => {
         const { data } =
           await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-            "/api/brands",
+            "/brands",
           );
         return data;
       },
