@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Button, Form, FormProps, Input, Modal, ModalProps } from "antd";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
@@ -9,6 +9,7 @@ interface IProps {
 }
 
 const UpsertModal: FC<IProps & ModalProps> = ({ productId, ...rest }) => {
+  const [form] = Form.useForm<IProduct>();
   const hasProductId = productId !== null;
 
   const { data: product } = useQuery({
@@ -40,9 +41,13 @@ const UpsertModal: FC<IProps & ModalProps> = ({ productId, ...rest }) => {
     mutate(product);
   };
 
+  useEffect(() => {
+    if (product) form.setFieldsValue(product);
+  }, [product]);
+
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
-      <Form initialValues={product} onFinish={handleFinish}>
+      <Form initialValues={product} form={form} onFinish={handleFinish}>
         <Form.Item<IProduct> name="image">
           <Input placeholder="이미지" />
         </Form.Item>
