@@ -5,6 +5,8 @@ import { EditOutlined, ProductOutlined, UserOutlined } from "@ant-design/icons";
 
 export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 
+export const DEFAULT_LIST_PAGE_SIZE = "5" as const;
+
 export const SAVE_ID = "SAVE_ID" as const;
 
 export const SIGN_IN_ROUTES = [

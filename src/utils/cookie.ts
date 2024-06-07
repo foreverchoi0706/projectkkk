@@ -7,11 +7,7 @@ export interface CookieOptions {
   httpOnly?: boolean;
 }
 
-export const setCookie = (
-  name: string,
-  value: string,
-  options?: CookieOptions,
-) => {
+export const setCookie = (name: string, value: string, options?: CookieOptions) => {
   document.cookie = `${name}=${value}; ${options ? serializeOptions(options) : ""}`;
 };
 

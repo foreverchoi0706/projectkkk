@@ -3,18 +3,14 @@ import { IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL:
-    import.meta.env.MODE === "development"
-      ? "/api"
-      : "https://projectkkk.com/api/",
+  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://projectkkk.com/api/",
 });
 
 const queryKeys = createQueryKeyStore({
   brands: {
     all: () => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IProduct[]>>>("/brands");
+        const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>("/brands");
         return data;
       },
       queryKey: [""],
@@ -23,9 +19,8 @@ const queryKeys = createQueryKeyStore({
   members: {
     all: (memberId?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<
-          IResponse<IPageList<IMember[]>>
-        >("/product/FindAllProduct");
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IMember[]>>>("/product/FindAllProduct");
         return data;
       },
       queryKey: [memberId],
@@ -37,16 +32,16 @@ const queryKeys = createQueryKeyStore({
         const { data } = await axiosInstance.get<IResponse<IProduct>>(
           `/product/DetailProduct?productName=${productId}`,
         );
-        return data;
+        return data.result;
       },
       queryKey: [productId],
     }),
     all: (queryString: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<
-          IResponse<IPageList<IProduct[]>>
-        >(`/product/FindAllProduct?${queryString}`);
-        return data;
+        const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
+          `/product/FindAllProduct?${queryString}`,
+        );
+        return data.result;
       },
       queryKey: [queryString],
     }),

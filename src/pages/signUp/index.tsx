@@ -12,10 +12,7 @@ const Page: FC = () => {
   const signIn = useStore(({ signIn }) => signIn);
   const signInMutation = useMutation({
     mutationFn: (signUpParams: ISignUpParams) =>
-      axiosInstance.post<IResponse, Error, ISignUpParams>(
-        "/member/Join",
-        signUpParams,
-      ),
+      axiosInstance.post<IResponse, Error, ISignUpParams>("/member/Join", signUpParams),
     onSuccess: () => {
       console.log(signIn);
     },
@@ -25,9 +22,7 @@ const Page: FC = () => {
     signInMutation.mutate(signUpParams);
   };
 
-  const onFinishFailed: FormProps<ISignUpParams>["onFinishFailed"] = (
-    errorInfo,
-  ) => {
+  const onFinishFailed: FormProps<ISignUpParams>["onFinishFailed"] = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
@@ -64,10 +59,7 @@ const Page: FC = () => {
           <Input.Password placeholder="password" />
         </Form.Item>
 
-        <Form.Item<ISignUpParams>
-          name="rePassword"
-          rules={[{ required: true }]}
-        >
+        <Form.Item<ISignUpParams> name="rePassword" rules={[{ required: true }]}>
           <Input.Password placeholder="rePassword" />
         </Form.Item>
 
@@ -76,11 +68,7 @@ const Page: FC = () => {
             <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
               회원가입
             </Button>
-            <Button
-              onClick={() => navigate(-1)}
-              style={{ flexGrow: "1" }}
-              htmlType="button"
-            >
+            <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
               뒤로
             </Button>
           </Flex>

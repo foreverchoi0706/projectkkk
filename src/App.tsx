@@ -1,17 +1,7 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button, Layout, Menu } from "antd";
-import {
-  LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from "@ant-design/icons";
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import module from "./index.module.css";
 import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
@@ -19,6 +9,7 @@ import useStore from "@/hooks/useStore";
 import SignUp from "@/pages/signUp";
 
 const App: FC = () => {
+  let timeOut: NodeJS.Timeout | null = null;
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({
@@ -29,6 +20,13 @@ const App: FC = () => {
     SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      if (timeOut) clearTimeout(timeOut);
+      timeOut = setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
+    });
+  }, []);
 
   if (signIn) {
     return (
@@ -60,27 +58,21 @@ const App: FC = () => {
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setCollapsed(!collapsed)}
             />
-            <Button
-              type="text"
-              icon={<LogoutOutlined />}
-              onClick={() => setSignIn(false)}
-            />
+            <Button type="text" icon={<LogoutOutlined />} onClick={() => setSignIn(false)} />
           </Layout.Header>
           <Layout.Content className={module.content}>
             <Routes>
               {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route
-                path="*"
-                element={<Navigate replace to={SIGN_IN_ROUTES[0].path} />}
-              />
+              <Route path="*" element={<Navigate replace to={SIGN_IN_ROUTES[0].path} />} />
             </Routes>
           </Layout.Content>
         </Layout>
       </Layout>
     );
   }
+
   return (
     <Routes>
       <Route path="/signIn" element={<SignIn />} />

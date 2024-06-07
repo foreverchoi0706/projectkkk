@@ -26,11 +26,7 @@ const Page: FC = () => {
         alignItems: "center",
       }}
     >
-      <Form
-        initialValues={{ remember: true }}
-        onFinish={handleFinish}
-        autoComplete="off"
-      >
+      <Form initialValues={{ remember: true }} onFinish={handleFinish} autoComplete="off">
         <Form.Item<ISignInParams> name="username" rules={[{ required: true }]}>
           <Input placeholder="username" />
         </Form.Item>
@@ -48,11 +44,7 @@ const Page: FC = () => {
             <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
               로그인
             </Button>
-            <Button
-              style={{ flexGrow: "1" }}
-              htmlType="button"
-              onClick={() => navigate("/signUp")}
-            >
+            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>
               회원가입
             </Button>
           </Flex>

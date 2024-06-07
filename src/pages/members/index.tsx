@@ -76,11 +76,7 @@ const Page: FC = () => {
           멤버 추가
         </Button>
       </Flex>
-      <Table
-        rowKey={({ id }) => id}
-        columns={columns}
-        dataSource={members.result.content}
-      />
+      <Table rowKey={({ id }) => id} columns={columns} dataSource={members.result.content} />
     </Flex>
   );
 };

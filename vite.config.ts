@@ -7,15 +7,15 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: "/src" }],
   },
-  // server : {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'https://projectkkk.com/api/',
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ''),
-  //       secure: false,
-  //       ws: true,
-  //     },
-  //   }
-  // }
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://projectkkk.com/api/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+        secure: false,
+        ws: true,
+      },
+    },
+  },
 });

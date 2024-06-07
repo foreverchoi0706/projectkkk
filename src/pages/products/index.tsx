@@ -1,26 +1,19 @@
 import { FC, useState } from "react";
 import { Button, Flex, Input, Spin, Table, TableProps } from "antd";
 import { IProduct } from "@/utils/types.ts";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/utils/queryKeys.ts";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import UpsertModal from "@/pages/products/UpsertModal";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 
 const Page: FC = () => {
-  const [selectedProductId, setSelectedProductId] = useState<string | null>();
-  const isOpen = selectedProductId !== undefined;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // @ts-ignore
-  const { data: products } = useInfiniteQuery({
-    ...queryKeys.products.all(searchParams.toString()),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.result.totalCount > allPages.length
-        ? lastPage.result.page + 1
-        : undefined;
-    },
-    initialPageParam: 1,
-  });
+  const [selectedProductId, setSelectedProductId] = useState<string | null>();
+  const isOpen = selectedProductId !== undefined;
+  searchParams.set("size", DEFAULT_LIST_PAGE_SIZE);
+  const { data: products } = useQuery(queryKeys.products.all(searchParams.toString()));
   if (!products) return <Spin />;
   const columns: TableProps<IProduct>["columns"] = [
     {
@@ -83,11 +76,13 @@ const Page: FC = () => {
     <Flex vertical gap="middle">
       {isOpen && (
         <UpsertModal
+          setSelectedProductId={setSelectedProductId}
           productId={selectedProductId}
           open={isOpen}
           footer={null}
           okButtonProps={{}}
           onCancel={() => setSelectedProductId(undefined)}
+          queryString={searchParams.toString()}
         />
       )}
       <Flex gap="middle">
@@ -103,19 +98,20 @@ const Page: FC = () => {
         onRow={(_, rowIndex = 0) => {
           return {
             onClick: () => {
-              const product = products.pages[0].result.content.at(rowIndex);
+              const product = products.content.at(rowIndex);
               if (product?.name) setSelectedProductId(product.name);
             },
           };
         }}
         rowKey={({ id }) => id}
         columns={columns}
-        dataSource={products.pages[0].result.content}
+        dataSource={products.content}
         pagination={{
-          onChange: (page) =>
-            navigate(`/products?page=${page}`, { replace: true }),
-          current: products.pages[0].result.page,
-          total: products.pages[0].result.totalCount,
+          showSizeChanger: true,
+          onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),
+          pageSize: +DEFAULT_LIST_PAGE_SIZE,
+          current: products.page,
+          total: products.totalCount,
         }}
       />
     </Flex>
