@@ -3,18 +3,24 @@ import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "@/hooks/useStore.ts";
-import { IResponse, ISignUpParams } from "@/utils/types.ts";
+import { ISignUpParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys.ts";
+import module from "@/pages/signUp/index.module.css";
+import { AxiosResponse } from "axios";
+import { setCookie } from "@/utils/cookie";
+import { ADMIN_ACCESS_TOKEN } from "@/utils/constants";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const signIn = useStore(({ signIn }) => signIn);
+  const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({ signIn, setSignIn }));
   const signInMutation = useMutation({
     mutationFn: (signUpParams: ISignUpParams) =>
-      axiosInstance.post<IResponse, Error, ISignUpParams>("/member/Join", signUpParams),
-    onSuccess: () => {
+      axiosInstance.post<ISignUpParams, AxiosResponse<IUserInfo>>("/member/Join", signUpParams),
+    onSuccess: ({ data: { accessToken } }) => {
       console.log(signIn);
+      setSignIn(true);
+      setCookie(ADMIN_ACCESS_TOKEN, accessToken);
     },
   });
 
@@ -65,10 +71,10 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="small">
-            <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
+            <Button className={module.button} type="primary" htmlType="submit">
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
+            <Button onClick={() => navigate(-1)} className={module.button} htmlType="button">
               뒤로
             </Button>
           </Flex>

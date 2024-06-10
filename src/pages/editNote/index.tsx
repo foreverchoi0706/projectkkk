@@ -12,6 +12,8 @@ const Page: FC = () => {
       <li>
         <Typography.Title>멤버 API도 마찬가지로 수정!</Typography.Title>
       </li>
+      <li>회원가입 성공 시에도 로그인 성공시와 같은 값이 내려와야함</li>
+      <li>오류 포맷도 맞춰야함</li>
     </ul>
   );
 };

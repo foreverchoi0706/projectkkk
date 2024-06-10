@@ -4,7 +4,11 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "@/utils/cookie.ts";
 import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
-import { ISignInParams } from "@/utils/types.ts";
+import { ISignInParams, IUserInfo } from "@/utils/types.ts";
+import { useMutation } from "@tanstack/react-query";
+import { axiosInstance } from "@/utils/queryKeys";
+import module from "@/pages/signIn/index.module.css";
+import { AxiosResponse } from "axios";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -12,23 +16,30 @@ const Page: FC = () => {
     setSignIn,
   }));
 
-  const handleFinish: FormProps<ISignInParams>["onFinish"] = () => {
-    setSignIn(true);
-    setCookie(ADMIN_ACCESS_TOKEN, ADMIN_ACCESS_TOKEN);
+  const signInMutation = useMutation({
+    mutationFn: (signInParams: ISignInParams) =>
+      axiosInstance.post<ISignInParams, AxiosResponse<IUserInfo>>(
+        "/loginToken/login",
+        signInParams,
+      ),
+    onSuccess: ({ data: { accessToken } }) => {
+      setSignIn(true);
+      setCookie(ADMIN_ACCESS_TOKEN, accessToken);
+    },
+    onError: (e) => {
+      alert(JSON.stringify(e));
+    },
+  });
+
+  const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
+    signInMutation.mutate(signInParams);
   };
 
   return (
-    <Layout
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <Layout className={module.layout}>
       <Form initialValues={{ remember: true }} onFinish={handleFinish} autoComplete="off">
-        <Form.Item<ISignInParams> name="username" rules={[{ required: true }]}>
-          <Input placeholder="username" />
+        <Form.Item<ISignInParams> name="email" rules={[{ required: true }]}>
+          <Input placeholder="email" />
         </Form.Item>
 
         <Form.Item<ISignInParams> name="password" rules={[{ required: true }]}>
@@ -41,10 +52,10 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="small">
-            <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
+            <Button className={module.button} type="primary" htmlType="submit">
               로그인
             </Button>
-            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>
+            <Button className={module.button} htmlType="button" onClick={() => navigate("/signUp")}>
               회원가입
             </Button>
           </Flex>

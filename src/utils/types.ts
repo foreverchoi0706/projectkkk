@@ -4,8 +4,14 @@ export interface IResponse<T = unknown> {
   status: number;
 }
 
+export interface IUserInfo {
+  grantType: "Bearer";
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface ISignInParams {
-  username: string;
+  email: string;
   password: string;
   remember: string;
 }

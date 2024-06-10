@@ -20,7 +20,7 @@ const queryKeys = createQueryKeyStore({
     all: (memberId?: string) => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<IMember[]>>>("/product/FindAllProduct");
+          await axiosInstance.get<IResponse<IPageList<IMember[]>>>("/member/FindAllMember");
         return data;
       },
       queryKey: [memberId],
@@ -39,7 +39,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/FindAllProduct?${queryString}`,
+          `/product/FindProduct?${queryString}`,
         );
         return data.result;
       },
