@@ -11,19 +11,29 @@ const queryKeys = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>("/brands");
-        return data;
+        return data.result;
       },
       queryKey: [""],
     }),
   },
   members: {
-    all: (memberId?: string) => ({
+    detail: (memberId: number) => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IMember[]>>>("/member/FindAllMember");
-        return data;
+        const { data } = await axiosInstance.get<IResponse<IProduct>>(
+          `/member/findMemberById?MemberId=${memberId}`,
+        );
+        return data.result;
       },
       queryKey: [memberId],
+    }),
+    all: (queryString?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
+          `/member/FindAllMember?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
     }),
   },
   products: {
@@ -39,7 +49,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/FindProduct?${queryString}`,
+          `/product/search?${queryString}`,
         );
         return data.result;
       },

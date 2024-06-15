@@ -7,7 +7,7 @@ export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 
 export const DEFAULT_LIST_PAGE_SIZE = "5" as const;
 
-export const SAVE_ID = "SAVE_ID" as const;
+export const REMEMBER_ID = "REMEMBER_ID" as const;
 
 export const SIGN_IN_ROUTES = [
   {
@@ -16,6 +16,7 @@ export const SIGN_IN_ROUTES = [
     Page: Products,
     path: "/products",
     label: "상품관리",
+    searchable: true,
   },
   {
     key: "1",
@@ -23,6 +24,7 @@ export const SIGN_IN_ROUTES = [
     Page: Categories,
     path: "/members",
     label: "멤버관리",
+    searchable: true,
   },
   {
     key: "2",
@@ -30,5 +32,6 @@ export const SIGN_IN_ROUTES = [
     Page: EditNote,
     path: "/editNote",
     label: "수정노트",
+    searchable: false,
   },
 ];

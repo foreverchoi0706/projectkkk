@@ -2,8 +2,8 @@ import useStore from "@/hooks/useStore";
 import { Layout, Form, FormProps, Input, Checkbox, Button, Flex } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "@/utils/cookie.ts";
-import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
+import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
 import { ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys";
@@ -32,12 +32,21 @@ const Page: FC = () => {
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
+    if (signInParams.remember) {
+      setCookie(REMEMBER_ID, signInParams.email);
+    } else {
+      deleteCookie(REMEMBER_ID);
+    }
     signInMutation.mutate(signInParams);
   };
 
   return (
     <Layout className={module.layout}>
-      <Form initialValues={{ remember: true }} onFinish={handleFinish} autoComplete="off">
+      <Form
+        initialValues={{ email: getCookie(REMEMBER_ID) ?? "", remember: hasCookie(REMEMBER_ID) }}
+        onFinish={handleFinish}
+        autoComplete="off"
+      >
         <Form.Item<ISignInParams> name="email" rules={[{ required: true }]}>
           <Input placeholder="email" />
         </Form.Item>

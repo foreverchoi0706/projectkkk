@@ -42,7 +42,10 @@ export interface IProduct {
 }
 
 export interface IProductSearchParams {
-  page: number;
+  id?: string;
+  brand?: string;
+  contents?: string;
+  page?: number | null;
 }
 
 export interface IMember {

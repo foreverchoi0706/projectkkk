@@ -1,12 +1,18 @@
-import { FC, useEffect, useState } from "react";
-import { Button, Layout, Menu } from "antd";
-import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { FC, KeyboardEventHandler, useEffect, useState } from "react";
+import { Button, Flex, Input, Layout, Menu } from "antd";
+import {
+  SearchOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import module from "./index.module.css";
-import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
 import useStore from "@/hooks/useStore";
 import SignUp from "@/pages/signUp";
+import { deleteCookie } from "@/utils/cookie.ts";
 
 const App: FC = () => {
   let timeOut: NodeJS.Timeout | null = null;
@@ -20,6 +26,16 @@ const App: FC = () => {
     SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const onClickSignOut = () => {
+    deleteCookie(ADMIN_ACCESS_TOKEN);
+    setSignIn(false);
+  };
+
+  const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
+    if (currentTarget.value !== "" && key === "Enter")
+      navigate(`${pathname}?keyword=${currentTarget.value}`);
+  };
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -53,12 +69,23 @@ const App: FC = () => {
         </Layout.Sider>
         <Layout>
           <Layout.Header className={module.header}>
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-            />
-            <Button type="text" icon={<LogoutOutlined />} onClick={() => setSignIn(false)} />
+            <Flex gap="middle">
+              <Button
+                type="text"
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+              />
+              {SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
+                .map(({ path }) => path)
+                .includes(pathname) && (
+                <Input
+                  placeholder="통합검색"
+                  suffix={<SearchOutlined />}
+                  onKeyDown={onKeyDownSearch}
+                />
+              )}
+            </Flex>
+            <Button type="text" icon={<LogoutOutlined />} onClick={onClickSignOut} />
           </Layout.Header>
           <Layout.Content className={module.content}>
             <Routes>

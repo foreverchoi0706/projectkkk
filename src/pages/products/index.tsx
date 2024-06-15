@@ -1,19 +1,32 @@
 import { FC, useState } from "react";
-import { Button, Flex, Input, Spin, Table, TableProps } from "antd";
-import { IProduct } from "@/utils/types.ts";
+import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
+import { IProduct, IProductSearchParams } from "@/utils/types.ts";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/utils/queryKeys.ts";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import UpsertModal from "@/pages/products/UpsertModal";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import queryString from "query-string";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [form] = Form.useForm();
+  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE });
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
-  searchParams.set("size", DEFAULT_LIST_PAGE_SIZE);
+
   const { data: products } = useQuery(queryKeys.products.all(searchParams.toString()));
+
+  const onFinish: FormProps<IProductSearchParams>["onFinish"] = (productSearchParams) => {
+    const page = searchParams.get("page");
+    navigate(
+      `/products?${queryString.stringify({ ...productSearchParams, page }, { skipEmptyString: true })}`,
+      {
+        replace: true,
+      },
+    );
+  };
+
   if (!products) return <Spin />;
   const columns: TableProps<IProduct>["columns"] = [
     {
@@ -74,25 +87,30 @@ const Page: FC = () => {
   ];
   return (
     <Flex vertical gap="middle">
-      {isOpen && (
-        <UpsertModal
-          setSelectedProductId={setSelectedProductId}
-          productId={selectedProductId}
-          open={isOpen}
-          footer={null}
-          okButtonProps={{}}
-          onCancel={() => setSelectedProductId(undefined)}
-          queryString={searchParams.toString()}
-        />
-      )}
-      <Flex gap="middle">
-        <Input />
-        <Input />
-        <Button type="primary">검색</Button>
-        <Button type="default" onClick={() => setSelectedProductId(null)}>
-          상품 추가
-        </Button>
-      </Flex>
+      <Form form={form} onFinish={onFinish}>
+        <Flex gap="middle">
+          <Form.Item<IProductSearchParams> name="id">
+            <Input placeholder="상품아이디" />
+          </Form.Item>
+          <Form.Item<IProductSearchParams> name="contents">
+            <Input placeholder="상품명" />
+          </Form.Item>
+          <Form.Item<IProductSearchParams> name="brand">
+            <Input placeholder="브랜드명" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              검색
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="default" onClick={() => setSelectedProductId(null)}>
+              멤버 추가
+            </Button>
+          </Form.Item>
+        </Flex>
+      </Form>
+
       <Table
         title={() => "상품관리"}
         onRow={(_, rowIndex = 0) => {
@@ -107,13 +125,23 @@ const Page: FC = () => {
         columns={columns}
         dataSource={products.content}
         pagination={{
-          showSizeChanger: true,
           onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
           current: products.page,
           total: products.totalCount,
         }}
       />
+      {isOpen && (
+        <UpsertModal
+          setSelectedProductId={setSelectedProductId}
+          productId={selectedProductId}
+          open={isOpen}
+          footer={null}
+          okButtonProps={{}}
+          onCancel={() => setSelectedProductId(undefined)}
+          queryString={searchParams.toString()}
+        />
+      )}
     </Flex>
   );
 };

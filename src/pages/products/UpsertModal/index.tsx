@@ -1,8 +1,8 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Button, Form, FormProps, Input, Modal, ModalProps, Image, Flex } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
-import { IProduct } from "@/utils/types.ts";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys";
+import { IProduct, IResponse } from "@/utils/types";
 import { AxiosError } from "axios";
 
 interface IProps {
@@ -34,7 +34,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("판매취소되었습니다");
     },
-    onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
+    onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
   });
 
   const addProductMutation = useMutation({
@@ -44,7 +44,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       alert("상품이 추가되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
+    onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
   });
 
   const updateProductMutation = useMutation({
@@ -58,18 +58,18 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       alert("상품이 수정되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
+    onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
   });
 
   const deleteProductMutation = useMutation({
     mutationFn: (productId: number) =>
-      axiosInstance.delete(`/product/DeleteProduct?productName=${productId}`),
+      axiosInstance.delete(`/product/DeleteProduct?productId=${productId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("상품이 삭제되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
+    onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
   });
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
@@ -108,7 +108,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
           <Input placeholder="파일명" />
         </Form.Item>
         <Form.Item<IProduct> name="id">
-          <Input placeholder="상품번호" />
+          <Input placeholder="상품번호" readOnly />
         </Form.Item>
         <Form.Item<IProduct> name="brand">
           <Input placeholder="브랜드" />

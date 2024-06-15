@@ -3,33 +3,31 @@ import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "@/hooks/useStore.ts";
-import { ISignUpParams, IUserInfo } from "@/utils/types.ts";
+import { IResponse, ISignUpParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys.ts";
 import module from "@/pages/signUp/index.module.css";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { setCookie } from "@/utils/cookie";
 import { ADMIN_ACCESS_TOKEN } from "@/utils/constants";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({ signIn, setSignIn }));
-  const signInMutation = useMutation({
+  const setSignIn = useStore(({ setSignIn }) => setSignIn);
+  const signUpMutation = useMutation({
     mutationFn: (signUpParams: ISignUpParams) =>
       axiosInstance.post<ISignUpParams, AxiosResponse<IUserInfo>>("/member/Join", signUpParams),
     onSuccess: ({ data: { accessToken } }) => {
-      console.log(signIn);
       setSignIn(true);
       setCookie(ADMIN_ACCESS_TOKEN, accessToken);
+    },
+    onError: ({ response }: AxiosError<IResponse>) => {
+      alert(JSON.stringify(response?.data.result));
     },
   });
 
   const onFinish: FormProps<ISignUpParams>["onFinish"] = (signUpParams) => {
-    signInMutation.mutate(signUpParams);
-  };
-
-  const onFinishFailed: FormProps<ISignUpParams>["onFinishFailed"] = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    signUpMutation.mutate(signUpParams);
   };
 
   return (
@@ -42,13 +40,7 @@ const Page: FC = () => {
       }}
     >
       <Typography.Title>회원가입</Typography.Title>
-      <Form
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
+      <Form name="basic" onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams> name="email" rules={[{ required: true }]}>
           <Input placeholder="email" />
         </Form.Item>
