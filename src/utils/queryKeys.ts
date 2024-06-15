@@ -27,10 +27,10 @@ const queryKeys = createQueryKeyStore({
     }),
   },
   products: {
-    detail: (productId: string) => ({
+    detail: (productId: number) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IProduct>>(
-          `/product/DetailProduct?productName=${productId}`,
+          `/product/DetailProduct?productId=${productId}`,
         );
         return data.result;
       },

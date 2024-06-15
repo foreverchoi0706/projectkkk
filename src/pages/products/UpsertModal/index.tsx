@@ -1,13 +1,13 @@
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
-import { Button, Form, FormProps, Input, Modal, ModalProps, Image } from "antd";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Button, Form, FormProps, Input, Modal, ModalProps, Image, Flex } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
 import { IProduct } from "@/utils/types.ts";
 import { AxiosError } from "axios";
 
 interface IProps {
-  productId: string | null;
-  setSelectedProductId: Dispatch<SetStateAction<string | null | undefined>>;
+  productId: number | null;
+  setSelectedProductId: Dispatch<SetStateAction<number | null | undefined>>;
   queryString: string;
 }
 
@@ -19,11 +19,22 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
+  const [cancelSellCount, setCancelSellCount] = useState<number>(0);
   const hasProductId = productId !== null;
 
   const { data: product } = useQuery({
-    ...queryKeys.products.detail(productId as string),
+    ...queryKeys.products.detail(productId as number),
     enabled: hasProductId,
+  });
+
+  const cancelSellCountMutation = useMutation({
+    mutationFn: (stock: number) =>
+      axiosInstance.put(`/product/selledCancle?productId=${productId}&stock=${stock}`),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(queryKeys.products.all(queryString));
+      alert("판매취소되었습니다");
+    },
+    onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
   });
 
   const addProductMutation = useMutation({
@@ -51,7 +62,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const deleteProductMutation = useMutation({
-    mutationFn: (productId: string) =>
+    mutationFn: (productId: number) =>
       axiosInstance.delete(`/product/DeleteProduct?productName=${productId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
@@ -61,21 +72,24 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: (e: AxiosError) => alert(JSON.stringify(e.response?.data)),
   });
 
-  const handleFinish: FormProps<IProduct>["onFinish"] = (product) => {
-    console.log(product);
+  const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
     mutate(product);
+  };
+
+  const onClickCancelSellCount = () => {
+    if (cancelSellCount === 0 || !window.confirm(`${cancelSellCount}개 판매취소하시겠습니까?`))
+      return;
+    cancelSellCountMutation.mutate(cancelSellCount);
   };
 
   useEffect(() => {
     if (product) form.setFieldsValue(product);
   }, [product]);
 
-  console.log(product?.image);
-
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
-      <Form initialValues={product} form={form} onFinish={handleFinish}>
+      <Form initialValues={product} form={form} onFinish={onFinish}>
         {hasProductId && (
           <Form.Item>
             <Image
@@ -100,8 +114,30 @@ const UpsertModal: FC<IProps & ModalProps> = ({
           <Input placeholder="브랜드" />
         </Form.Item>
         <Form.Item<IProduct> name="selledcount">
-          <Input type="number" placeholder="판매량" />
+          <Flex gap="middle">
+            <Input type="text" placeholder="현재 판매량" readOnly={hasProductId} />
+          </Flex>
         </Form.Item>
+        {hasProductId && (
+          <Form.Item>
+            <Flex gap="middle">
+              <Input
+                type="number"
+                value={cancelSellCount}
+                placeholder="판매취소할 수량"
+                onChange={({ target: { value } }) => setCancelSellCount(+value)}
+              />
+              <Button
+                disabled={cancelSellCount === 0 || cancelSellCountMutation.isPending}
+                htmlType="button"
+                type="primary"
+                onClick={onClickCancelSellCount}
+              >
+                판매 취소
+              </Button>
+            </Flex>
+          </Form.Item>
+        )}
         <Form.Item<IProduct> name="category">
           <Input placeholder="카테고리" />
         </Form.Item>
@@ -122,7 +158,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
           {hasProductId && (
             <Button
               disabled={deleteProductMutation.isPending}
-              onClick={() => deleteProductMutation.mutate(productId as string)}
+              onClick={() => deleteProductMutation.mutate(productId)}
               htmlType="button"
               type="link"
             >

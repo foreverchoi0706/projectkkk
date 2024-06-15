@@ -51,7 +51,7 @@ const Page: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Flex gap="small">
+          <Flex gap="middle">
             <Button className={module.button} type="primary" htmlType="submit">
               로그인
             </Button>

@@ -70,7 +70,7 @@ const Page: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Flex gap="small">
+          <Flex gap="middle">
             <Button className={module.button} type="primary" htmlType="submit">
               회원가입
             </Button>

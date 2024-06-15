@@ -10,7 +10,7 @@ import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [selectedProductId, setSelectedProductId] = useState<string | null>();
+  const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
   searchParams.set("size", DEFAULT_LIST_PAGE_SIZE);
   const { data: products } = useQuery(queryKeys.products.all(searchParams.toString()));
@@ -99,7 +99,7 @@ const Page: FC = () => {
           return {
             onClick: () => {
               const product = products.content.at(rowIndex);
-              if (product?.name) setSelectedProductId(product.name);
+              if (product?.id) setSelectedProductId(product.id);
             },
           };
         }}
