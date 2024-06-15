@@ -62,16 +62,7 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="middle">
-            <Button
-              style={{
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              type="primary"
-              htmlType="submit"
-            >
+            <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
               회원가입
             </Button>
             <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
