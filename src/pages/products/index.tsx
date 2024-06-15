@@ -10,7 +10,7 @@ import queryString from "query-string";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<IProductSearchParams>();
   const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE });
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
@@ -77,17 +77,16 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "detailButton",
       key: "detailButton",
-      render: () => (
-        <Button onClick={() => setSelectedProductId(undefined)} type="primary">
-          상세
-        </Button>
-      ),
+      onCell: ({ id }) => ({
+        onClick: () => setSelectedProductId(id),
+      }),
+      render: () => <Button type="primary">상세</Button>,
       title: "상세",
     },
   ];
   return (
     <Flex vertical gap="middle">
-      <Form form={form} onFinish={onFinish}>
+      <Form<IProductSearchParams> form={form} onFinish={onFinish}>
         <Flex gap="middle">
           <Form.Item<IProductSearchParams> name="id">
             <Input placeholder="상품아이디" />
@@ -111,16 +110,8 @@ const Page: FC = () => {
         </Flex>
       </Form>
 
-      <Table
+      <Table<IProduct>
         title={() => "상품관리"}
-        onRow={(_, rowIndex = 0) => {
-          return {
-            onClick: () => {
-              const product = products.content.at(rowIndex);
-              if (product?.id) setSelectedProductId(product.id);
-            },
-          };
-        }}
         rowKey={({ id }) => id}
         columns={columns}
         dataSource={products.content}
@@ -129,6 +120,7 @@ const Page: FC = () => {
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
           current: products.page,
           total: products.totalCount,
+          showSizeChanger: false,
         }}
       />
       {isOpen && (

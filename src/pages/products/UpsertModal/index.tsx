@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Button, Form, FormProps, Input, Modal, ModalProps, Image, Flex } from "antd";
+import { Button, Flex, Form, FormProps, Image, Input, Modal, ModalProps } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IProduct, IResponse } from "@/utils/types";
@@ -19,20 +19,39 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
+  const [isEditableSelledCount, setIsEditableSelledCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
   const hasProductId = productId !== null;
 
   const { data: product } = useQuery({
-    ...queryKeys.products.detail(productId as number),
+    ...queryKeys.products.detail(productId!),
     enabled: hasProductId,
   });
 
-  const cancelSellCountMutation = useMutation({
+  const increaseStockMutation = useMutation({
     mutationFn: (stock: number) =>
-      axiosInstance.put(`/product/selledCancle?productId=${productId}&stock=${stock}`),
+      axiosInstance.put(`product/IncreaseStock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.products.all(queryString));
-      alert("판매취소되었습니다");
+      if (!hasProductId) return;
+      await Promise.allSettled([
+        queryClient.invalidateQueries(queryKeys.products.all(queryString)),
+        queryClient.invalidateQueries(queryKeys.products.detail(productId)),
+      ]);
+      alert("재고수량이 증가되었습니다");
+    },
+    onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
+  });
+
+  const decreaseStockStockMutation = useMutation({
+    mutationFn: (stock: number) =>
+      axiosInstance.put(`/product/DecreaseStock?productId=${productId}&stock=${stock}`),
+    onSuccess: async () => {
+      if (!hasProductId) return;
+      await Promise.allSettled([
+        queryClient.invalidateQueries(queryKeys.products.all(queryString)),
+        queryClient.invalidateQueries(queryKeys.products.detail(productId)),
+      ]);
+      alert("재고수량이 감소되었습니다");
     },
     onError: (e: AxiosError<IResponse>) => alert(JSON.stringify(e.response?.data)),
   });
@@ -77,10 +96,16 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     mutate(product);
   };
 
-  const onClickCancelSellCount = () => {
-    if (cancelSellCount === 0 || !window.confirm(`${cancelSellCount}개 판매취소하시겠습니까?`))
+  const onClickIncreaseStock = () => {
+    if (cancelSellCount === 0 || !window.confirm(`${cancelSellCount}개 재고수량 증가하시겠습니까?`))
       return;
-    cancelSellCountMutation.mutate(cancelSellCount);
+    increaseStockMutation.mutate(cancelSellCount);
+  };
+
+  const onClickDecreaseStock = () => {
+    if (cancelSellCount === 0 || !window.confirm(`${cancelSellCount}개 재고수량 감소하시겠습니까?`))
+      return;
+    decreaseStockStockMutation.mutate(cancelSellCount);
   };
 
   useEffect(() => {
@@ -114,11 +139,30 @@ const UpsertModal: FC<IProps & ModalProps> = ({
           <Input placeholder="브랜드" />
         </Form.Item>
         <Form.Item<IProduct> name="selledcount">
-          <Flex gap="middle">
-            <Input type="text" placeholder="현재 판매량" readOnly={hasProductId} />
-          </Flex>
+          <Input type="number" placeholder="현재 판매량" readOnly={hasProductId} />
         </Form.Item>
-        {hasProductId && (
+        <Form.Item<IProduct> name="category">
+          <Input placeholder="카테고리" />
+        </Form.Item>
+        <Form.Item<IProduct> name="name">
+          <Input placeholder="상품명" />
+        </Form.Item>
+        <Flex gap="middle">
+          <Form.Item<IProduct> name="stock" style={{ flexGrow: "1" }}>
+            <Input type="number" placeholder="수량" />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              disabled={!hasProductId}
+              onClick={() => setIsEditableSelledCount((prevState) => !prevState)}
+            >
+              {isEditableSelledCount ? "취소" : "재고관리"}
+            </Button>
+          </Form.Item>
+        </Flex>
+
+        {isEditableSelledCount && (
           <Form.Item>
             <Flex gap="middle">
               <Input
@@ -128,25 +172,24 @@ const UpsertModal: FC<IProps & ModalProps> = ({
                 onChange={({ target: { value } }) => setCancelSellCount(+value)}
               />
               <Button
-                disabled={cancelSellCount === 0 || cancelSellCountMutation.isPending}
+                disabled={cancelSellCount === 0 || increaseStockMutation.isPending}
                 htmlType="button"
                 type="primary"
-                onClick={onClickCancelSellCount}
+                onClick={onClickIncreaseStock}
+              >
+                재고 증가
+              </Button>
+              <Button
+                disabled={cancelSellCount === 0 || decreaseStockStockMutation.isPending}
+                htmlType="button"
+                type="primary"
+                onClick={onClickDecreaseStock}
               >
                 판매 취소
               </Button>
             </Flex>
           </Form.Item>
         )}
-        <Form.Item<IProduct> name="category">
-          <Input placeholder="카테고리" />
-        </Form.Item>
-        <Form.Item<IProduct> name="name">
-          <Input placeholder="상품명" />
-        </Form.Item>
-        <Form.Item<IProduct> name="stock">
-          <Input type="number" placeholder="수량" />
-        </Form.Item>
         <Form.Item>
           <Button
             disabled={addProductMutation.isPending || updateProductMutation.isPending}

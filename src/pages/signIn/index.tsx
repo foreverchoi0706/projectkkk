@@ -7,7 +7,6 @@ import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
 import { ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys";
-import module from "@/pages/signIn/index.module.css";
 import { AxiosResponse } from "axios";
 
 const Page: FC = () => {
@@ -41,7 +40,14 @@ const Page: FC = () => {
   };
 
   return (
-    <Layout className={module.layout}>
+    <Layout
+      style={{
+        alignItems: "center",
+        display: "flex",
+        height: "100vh",
+        justifyContent: "center",
+      }}
+    >
       <Form
         initialValues={{ email: getCookie(REMEMBER_ID) ?? "", remember: hasCookie(REMEMBER_ID) }}
         onFinish={handleFinish}
@@ -61,10 +67,19 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="middle">
-            <Button className={module.button} type="primary" htmlType="submit">
+            <Button
+              style={{
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              type="primary"
+              htmlType="submit"
+            >
               로그인
             </Button>
-            <Button className={module.button} htmlType="button" onClick={() => navigate("/signUp")}>
+            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>
               회원가입
             </Button>
           </Flex>

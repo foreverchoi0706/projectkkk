@@ -54,3 +54,8 @@ export interface IMember {
   name: string;
   phone: string;
 }
+
+export interface IMemberSearchParams {
+  id: number;
+  email: string;
+}

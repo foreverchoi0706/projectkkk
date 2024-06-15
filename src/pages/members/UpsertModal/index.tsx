@@ -22,7 +22,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasMemberId = memberId !== null;
 
   const { data: member } = useQuery({
-    ...queryKeys.members.detail(memberId as number),
+    ...queryKeys.members.detail(memberId!),
     enabled: hasMemberId,
   });
 

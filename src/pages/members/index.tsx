@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Form, Input, Spin, Table, TableProps } from "antd";
 import { FC, useState } from "react";
-import { IMember } from "@/utils/types.ts";
+import { IMember, IMemberSearchParams } from "@/utils/types.ts";
 import queryKeys from "@/utils/queryKeys.ts";
 import UpsertModal from "@/pages/members/UpsertModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
 
 const Page: FC = () => {
   const navigate = useNavigate();
+  const [form] = Form.useForm<IMemberSearchParams>();
   const [searchParams] = useSearchParams();
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>();
   const isOpen = selectedMemberId !== undefined;
@@ -50,9 +51,7 @@ const Page: FC = () => {
       dataIndex: "update",
       key: "update",
       onCell: ({ id }) => ({
-        onClick: () => {
-          console.log(id);
-        },
+        onClick: () => setSelectedMemberId(id),
       }),
       render: () => <Button type="primary">상세</Button>,
       title: "상세",
@@ -61,12 +60,12 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
-      <Form>
+      <Form<IMemberSearchParams> form={form}>
         <Flex gap="middle">
-          <Form.Item>
+          <Form.Item<IMemberSearchParams> name="id">
             <Input placeholder="멤버아이디" />
           </Form.Item>
-          <Form.Item>
+          <Form.Item<IMemberSearchParams> name="email">
             <Input placeholder="이메일" />
           </Form.Item>
           <Form.Item>
@@ -80,16 +79,8 @@ const Page: FC = () => {
         </Flex>
       </Form>
 
-      <Table
+      <Table<IMember>
         title={() => "멤버관리"}
-        onRow={(_, rowIndex = 0) => {
-          return {
-            onClick: () => {
-              const member = members.content.at(rowIndex);
-              if (member?.id) setSelectedMemberId(member.id);
-            },
-          };
-        }}
         rowKey={({ id }) => id}
         columns={columns}
         dataSource={members.content}
@@ -98,6 +89,7 @@ const Page: FC = () => {
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
           current: members.page,
           total: members.totalCount,
+          showSizeChanger: false,
         }}
       />
       {isOpen && (

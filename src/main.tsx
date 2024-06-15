@@ -1,4 +1,4 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "@/App.tsx";
 import { ConfigProvider } from "antd";
@@ -17,7 +17,7 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <StrictMode>
     <ConfigProvider theme={{ token: {} }}>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
@@ -25,5 +25,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </BrowserRouter>
     </ConfigProvider>
-  </React.StrictMode>,
+  </StrictMode>,
 );

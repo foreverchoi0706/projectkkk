@@ -7,7 +7,6 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import module from "./index.module.css";
 import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import SignIn from "@/pages/signIn";
 import useStore from "@/hooks/useStore";
@@ -46,7 +45,7 @@ const App: FC = () => {
 
   if (signIn) {
     return (
-      <Layout className={module.layout}>
+      <Layout style={{ height: "100vh" }}>
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
           <Menu
             theme="dark"
@@ -68,7 +67,14 @@ const App: FC = () => {
           />
         </Layout.Sider>
         <Layout>
-          <Layout.Header className={module.header}>
+          <Layout.Header
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#ffffff",
+            }}
+          >
             <Flex gap="middle">
               <Button
                 type="text"
@@ -87,7 +93,13 @@ const App: FC = () => {
             </Flex>
             <Button type="text" icon={<LogoutOutlined />} onClick={onClickSignOut} />
           </Layout.Header>
-          <Layout.Content className={module.content}>
+          <Layout.Content
+            style={{
+              margin: "24px 16px",
+              padding: "24px",
+              minHeight: "280px",
+            }}
+          >
             <Routes>
               {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />

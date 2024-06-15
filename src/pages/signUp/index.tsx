@@ -6,7 +6,6 @@ import useStore from "@/hooks/useStore.ts";
 import { IResponse, ISignUpParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys.ts";
-import module from "@/pages/signUp/index.module.css";
 import { AxiosError, AxiosResponse } from "axios";
 import { setCookie } from "@/utils/cookie";
 import { ADMIN_ACCESS_TOKEN } from "@/utils/constants";
@@ -63,10 +62,19 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="middle">
-            <Button className={module.button} type="primary" htmlType="submit">
+            <Button
+              style={{
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              type="primary"
+              htmlType="submit"
+            >
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} className={module.button} htmlType="button">
+            <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
               뒤로
             </Button>
           </Flex>
