@@ -4,10 +4,10 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
 import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
-import { ISignInParams, IUserInfo } from "@/utils/types.ts";
+import { IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/queryKeys";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -25,9 +25,7 @@ const Page: FC = () => {
       setSignIn(true);
       setCookie(ADMIN_ACCESS_TOKEN, accessToken);
     },
-    onError: (e) => {
-      alert(JSON.stringify(e));
-    },
+    onError: ({response}: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -67,7 +65,7 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="middle">
-            <Button style={{ flexGrow: "1" }} type="primary" htmlType="submit">
+            <Button disabled={signInMutation.isPending} style={{ flexGrow: "1" }} type="primary" htmlType="submit">
               로그인
             </Button>
             <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>

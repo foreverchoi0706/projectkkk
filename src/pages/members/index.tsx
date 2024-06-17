@@ -11,7 +11,7 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm<IMemberSearchParams>();
   const [searchParams] = useSearchParams();
-  const [selectedMemberId, setSelectedMemberId] = useState<number | null>();
+  const [selectedMemberId, setSelectedMemberId] = useState<number>();
   const isOpen = selectedMemberId !== undefined;
   const { data: members } = useQuery(queryKeys.members.all(searchParams.toString()));
   if (!members) return <Spin />;
@@ -70,11 +70,6 @@ const Page: FC = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary">검색</Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="default" onClick={() => setSelectedMemberId(null)}>
-              멤버 추가
-            </Button>
           </Form.Item>
         </Flex>
       </Form>
