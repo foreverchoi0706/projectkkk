@@ -89,7 +89,7 @@ const Page: FC = () => {
       <Form<IProductSearchParams> form={form} onFinish={onFinish}>
         <Flex gap="middle">
           <Form.Item<IProductSearchParams> name="id">
-            <Input placeholder="상품아이디" />
+            <Input min="0" type="number" placeholder="상품아이디" />
           </Form.Item>
           <Form.Item<IProductSearchParams> name="contents">
             <Input placeholder="상품명" />
@@ -114,6 +114,9 @@ const Page: FC = () => {
         title={() => "상품관리"}
         rowKey={({ id }) => id}
         columns={columns}
+        locale={{
+          emptyText: "검색결과가 없습니다",
+        }}
         dataSource={products.content}
         pagination={{
           onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),

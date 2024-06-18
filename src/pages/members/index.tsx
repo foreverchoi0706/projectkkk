@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Flex, Form, Input, Spin, Table, TableProps } from "antd";
+import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
 import { FC, useState } from "react";
 import { IMember, IMemberSearchParams } from "@/utils/types.ts";
 import queryKeys from "@/utils/queryKeys.ts";
 import UpsertModal from "@/pages/members/UpsertModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
+import queryString from "query-string";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,17 @@ const Page: FC = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<number>();
   const isOpen = selectedMemberId !== undefined;
   const { data: members } = useQuery(queryKeys.members.all(searchParams.toString()));
+
+  const onFinish: FormProps<IMemberSearchParams>["onFinish"] = (memberSearchParams) => {
+    const page = searchParams.get("page");
+    navigate(
+      `/members?${queryString.stringify({ ...memberSearchParams, page }, { skipEmptyString: true })}`,
+      {
+        replace: true,
+      },
+    );
+  };
+
   if (!members) return <Spin />;
   const columns: TableProps<IMember>["columns"] = [
     {
@@ -60,16 +72,18 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
-      <Form<IMemberSearchParams> form={form}>
+      <Form<IMemberSearchParams> form={form} onFinish={onFinish}>
         <Flex gap="middle">
           <Form.Item<IMemberSearchParams> name="id">
-            <Input placeholder="멤버아이디" />
+            <Input min="0" type="number" placeholder="멤버아이디" />
           </Form.Item>
           <Form.Item<IMemberSearchParams> name="email">
             <Input placeholder="이메일" />
           </Form.Item>
           <Form.Item>
-            <Button type="primary">검색</Button>
+            <Button htmlType="submit" type="primary">
+              검색
+            </Button>
           </Form.Item>
         </Flex>
       </Form>
@@ -78,6 +92,9 @@ const Page: FC = () => {
         title={() => "멤버관리"}
         rowKey={({ id }) => id}
         columns={columns}
+        locale={{
+          emptyText: "검색결과가 없습니다",
+        }}
         dataSource={members.content}
         pagination={{
           onChange: (page) => navigate(`/members?page=${page}`, { replace: true }),

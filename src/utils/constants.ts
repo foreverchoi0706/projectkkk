@@ -1,7 +1,6 @@
 import Products from "@/pages/products";
 import Categories from "@/pages/members";
-import EditNote from "@/pages/editNote";
-import { EditOutlined, ProductOutlined, UserOutlined } from "@ant-design/icons";
+import { ProductOutlined, UserOutlined } from "@ant-design/icons";
 
 export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 
@@ -25,13 +24,5 @@ export const SIGN_IN_ROUTES = [
     path: "/members",
     label: "멤버관리",
     searchable: true,
-  },
-  {
-    key: "2",
-    Icon: EditOutlined,
-    Page: EditNote,
-    path: "/editNote",
-    label: "수정노트",
-    searchable: false,
   },
 ];
