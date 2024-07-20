@@ -14,7 +14,7 @@ import SignUp from "@/pages/signUp";
 import { deleteCookie } from "@/utils/cookie.ts";
 
 const App: FC = () => {
-  let timeOut: NodeJS.Timeout | null = null;
+  let timeOut: number | null = null;
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({
@@ -39,7 +39,7 @@ const App: FC = () => {
   useEffect(() => {
     window.addEventListener("resize", () => {
       if (timeOut) clearTimeout(timeOut);
-      timeOut = setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
+      timeOut = window.setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
     });
   }, []);
 

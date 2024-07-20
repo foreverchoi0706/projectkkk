@@ -31,7 +31,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       alert("멤버가 수정되었습니다");
       setSelectedMemberId(undefined);
     },
-    onError: ({response}: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
   });
 
   const deleteMemberMutation = useMutation({
@@ -42,7 +42,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       alert("멤버가 삭제되었습니다");
       setSelectedMemberId(undefined);
     },
-    onError: ({response}: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
   });
 
   const onFinish: FormProps<IMember>["onFinish"] = (product) => {

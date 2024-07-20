@@ -25,7 +25,7 @@ const Page: FC = () => {
       setSignIn(true);
       setCookie(ADMIN_ACCESS_TOKEN, accessToken);
     },
-    onError: ({response}: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -65,7 +65,12 @@ const Page: FC = () => {
 
         <Form.Item>
           <Flex gap="middle">
-            <Button disabled={signInMutation.isPending} style={{ flexGrow: "1" }} type="primary" htmlType="submit">
+            <Button
+              disabled={signInMutation.isPending}
+              style={{ flexGrow: "1" }}
+              type="primary"
+              htmlType="submit"
+            >
               로그인
             </Button>
             <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>
