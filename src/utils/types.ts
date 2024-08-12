@@ -4,6 +4,15 @@ export interface IResponse<T = unknown> {
   status: number;
 }
 
+export interface IError {
+  detail: string;
+  instance: string;
+  properties: null;
+  status: number;
+  title: string;
+  type: string;
+}
+
 export interface IUserInfo {
   grantType: "Bearer";
   accessToken: string;

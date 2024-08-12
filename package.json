@@ -10,15 +10,15 @@
     "ncu": "npm-check-updates -u & npm install"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.7",
+    "@ant-design/icons": "^5.4.0",
     "@lukemorales/query-key-factory": "^1.3.4",
-    "@tanstack/react-query": "^5.51.11",
-    "antd": "^5.19.3",
-    "axios": "^1.7.2",
-    "query-string": "^9.0.0",
+    "@tanstack/react-query": "^5.51.23",
+    "antd": "^5.20.0",
+    "axios": "^1.7.3",
+    "query-string": "^9.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.25.1",
+    "react-router-dom": "^6.26.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
@@ -26,8 +26,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
-    "npm-check-updates": "^16.14.20",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.4"
+    "npm-check-updates": "^17.0.6",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0"
   }
 }

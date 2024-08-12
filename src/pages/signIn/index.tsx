@@ -1,13 +1,13 @@
 import useStore from "@/hooks/useStore";
-import { Layout, Form, FormProps, Input, Checkbox, Button, Flex } from "antd";
+import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
+import { axiosInstance } from "@/utils/queryKeys";
+import { IError, ISignInParams, IUserInfo } from "@/utils/types.ts";
+import { useMutation } from "@tanstack/react-query";
+import { Button, Checkbox, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
+import { AxiosError, AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
-import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
-import { IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
-import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/utils/queryKeys";
-import { AxiosError, AxiosResponse } from "axios";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -15,17 +15,13 @@ const Page: FC = () => {
     setSignIn,
   }));
 
-  const signInMutation = useMutation({
-    mutationFn: (signInParams: ISignInParams) =>
-      axiosInstance.post<ISignInParams, AxiosResponse<IUserInfo>>(
-        "/loginToken/login",
-        signInParams,
-      ),
+  const signInMutation = useMutation<AxiosResponse<IUserInfo>, AxiosError<IError>, ISignInParams>({
+    mutationFn: (signInParams) => axiosInstance.post("/auth/login", signInParams),
     onSuccess: ({ data: { accessToken } }) => {
       setSignIn(true);
       setCookie(ADMIN_ACCESS_TOKEN, accessToken);
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ response }) => alert(response?.data.title),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -46,6 +42,7 @@ const Page: FC = () => {
         justifyContent: "center",
       }}
     >
+      <Typography.Title>로그인</Typography.Title>
       <Form
         initialValues={{ email: getCookie(REMEMBER_ID) ?? "", remember: hasCookie(REMEMBER_ID) }}
         onFinish={handleFinish}
