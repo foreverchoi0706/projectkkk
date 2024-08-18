@@ -1,17 +1,17 @@
-import { FC, KeyboardEventHandler, useEffect, useState } from "react";
-import { Button, Flex, Input, Layout, Menu } from "antd";
+import useStore from "@/hooks/useStore";
+import SignIn from "@/pages/signIn";
+import SignUp from "@/pages/signUp";
+import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { deleteCookie } from "@/utils/cookie.ts";
 import {
-  SearchOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
+import { Button, Flex, Input, Layout, Menu } from "antd";
+import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
-import SignIn from "@/pages/signIn";
-import useStore from "@/hooks/useStore";
-import SignUp from "@/pages/signUp";
-import { deleteCookie } from "@/utils/cookie.ts";
 
 const App: FC = () => {
   let timeOut: number | null = null;
@@ -29,6 +29,7 @@ const App: FC = () => {
   const onClickSignOut = () => {
     deleteCookie(ADMIN_ACCESS_TOKEN);
     setSignIn(false);
+    window.location.href = "/signIn";
   };
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
@@ -37,10 +38,18 @@ const App: FC = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      if (timeOut) clearTimeout(timeOut);
-      timeOut = window.setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
-    });
+    const abortController = new AbortController();
+    window.addEventListener(
+      "resize",
+      () => {
+        if (timeOut) clearTimeout(timeOut);
+        timeOut = window.setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
+      },
+      {
+        signal: abortController.signal,
+      },
+    );
+    return () => abortController.abort();
   }, []);
 
   if (signIn) {
