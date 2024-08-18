@@ -1,10 +1,10 @@
 import useStore from "@/hooks/useStore";
-import { ADMIN_ACCESS_TOKEN, REMEMBER_ID } from "@/utils/constants.ts";
-import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
+import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
+import { setCookie } from "@/utils/cookie.ts";
 import { axiosInstance } from "@/utils/queryKeys";
-import { IError, ISignInParams, IUserInfo } from "@/utils/types.ts";
+import { IError, IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Checkbox, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
+import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosError, AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,21 +15,20 @@ const Page: FC = () => {
     setSignIn,
   }));
 
-  const signInMutation = useMutation<AxiosResponse<IUserInfo>, AxiosError<IError>, ISignInParams>({
+  const signInMutation = useMutation<
+    AxiosResponse<IResponse<IUserInfo>>,
+    AxiosError<IError>,
+    ISignInParams
+  >({
     mutationFn: (signInParams) => axiosInstance.post("/auth/login", signInParams),
-    onSuccess: ({ data: { accessToken } }) => {
+    onSuccess: ({ data }) => {
       setSignIn(true);
-      setCookie(ADMIN_ACCESS_TOKEN, accessToken);
+      setCookie(ADMIN_ACCESS_TOKEN, data.result.accessToken);
     },
     onError: ({ response }) => alert(response?.data.title),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
-    if (signInParams.remember) {
-      setCookie(REMEMBER_ID, signInParams.email);
-    } else {
-      deleteCookie(REMEMBER_ID);
-    }
     signInMutation.mutate(signInParams);
   };
 
@@ -43,21 +42,13 @@ const Page: FC = () => {
       }}
     >
       <Typography.Title>로그인</Typography.Title>
-      <Form
-        initialValues={{ email: getCookie(REMEMBER_ID) ?? "", remember: hasCookie(REMEMBER_ID) }}
-        onFinish={handleFinish}
-        autoComplete="off"
-      >
+      <Form onFinish={handleFinish}>
         <Form.Item<ISignInParams> name="email" rules={[{ required: true }]}>
           <Input placeholder="email" />
         </Form.Item>
 
         <Form.Item<ISignInParams> name="password" rules={[{ required: true }]}>
           <Input.Password placeholder="password" />
-        </Form.Item>
-
-        <Form.Item<ISignInParams> name="remember" valuePropName="checked">
-          <Checkbox>Remember me</Checkbox>
         </Form.Item>
 
         <Form.Item>

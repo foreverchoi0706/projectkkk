@@ -1,12 +1,42 @@
+import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
+import { getCookie, hasCookie } from "@/utils/cookie.ts";
+import { IAccount, IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
-import { IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.MODE === "development" ? "/api" : "https://projectkkk.com/api/",
 });
 
+axiosInstance.interceptors.request.use((value) => {
+  if (hasCookie(ADMIN_ACCESS_TOKEN))
+    value.headers.Authorization = `Bearer ${getCookie(ADMIN_ACCESS_TOKEN)}`;
+  return value;
+});
+
+axiosInstance.interceptors.response.use(
+  (value) => value,
+  (error) => {
+    if (error.response.status === 401) {
+      alert("로그아웃 되었습니다");
+      window.location.href = "/signIn";
+    }
+    return error;
+  },
+);
+
 const queryKeys = createQueryKeyStore({
+  accounts: {
+    all: (queryString?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IAccount[]>>>(
+          `/auth/authorities?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
   brands: {
     all: () => ({
       queryFn: async () => {
@@ -17,43 +47,43 @@ const queryKeys = createQueryKeyStore({
     }),
   },
   members: {
+    all: (queryString?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
+          `/member/members?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
     detail: (memberId: number) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IProduct>>(
-          `/member/findMemberById?MemberId=${memberId}`,
+          `/member/member?memberId=${memberId}`,
         );
         return data.result;
       },
       queryKey: [memberId],
     }),
-    all: (queryString?: string) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
-          `/member/searchMembers?${queryString}`,
-        );
-        return data.result;
-      },
-      queryKey: [queryString],
-    }),
   },
   products: {
-    detail: (productId: number) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IProduct>>(
-          `/product/DetailProduct?productId=${productId}`,
-        );
-        return data.result;
-      },
-      queryKey: [productId],
-    }),
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/searchProducts?${queryString}`,
+          `/product/products?${queryString}`,
         );
         return data.result;
       },
       queryKey: [queryString],
+      detail: (productId: number) => ({
+        queryFn: async () => {
+          const { data } = await axiosInstance.get<IResponse<IProduct>>(
+            `/product/product?productId=${productId}`,
+          );
+          return data.result;
+        },
+        queryKey: [productId],
+      }),
     }),
   },
 });

@@ -1,12 +1,12 @@
+import UpsertModal from "@/pages/members/UpsertModal";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
+import queryKeys from "@/utils/queryKeys.ts";
+import { IMember, IMemberSearchParams } from "@/utils/types.ts";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
-import { FC, useState } from "react";
-import { IMember, IMemberSearchParams } from "@/utils/types.ts";
-import queryKeys from "@/utils/queryKeys.ts";
-import UpsertModal from "@/pages/members/UpsertModal";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
 import queryString from "query-string";
+import { FC, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ const Page: FC = () => {
       title: "이메일",
     },
     {
+      align: "center",
       dataIndex: "update",
       key: "update",
       onCell: ({ id }) => ({

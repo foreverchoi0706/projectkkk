@@ -22,7 +22,6 @@ export interface IUserInfo {
 export interface ISignInParams {
   email: string;
   password: string;
-  remember: string;
 }
 
 export interface ISignUpParams {
@@ -67,4 +66,10 @@ export interface IMember {
 export interface IMemberSearchParams {
   id: number;
   email: string;
+}
+
+export interface IAccount {
+  id: number;
+  role: "center" | "admin" | "user";
+  name: string;
 }
