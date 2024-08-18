@@ -25,7 +25,7 @@ const Page: FC = () => {
       setSignIn(true);
       setCookie(ADMIN_ACCESS_TOKEN, data.result.accessToken);
     },
-    onError: ({ response }) => alert(response?.data.title),
+    onError: () => alert("아이디 또는 비밀번호가 일치하지 않습니다."),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {

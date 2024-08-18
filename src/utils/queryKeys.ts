@@ -17,9 +17,10 @@ axiosInstance.interceptors.request.use((value) => {
 axiosInstance.interceptors.response.use(
   (value) => value,
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.config.url !== "/auth/login") {
       alert("로그아웃 되었습니다");
       window.location.href = "/signIn";
+      return;
     }
     return error;
   },
