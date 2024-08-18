@@ -75,15 +75,15 @@ const queryKeys = createQueryKeyStore({
         return data.result;
       },
       queryKey: [queryString],
-      detail: (productId: number) => ({
-        queryFn: async () => {
-          const { data } = await axiosInstance.get<IResponse<IProduct>>(
-            `/product/product?productId=${productId}`,
-          );
-          return data.result;
-        },
-        queryKey: [productId],
-      }),
+    }),
+    detail: (productId: number) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IProduct>>(
+          `/product/product?productId=${productId}`,
+        );
+        return data.result;
+      },
+      queryKey: [productId],
     }),
   },
 });
