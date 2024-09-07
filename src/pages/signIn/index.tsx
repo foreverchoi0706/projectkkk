@@ -1,6 +1,4 @@
-import useStore from "@/hooks/useStore";
-import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
-import { setCookie } from "@/utils/cookie.ts";
+import useAuth from "@/hooks/useAuth.ts";
 import { axiosInstance } from "@/utils/queryKeys";
 import { IError, IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
@@ -11,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const { setSignIn } = useStore(({ setSignIn }) => ({
-    setSignIn,
-  }));
+  const { login } = useAuth();
 
   const signInMutation = useMutation<
     AxiosResponse<IResponse<IUserInfo>>,
@@ -21,11 +17,8 @@ const Page: FC = () => {
     ISignInParams
   >({
     mutationFn: (signInParams) => axiosInstance.post("/auth/login", signInParams),
-    onSuccess: ({ data }) => {
-      setSignIn(true);
-      setCookie(ADMIN_ACCESS_TOKEN, data.result.accessToken);
-    },
-    onError: () => alert("아이디 또는 비밀번호가 일치하지 않습니다."),
+    onSuccess: ({ data }) => login(data.result),
+    onError: () => alert("아이디 또는 비밀번호가 일치하지 않습니다"),
   });
 
   const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -61,7 +54,7 @@ const Page: FC = () => {
             >
               로그인
             </Button>
-            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signUp")}>
+            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signup")}>
               회원가입
             </Button>
           </Flex>

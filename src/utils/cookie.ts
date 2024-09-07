@@ -11,7 +11,7 @@ export const setCookie = (name: string, value: string, options?: CookieOptions) 
   document.cookie = `${name}=${value}; ${options ? serializeOptions(options) : ""}`;
 };
 
-export const getCookie = (name: string): string | undefined => {
+export const getCookie = (name: string) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
     const [cookieName, cookieValue] = cookie.split("=");
@@ -19,7 +19,7 @@ export const getCookie = (name: string): string | undefined => {
       return cookieValue.trim();
     }
   }
-  return undefined;
+  return null;
 };
 
 export const deleteCookie = (name: string) => {

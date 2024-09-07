@@ -1,7 +1,5 @@
 "use client";
-import useStore from "@/hooks/useStore.ts";
-import { ADMIN_ACCESS_TOKEN } from "@/utils/constants";
-import { setCookie } from "@/utils/cookie";
+import useAuth from "@/hooks/useAuth.ts";
 import { axiosInstance } from "@/utils/queryKeys.ts";
 import { IResponse, ISignUpParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
@@ -12,14 +10,11 @@ import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const setSignIn = useStore(({ setSignIn }) => setSignIn);
+  const { login } = useAuth();
   const signUpMutation = useMutation({
     mutationFn: (signUpParams: ISignUpParams) =>
       axiosInstance.post<ISignUpParams, AxiosResponse<IUserInfo>>("/member/join", signUpParams),
-    onSuccess: ({ data: { accessToken } }) => {
-      setSignIn(true);
-      setCookie(ADMIN_ACCESS_TOKEN, accessToken);
-    },
+    onSuccess: ({ data }) => login(data),
     onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
   });
 

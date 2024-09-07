@@ -1,6 +1,14 @@
-import { ADMIN_ACCESS_TOKEN } from "@/utils/constants.ts";
+import { ACCESS_TOKEN } from "@/utils/constants.ts";
 import { getCookie, hasCookie } from "@/utils/cookie.ts";
-import { IAccount, IMember, IPageList, IProduct, IResponse } from "@/utils/types.ts";
+import {
+  IAccount,
+  IMember,
+  IPageList,
+  IProduct,
+  IResponse,
+  IToken,
+  IUserInfo,
+} from "@/utils/types.ts";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import axios from "axios";
 
@@ -9,8 +17,7 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((value) => {
-  if (hasCookie(ADMIN_ACCESS_TOKEN))
-    value.headers.Authorization = `Bearer ${getCookie(ADMIN_ACCESS_TOKEN)}`;
+  if (hasCookie(ACCESS_TOKEN)) value.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`;
   return value;
 });
 
@@ -27,6 +34,17 @@ axiosInstance.interceptors.response.use(
 );
 
 const queryKeys = createQueryKeyStore({
+  auth: {
+    verify: ({ accessToken, refreshToken }: IToken) => ({
+      queryKey: [accessToken, refreshToken],
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IUserInfo>>(
+          `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
+        );
+        return data.result;
+      },
+    }),
+  },
   accounts: {
     all: (queryString?: string) => ({
       queryFn: async () => {
@@ -71,7 +89,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/products?${queryString}`,
+          `/product/search?${queryString}`,
         );
         return data.result;
       },

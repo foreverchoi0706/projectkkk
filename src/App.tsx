@@ -1,14 +1,15 @@
-import useStore from "@/hooks/useStore";
+import useAuth from "@/hooks/useAuth.ts";
 import SignIn from "@/pages/signIn";
 import SignUp from "@/pages/signUp";
-import { ADMIN_ACCESS_TOKEN, SIGN_IN_ROUTES } from "@/utils/constants.ts";
-import { deleteCookie } from "@/utils/cookie.ts";
+import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import queryKeys from "@/utils/queryKeys.ts";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Input, Layout, Menu } from "antd";
 import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -17,25 +18,28 @@ const App: FC = () => {
   let timeOut: number | null = null;
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { signIn, setSignIn } = useStore(({ signIn, setSignIn }) => ({
-    signIn,
-    setSignIn,
-  }));
+
+  const { role, signIn, token, login, logout } = useAuth();
+
   const [selectedKey, setSelectedKey] = useState<string>(
     SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
-  const onClickSignOut = () => {
-    deleteCookie(ADMIN_ACCESS_TOKEN);
-    setSignIn(false);
-    window.location.href = "/signIn";
-  };
+  const { data: verify, isLoading } = useQuery({
+    ...queryKeys.auth.verify(token),
+    enabled: token.accessToken !== "" && token.refreshToken !== "",
+  });
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
     if (currentTarget.value !== "" && key === "Enter")
       navigate(`${pathname}?keyword=${currentTarget.value}`);
   };
+
+  useEffect(() => {
+    if (!verify) return;
+    login(verify);
+  }, [verify]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -45,14 +49,14 @@ const App: FC = () => {
         if (timeOut) clearTimeout(timeOut);
         timeOut = window.setTimeout(() => setCollapsed(window.innerWidth < 1000), 200);
       },
-      {
-        signal: abortController.signal,
-      },
+      { signal: abortController.signal },
     );
     return () => abortController.abort();
   }, []);
 
-  if (signIn) {
+  if (isLoading) return null;
+
+  if (signIn && role !== null) {
     return (
       <Layout style={{ height: "100vh" }}>
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
@@ -61,11 +65,13 @@ const App: FC = () => {
             mode="inline"
             defaultSelectedKeys={[selectedKey]}
             selectedKeys={[selectedKey]}
-            items={SIGN_IN_ROUTES.map(({ key, Icon, label }) => ({
-              key,
-              icon: <Icon />,
-              label,
-            }))}
+            items={SIGN_IN_ROUTES.filter(({ accessibleRoles }) => accessibleRoles.has(role)).map(
+              ({ key, Icon, label }) => ({
+                key,
+                icon: <Icon />,
+                label,
+              }),
+            )}
             onSelect={({ key }) => {
               const route = SIGN_IN_ROUTES.at(+key);
               if (route) {
@@ -100,7 +106,7 @@ const App: FC = () => {
                 />
               )}
             </Flex>
-            <Button type="text" icon={<LogoutOutlined />} onClick={onClickSignOut} />
+            <Button type="text" icon={<LogoutOutlined />} onClick={logout} />
           </Layout.Header>
           <Layout.Content
             style={{
@@ -123,9 +129,9 @@ const App: FC = () => {
 
   return (
     <Routes>
-      <Route path="/signIn" element={<SignIn />} />
-      <Route path="/signUp" element={<SignUp />} />
-      <Route path="*" element={<Navigate replace to="/signIn" />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="*" element={<Navigate replace to="/signin" />} />
     </Routes>
   );
 };

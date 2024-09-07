@@ -1,17 +1,17 @@
-import { FC, useState } from "react";
-import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
-import { IProduct, IProductSearchParams } from "@/utils/types.ts";
-import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/utils/queryKeys.ts";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import UpsertModal from "@/pages/products/UpsertModal";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import queryKeys from "@/utils/queryKeys.ts";
+import { IProduct, IProductSearchParams } from "@/utils/types.ts";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
 import queryString from "query-string";
+import { FC, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm<IProductSearchParams>();
-  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE });
+  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE, page: "1" });
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
 
@@ -84,6 +84,7 @@ const Page: FC = () => {
       title: "상세",
     },
   ];
+  console.log(products.content);
   return (
     <Flex vertical gap="middle">
       <Form<IProductSearchParams> form={form} onFinish={onFinish}>
@@ -91,7 +92,7 @@ const Page: FC = () => {
           <Form.Item<IProductSearchParams> name="id">
             <Input min="0" type="number" placeholder="상품아이디" />
           </Form.Item>
-          <Form.Item<IProductSearchParams> name="contents">
+          <Form.Item<IProductSearchParams> name="content">
             <Input placeholder="상품명" />
           </Form.Item>
           <Form.Item<IProductSearchParams> name="brand">

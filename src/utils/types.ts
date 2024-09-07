@@ -13,10 +13,16 @@ export interface IError {
   type: string;
 }
 
+export interface IToken {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface IUserInfo {
   grantType: "Bearer";
   accessToken: string;
   refreshToken: string;
+  role: TRole;
 }
 
 export interface ISignInParams {
@@ -52,7 +58,7 @@ export interface IProduct {
 export interface IProductSearchParams {
   id?: string;
   brand?: string;
-  contents?: string;
+  content?: string;
   page?: number | null;
 }
 
@@ -70,6 +76,12 @@ export interface IMemberSearchParams {
 
 export interface IAccount {
   id: number;
-  role: "center" | "admin" | "user";
+  role: TRole;
   name: string;
 }
+
+export type TRole = "center" | "admin" | "user";
+
+export type INonNullable<T> = {
+  [K in keyof T]: NonNullable<K>;
+};
