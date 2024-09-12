@@ -11,7 +11,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const Page: FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm<IProductSearchParams>();
-  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE, page: "1" });
+  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE.toString(), page: "1" });
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
 
