@@ -59,16 +59,6 @@ const Page: FC = () => {
       key: "email",
       title: "이메일",
     },
-    {
-      align: "center",
-      dataIndex: "update",
-      key: "update",
-      onCell: ({ id }) => ({
-        onClick: () => setSelectedMemberId(id),
-      }),
-      render: () => <Button type="primary">상세</Button>,
-      title: "상세",
-    },
   ];
 
   return (
@@ -100,7 +90,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => navigate(`/members?page=${page}`, { replace: true }),
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
-          current: members.page,
+          current: members.page + 1,
           total: members.totalCount,
           showSizeChanger: false,
         }}

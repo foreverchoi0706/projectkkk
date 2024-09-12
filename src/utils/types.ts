@@ -36,7 +36,7 @@ export interface ISignUpParams {
   id: number;
   email: string;
   password: string;
-  rePassword: string;
+  passwordConfirm: string;
   name: string;
   phone: string;
 }

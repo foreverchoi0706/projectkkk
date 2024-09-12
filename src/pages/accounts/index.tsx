@@ -67,7 +67,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => navigate(`/accounts?page=${page}`, { replace: true }),
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
-          current: accounts.page,
+          current: accounts.page + 1,
           total: accounts.totalCount,
           showSizeChanger: false,
         }}

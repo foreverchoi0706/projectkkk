@@ -1,7 +1,9 @@
 import Accounts from "@/pages/accounts";
 import Categories from "@/pages/members";
+import Brands from "@/pages/brands";
 import Products from "@/pages/products";
 import { AccountBookOutlined, ProductOutlined, UserOutlined } from "@ant-design/icons";
+import Setting from "@/pages/setting";
 
 export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
 export const REFRESH_TOKEN = "REFRESH_TOKEN" as const;
@@ -42,6 +44,24 @@ export const SIGN_IN_ROUTES = [
     path: "/accounts",
     label: "권한관리",
     searchable: false,
-    accessibleRoles: new Set(["center", "admin"]),
+    accessibleRoles: new Set(["center"]),
+  },
+  {
+    key: "3",
+    Icon: AccountBookOutlined,
+    Page: Brands,
+    path: "/brands",
+    label: "브랜드",
+    searchable: false,
+    accessibleRoles: new Set(["center", "admin","user"]),
+  },
+  {
+    key: "4",
+    Icon: AccountBookOutlined,
+    Page: Setting,
+    path: "/setting",
+    label: "마이페이지",
+    searchable: false,
+    accessibleRoles: new Set(["center", "admin","user"]),
   },
 ];

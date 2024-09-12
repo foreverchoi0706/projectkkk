@@ -105,7 +105,7 @@ const Page: FC = () => {
           </Form.Item>
           <Form.Item>
             <Button type="default" onClick={() => setSelectedProductId(null)}>
-              멤버 추가
+              상품 추가
             </Button>
           </Form.Item>
         </Flex>
@@ -122,7 +122,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),
           pageSize: +DEFAULT_LIST_PAGE_SIZE,
-          current: products.page,
+          current: products.page + 1,
           total: products.totalCount,
           showSizeChanger: false,
         }}

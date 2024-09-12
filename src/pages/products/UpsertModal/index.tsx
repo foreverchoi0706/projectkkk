@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Button, Flex, Form, FormProps, Image, Input, Modal, ModalProps } from "antd";
+import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IProduct, IResponse } from "@/utils/types";
@@ -115,23 +115,6 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
       <Form initialValues={product} form={form} onFinish={onFinish}>
-        {hasProductId && (
-          <Form.Item>
-            <Image
-              alt={product?.image}
-              src={
-                product?.image ||
-                "https://ssl.pstatic.net/melona/libs/1483/1483197/701ff7f5c96e711ca721_20240603141547415_1.jpg"
-              }
-            />
-          </Form.Item>
-        )}
-        <Form.Item<IProduct>>
-          <Input type="file" />
-        </Form.Item>
-        <Form.Item<IProduct> name="image">
-          <Input placeholder="파일명" />
-        </Form.Item>
         <Form.Item<IProduct> name="id">
           <Input placeholder="상품번호" readOnly />
         </Form.Item>
@@ -149,7 +132,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         </Form.Item>
         <Flex gap="middle">
           <Form.Item<IProduct> name="stock" style={{ flexGrow: "1" }}>
-            <Input type="number" placeholder="수량" />
+            <Input type="number" min="0" placeholder="수량" />
           </Form.Item>
           <Form.Item>
             <Button

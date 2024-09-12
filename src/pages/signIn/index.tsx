@@ -22,7 +22,7 @@ const Page: FC = () => {
     onError: ({ responseMessage }) => alert(responseMessage)
   });
 
-  const handleFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
+  const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
     signInMutation.mutate(signInParams);
   };
 
