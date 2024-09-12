@@ -1,12 +1,17 @@
 import { axiosInstance } from "@/utils/queryKeys";
-import { ISignInParams } from "@/utils/types";
+import { IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Input, Flex, Button, FormProps } from "antd";
+import { AxiosResponse } from "axios";
 import { FC } from "react";
 
 const Setting: FC = () => {
-  const memberVerifyMutation = useMutation({
-    mutationFn : () => axiosInstance.post("/api/member/verify"),
+  const memberVerifyMutation = useMutation<
+    AxiosResponse<IResponse<IUserInfo>>,
+    TError,
+    ISignInParams
+  >({
+    mutationFn: () => axiosInstance.post("/api/member/verify"),
   });
 
   const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {

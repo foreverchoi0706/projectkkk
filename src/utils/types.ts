@@ -13,7 +13,7 @@ export interface IResponse<T = unknown> {
   status: number;
 }
 
-export type TError = IResponse<{ errorMessage: string }>
+export type TError = IResponse<{ errorMessage: string }>;
 
 export interface IToken {
   accessToken: string;
@@ -48,12 +48,13 @@ export interface IPageList<T> {
 }
 
 export interface IProduct {
+  id: number;
   brand: string;
   selledcount: number;
   name: string;
   category: string;
   stock: number;
-  soldQuantity : number;
+  soldQuantity: number;
 }
 
 export interface IProductSearchParams {

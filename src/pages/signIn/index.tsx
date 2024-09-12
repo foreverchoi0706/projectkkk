@@ -1,5 +1,10 @@
 import useAuth from "@/hooks/useAuth.ts";
-import { INVALILD_FORMAT_EMAIL, INVALILD_FORMAT_PASSWORD, REQUIRED_EMAIL, REQUIRED_PASSWORD } from "@/utils/constants";
+import {
+  INVALILD_FORMAT_EMAIL,
+  INVALILD_FORMAT_PASSWORD,
+  REQUIRED_EMAIL,
+  REQUIRED_PASSWORD,
+} from "@/utils/constants";
 import { axiosInstance } from "@/utils/queryKeys";
 import { TError, IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
@@ -12,14 +17,10 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const signInMutation = useMutation<
-    AxiosResponse<IResponse<IUserInfo>>,
-    TError,
-    ISignInParams
-  >({
+  const signInMutation = useMutation<AxiosResponse<IResponse<IUserInfo>>, TError, ISignInParams>({
     mutationFn: (signInParams) => axiosInstance.post("/auth/login", signInParams),
     onSuccess: ({ data }) => login(data.result),
-    onError: ({ responseMessage }) => alert(responseMessage)
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -36,18 +37,30 @@ const Page: FC = () => {
       }}
     >
       <Typography.Title>로그인</Typography.Title>
-      <Form onFinish={handleFinish}>
-        <Form.Item<ISignInParams> name="email" rules={[{ required: true, message: REQUIRED_EMAIL }, {
-          type: 'email',
-          message: INVALILD_FORMAT_EMAIL,
-        }]}>
+      <Form onFinish={onFinish}>
+        <Form.Item<ISignInParams>
+          name="email"
+          rules={[
+            { required: true, message: REQUIRED_EMAIL },
+            {
+              type: "email",
+              message: INVALILD_FORMAT_EMAIL,
+            },
+          ]}
+        >
           <Input placeholder="email" />
         </Form.Item>
 
-        <Form.Item<ISignInParams> name="password" rules={[{ required: true, message: REQUIRED_PASSWORD }, {
-          pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-          message: INVALILD_FORMAT_PASSWORD,
-        }]}>
+        <Form.Item<ISignInParams>
+          name="password"
+          rules={[
+            { required: true, message: REQUIRED_PASSWORD },
+            {
+              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
+              message: INVALILD_FORMAT_PASSWORD,
+            },
+          ]}
+        >
           <Input.Password placeholder="password" />
         </Form.Item>
 
@@ -67,7 +80,7 @@ const Page: FC = () => {
           </Flex>
         </Form.Item>
       </Form>
-    </Layout >
+    </Layout>
   );
 };
 
