@@ -1,5 +1,5 @@
-import { ACCESS_TOKEN } from "@/utils/constants.ts";
-import { getCookie, hasCookie } from "@/utils/cookie.ts";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants.ts";
+import { deleteCookie, getCookie, hasCookie } from "@/utils/cookie.ts";
 import {
   IAccount,
   IMember,
@@ -24,12 +24,15 @@ axiosInstance.interceptors.request.use((value) => {
 axiosInstance.interceptors.response.use(
   (value) => value,
   (error) => {
-    if (error.response.status === 401 && error.config.url !== "/auth/login") {
+    const { config, response } = error;
+    if (response.status === 401 && !["/auth/login", "/auth/verify"].includes(config.url)) {
       alert("로그아웃 되었습니다");
-      window.location.href = "/signIn";
+      deleteCookie(ACCESS_TOKEN);
+      deleteCookie(REFRESH_TOKEN);
+      location.replace("/signIn");
       return;
     }
-    return Promise.reject(error.response.data);
+    return Promise.reject(response.data);
   },
 );
 
