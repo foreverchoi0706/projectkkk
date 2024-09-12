@@ -23,7 +23,7 @@ const Page: FC = () => {
     );
   };
 
-  const deleteMemberMutation = useMutation<null, TError, number>({
+  const deleteMemberMutation = useMutation<unknown, TError, number>({
     mutationFn: (memberId: number) => axiosInstance.delete(`/member/delete?memberId=${memberId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.members.all(searchParams.toString()));

@@ -18,13 +18,13 @@ const Setting: FC = () => {
   const { data: member } = useQuery(queryKeys.members.detail());
   const [isVerified, setIsVerified] = useState<boolean>(false);
 
-  const updateMemberMutation = useMutation({
-    mutationFn: (member: IMember) => axiosInstance.put("/member/UpdateMember", member),
+  const updateMemberMutation = useMutation<unknown, TError, IMember>({
+    mutationFn: (member) => axiosInstance.put("/member/UpdateMember", member),
     onSuccess: async () => {
       await Promise.allSettled([queryClient.invalidateQueries(queryKeys.members.detail())]);
       alert("멤버가 수정되었습니다");
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const memberVerifyMutation = useMutation<
