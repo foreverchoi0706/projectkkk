@@ -4,6 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IProduct, IResponse } from "@/utils/types";
 import { AxiosError } from "axios";
+import {
+  REQUIRED_BRAND_NAME,
+  REQUIRED_CATEGORY_NAME,
+  REQUIRED_PRODUCT_NAME,
+  REQUIRED_SOLD_QUANTITY_NAME,
+  REQUIRED_STOCK_NAME,
+} from "@/utils/constants";
 
 interface IProps {
   productId: number | null;
@@ -57,7 +64,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const addProductMutation = useMutation({
-    mutationFn: (product: IProduct) => axiosInstance.post("/product/CreateProduct", product),
+    mutationFn: (product: IProduct) =>
+      axiosInstance.post("/product/create", { ...product, image: "test" }),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("상품이 추가되었습니다");
@@ -82,7 +90,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const deleteProductMutation = useMutation({
     mutationFn: (productId: number) =>
-      axiosInstance.delete(`/product/DeleteProduct?productId=${productId}`),
+      axiosInstance.delete(`/product/delete?productId=${productId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("상품이 삭제되었습니다");
@@ -115,24 +123,62 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
       <Form initialValues={product} form={form} onFinish={onFinish}>
-        <Form.Item<IProduct> name="id">
-          <Input placeholder="상품번호" readOnly />
-        </Form.Item>
-        <Form.Item<IProduct> name="brand">
-          <Input placeholder="브랜드" />
-        </Form.Item>
-        <Form.Item<IProduct> name="selledcount">
-          <Input type="number" placeholder="현재 판매량" readOnly={hasProductId} />
-        </Form.Item>
-        <Form.Item<IProduct> name="category">
-          <Input placeholder="카테고리" />
-        </Form.Item>
-        <Form.Item<IProduct> name="name">
+        <Form.Item<IProduct>
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_PRODUCT_NAME,
+            },
+          ]}
+        >
           <Input placeholder="상품명" />
         </Form.Item>
+        <Form.Item<IProduct>
+          name="brand"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_BRAND_NAME,
+            },
+          ]}
+        >
+          <Input placeholder="브랜드" />
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="soldQuantity"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_SOLD_QUANTITY_NAME,
+            },
+          ]}
+        >
+          <Input type="number" min="0" placeholder="현재 판매량" readOnly={hasProductId} />
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_CATEGORY_NAME,
+            },
+          ]}
+        >
+          <Input placeholder="카테고리" />
+        </Form.Item>
         <Flex gap="middle">
-          <Form.Item<IProduct> name="stock" style={{ flexGrow: "1" }}>
-            <Input type="number" min="0" placeholder="수량" />
+          <Form.Item<IProduct>
+            name="stock"
+            style={{ flexGrow: "1" }}
+            rules={[
+              {
+                required: true,
+                message: REQUIRED_STOCK_NAME,
+              },
+            ]}
+          >
+            <Input type="number" min="0" placeholder="현재 재고" />
           </Form.Item>
           <Form.Item>
             <Button

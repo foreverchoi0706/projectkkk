@@ -71,7 +71,7 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "stock",
       key: "stock",
-      title: "수량",
+      title: "현재 재고",
     },
     {
       align: "center",

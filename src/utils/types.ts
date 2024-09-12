@@ -48,13 +48,12 @@ export interface IPageList<T> {
 }
 
 export interface IProduct {
-  id: number;
   brand: string;
   selledcount: number;
   name: string;
   category: string;
   stock: number;
-  image: string;
+  soldQuantity : number;
 }
 
 export interface IProductSearchParams {
