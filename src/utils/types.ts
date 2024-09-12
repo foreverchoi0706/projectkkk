@@ -1,17 +1,10 @@
 export interface IResponse<T = unknown> {
   result: T;
-  ResponseMessage: string;
+  responseMessage: string;
   status: number;
 }
 
-export interface IError {
-  detail: string;
-  instance: string;
-  properties: null;
-  status: number;
-  title: string;
-  type: string;
-}
+export type TError = IResponse<{ errorMessage: string }>
 
 export interface IToken {
   accessToken: string;

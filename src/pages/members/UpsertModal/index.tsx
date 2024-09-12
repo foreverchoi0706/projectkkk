@@ -36,7 +36,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const deleteMemberMutation = useMutation({
     mutationFn: (memberId: number) =>
-      axiosInstance.delete(`/member/DeleteMember?memberId=${memberId}`),
+      axiosInstance.delete(`/member/delete?memberId=${memberId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.members.all(queryString));
       alert("멤버가 삭제되었습니다");

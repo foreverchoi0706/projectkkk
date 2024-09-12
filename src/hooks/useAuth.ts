@@ -14,6 +14,7 @@ const useAuth = () => {
   };
 
   const logout = () => {
+    alert("로그아웃되었습니다");
     deleteCookie(ACCESS_TOKEN);
     deleteCookie(REFRESH_TOKEN);
     store.setRole(null);

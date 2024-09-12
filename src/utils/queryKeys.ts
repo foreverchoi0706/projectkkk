@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       window.location.href = "/signIn";
       return;
     }
-    return error;
+    return Promise.reject(error.response.data);
   },
 );
 

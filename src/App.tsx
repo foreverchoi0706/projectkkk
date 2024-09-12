@@ -15,7 +15,6 @@ import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 const App: FC = () => {
-  let timeOut: number | null = null;
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -42,6 +41,7 @@ const App: FC = () => {
   }, [verify]);
 
   useEffect(() => {
+    let timeOut: number | null = null;
     const abortController = new AbortController();
     window.addEventListener(
       "resize",
@@ -99,12 +99,12 @@ const App: FC = () => {
               {SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
                 .map(({ path }) => path)
                 .includes(pathname) && (
-                <Input
-                  placeholder="통합검색"
-                  suffix={<SearchOutlined />}
-                  onKeyDown={onKeyDownSearch}
-                />
-              )}
+                  <Input
+                    placeholder="통합검색"
+                    suffix={<SearchOutlined />}
+                    onKeyDown={onKeyDownSearch}
+                  />
+                )}
             </Flex>
             <Button type="text" icon={<LogoutOutlined />} onClick={logout} />
           </Layout.Header>
@@ -119,7 +119,7 @@ const App: FC = () => {
               {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route path="*" element={<Navigate replace to={SIGN_IN_ROUTES[0].path} />} />
+              <Route path="*" element={<Navigate replace to={"/members"} />} />
             </Routes>
           </Layout.Content>
         </Layout>
