@@ -21,7 +21,7 @@ const Setting: FC = () => {
   const updateMemberMutation = useMutation({
     mutationFn: (member: IMember) => axiosInstance.put("/member/UpdateMember", member),
     onSuccess: async () => {
-      await Promise.allSettled([queryClient.invalidateQueries(queryKeys.members.detail(memberId))]);
+      await Promise.allSettled([queryClient.invalidateQueries(queryKeys.members.detail())]);
       alert("멤버가 수정되었습니다");
     },
     onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
@@ -38,7 +38,7 @@ const Setting: FC = () => {
 
   const onFinishVerify: FormProps<Pick<ISignInParams, "password">>["onFinish"] = ({ password }) => {
     // memberVerifyMutation.mutate({ password });
-    setIsVerified(true);
+    console.log(password);
   };
 
   const onFinishUpdateMember: FormProps<IMember>["onFinish"] = (member) => {
