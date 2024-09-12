@@ -1,19 +1,29 @@
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
-import queryKeys from "@/utils/queryKeys.ts";
-import { IAccount } from "@/utils/types.ts";
-import { useQuery } from "@tanstack/react-query";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
+import { IAccount, TError, TRole } from "@/utils/types.ts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Flex, Select, Spin, Table, TableProps } from "antd";
-import { ChangeEvent, FC } from "react";
+import { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const { data: accounts } = useQuery(queryKeys.accounts.all(searchParams.toString()));
 
-  const onChangeRole = (e: ChangeEvent<HTMLSelectElement>, _id: number) => {
+  const useChangeRoleMuataion = useMutation<unknown, TError, { role: TRole; id: number }>({
+    mutationFn: ({ id, role }) =>
+      axiosInstance.post(`/auth/authorization?memberId=${id}&authority=${role}`),
+    onSuccess: () => {
+      alert("권한이 변경되었습니다.");
+      queryClient.invalidateQueries(queryKeys.accounts.all(searchParams.toString()));
+    },
+  });
+
+  const onChangeRole = (role: TRole, id: number) => {
     if (!window.confirm("해당 회원의 권한을 변경하시겠습니까?")) return;
-    console.log(e, _id);
+    useChangeRoleMuataion.mutate({ role, id });
   };
 
   if (!accounts) return <Spin />;
@@ -22,7 +32,7 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "No.",
       key: "No.",
-      render: (_, __, index) => <>{index + 1}</>,
+      render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * accounts.page + index + 1}</>,
       title: "No.",
     },
     {
@@ -44,7 +54,7 @@ const Page: FC = () => {
       title: "권한",
       render: (value, { id }) => {
         return (
-          <Select defaultValue={value} onChange={(e) => onChangeRole(e, id)}>
+          <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
             <option value="center">중앙관리자</option>
             <option value="admin">관리자</option>
             <option value="user">회원</option>
@@ -66,7 +76,7 @@ const Page: FC = () => {
         dataSource={accounts.content}
         pagination={{
           onChange: (page) => navigate(`/accounts?page=${page}`, { replace: true }),
-          pageSize: +DEFAULT_LIST_PAGE_SIZE,
+          pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: accounts.page + 1,
           total: accounts.totalCount,
           showSizeChanger: false,

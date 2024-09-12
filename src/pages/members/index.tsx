@@ -1,21 +1,18 @@
-import UpsertModal from "@/pages/members/UpsertModal";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
-import queryKeys from "@/utils/queryKeys.ts";
-import { IMember, IMemberSearchParams } from "@/utils/types.ts";
-import { useQuery } from "@tanstack/react-query";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
+import { IMember, IMemberSearchParams, TError } from "@/utils/types.ts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
 import queryString from "query-string";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm<IMemberSearchParams>();
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
-  const [selectedMemberId, setSelectedMemberId] = useState<number>();
-  const isOpen = selectedMemberId !== undefined;
   const { data: members } = useQuery(queryKeys.members.all(searchParams.toString()));
-
   const onFinish: FormProps<IMemberSearchParams>["onFinish"] = (memberSearchParams) => {
     const page = searchParams.get("page");
     navigate(
@@ -26,20 +23,29 @@ const Page: FC = () => {
     );
   };
 
+  const deleteMemberMutation = useMutation<null, TError, number>({
+    mutationFn: (memberId: number) => axiosInstance.delete(`/member/delete?memberId=${memberId}`),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(queryKeys.members.all(searchParams.toString()));
+      alert("멤버가 삭제되었습니다");
+    },
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
   if (!members) return <Spin />;
   const columns: TableProps<IMember>["columns"] = [
     {
       align: "center",
       dataIndex: "No.",
       key: "No.",
-      render: (_, __, index) => <>{index + 1}</>,
+      render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * members.page + index + 1}</>,
       title: "No.",
     },
     {
       align: "center",
       dataIndex: "id",
       key: "id",
-      title: "회원번호",
+      title: "회원아이디",
     },
     {
       align: "center",
@@ -58,6 +64,25 @@ const Page: FC = () => {
       dataIndex: "email",
       key: "email",
       title: "이메일",
+    },
+    {
+      align: "center",
+      dataIndex: "role",
+      key: "role",
+      title: "권한",
+    },
+    {
+      align: "center",
+      dataIndex: "deleteButton",
+      key: "deleteButton",
+      onCell: ({ id }) => ({
+        onClick: () => {
+          if (!window.confirm("해당 멤버를 삭제하시겠습니까?")) return;
+          deleteMemberMutation.mutate(id);
+        },
+      }),
+      render: () => <Button>삭제</Button>,
+      title: "삭제",
     },
   ];
 
@@ -89,22 +114,12 @@ const Page: FC = () => {
         dataSource={members.content}
         pagination={{
           onChange: (page) => navigate(`/members?page=${page}`, { replace: true }),
-          pageSize: +DEFAULT_LIST_PAGE_SIZE,
+          pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: members.page + 1,
           total: members.totalCount,
           showSizeChanger: false,
         }}
       />
-      {isOpen && (
-        <UpsertModal
-          open={isOpen}
-          footer={null}
-          memberId={selectedMemberId}
-          setSelectedMemberId={setSelectedMemberId}
-          onCancel={() => setSelectedMemberId(undefined)}
-          queryString={searchParams.toString()}
-        />
-      )}
     </Flex>
   );
 };

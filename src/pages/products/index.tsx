@@ -33,7 +33,7 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "No.",
       key: "No.",
-      render: (_, __, index) => <>{index + 1}</>,
+      render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * products.page + index + 1}</>,
       title: "No.",
     },
     {
@@ -121,7 +121,7 @@ const Page: FC = () => {
         dataSource={products.content}
         pagination={{
           onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),
-          pageSize: +DEFAULT_LIST_PAGE_SIZE,
+          pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: products.page + 1,
           total: products.totalCount,
           showSizeChanger: false,

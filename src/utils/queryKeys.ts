@@ -1,4 +1,3 @@
-
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants.ts";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
 import {
@@ -28,10 +27,12 @@ axiosInstance.interceptors.response.use(
     const { config, response } = error;
     if (response.status === 401 && !["/auth/login", "/auth/verify"].includes(config.url)) {
       try {
-        const { data } = await axiosInstance.post<IResponse<IUserInfo>>(`/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`);
+        const { data } = await axiosInstance.post<IResponse<IUserInfo>>(
+          `/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`,
+        );
         setCookie(ACCESS_TOKEN, data.result.accessToken);
         setCookie(REFRESH_TOKEN, data.result.refreshToken);
-        location.reload()
+        location.reload();
       } catch {
         alert("로그아웃 되었습니다");
         deleteCookie(ACCESS_TOKEN);
@@ -68,9 +69,11 @@ const queryKeys = createQueryKeyStore({
     }),
   },
   brands: {
-    all: (queryString:string) => ({
+    all: (queryString: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(`/product/brands?${queryString}`);
+        const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
+          `/product/brands?${queryString}`,
+        );
         return data.result;
       },
       queryKey: [queryString],
@@ -86,14 +89,12 @@ const queryKeys = createQueryKeyStore({
       },
       queryKey: [queryString],
     }),
-    detail: (memberId: number) => ({
+    detail: () => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IProduct>>(
-          `/member/member?memberId=${memberId}`,
-        );
+        const { data } = await axiosInstance.get<IResponse<IMember>>("/member/member");
         return data.result;
       },
-      queryKey: [memberId],
+      queryKey: [""],
     }),
   },
   products: {

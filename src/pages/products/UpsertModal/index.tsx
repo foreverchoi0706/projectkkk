@@ -75,7 +75,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const updateProductMutation = useMutation({
-    mutationFn: (product: IProduct) => axiosInstance.put("/product/UpdateProduct", product),
+    mutationFn: (product: IProduct) =>
+      axiosInstance.put("/product/update", { ...product, image: "test" }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
