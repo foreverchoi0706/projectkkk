@@ -17,9 +17,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 const App: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
   const { role, signIn, token, login, logout } = useAuth();
-
   const [selectedKey, setSelectedKey] = useState<string>(
     SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
   );

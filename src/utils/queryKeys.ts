@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants.ts";
-import { deleteCookie, getCookie, hasCookie } from "@/utils/cookie.ts";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
 import {
   IAccount,
   IMember,
@@ -23,13 +23,20 @@ axiosInstance.interceptors.request.use((value) => {
 
 axiosInstance.interceptors.response.use(
   (value) => value,
-  (error) => {
+  async (error) => {
     const { config, response } = error;
     if (response.status === 401 && !["/auth/login", "/auth/verify"].includes(config.url)) {
-      alert("로그아웃 되었습니다");
-      deleteCookie(ACCESS_TOKEN);
-      deleteCookie(REFRESH_TOKEN);
-      location.replace("/signIn");
+      try {
+        const { data } = await axiosInstance.post<IResponse<IUserInfo>>(`/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`);
+        setCookie(ACCESS_TOKEN, data.result.accessToken);
+        setCookie(REFRESH_TOKEN, data.result.refreshToken);
+        location.reload()
+      } catch {
+        alert("로그아웃 되었습니다");
+        deleteCookie(ACCESS_TOKEN);
+        deleteCookie(REFRESH_TOKEN);
+        location.replace("/signIn");
+      }
       return;
     }
     return Promise.reject(response.data);

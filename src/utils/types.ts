@@ -1,3 +1,12 @@
+export interface IStore {
+  token: IToken;
+  setToken: (token: IToken) => void;
+  role: TRole | null;
+  setRole: (role: TRole | null) => void;
+  signIn: boolean;
+  setSignIn: (isSignIn: boolean) => void;
+}
+
 export interface IResponse<T = unknown> {
   result: T;
   responseMessage: string;
