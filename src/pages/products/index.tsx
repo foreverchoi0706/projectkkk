@@ -118,6 +118,7 @@ const Page: FC = () => {
       </Form>
 
       <Table<IProduct>
+        scroll={{ y: 550 }}
         title={() => "상품관리"}
         rowKey={({ id }) => id}
         columns={columns}

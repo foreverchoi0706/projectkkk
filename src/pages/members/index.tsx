@@ -144,6 +144,7 @@ const Page: FC = () => {
       </Form>
 
       <Table<IMember>
+        scroll={{ y: 550 }}
         title={() => "멤버관리"}
         rowKey={({ id }) => id}
         columns={columns}

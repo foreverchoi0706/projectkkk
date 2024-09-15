@@ -9,19 +9,19 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   console.log(searchParams.toString());
-  
+
   const { data: brands } = useQuery({
     ...queryKeys.brands.all(searchParams.toString()),
-    select : (data) => ({
-        ...data,
-        content : data.content.map((brand)=>({
-            name : brand
-        }))
-    })
+    select: (data) => ({
+      ...data,
+      content: data.content.map((brand) => ({
+        name: brand,
+      })),
+    }),
   });
 
   if (!brands) return <Spin />;
-  const columns: TableProps<{  name: string }>["columns"] = [
+  const columns: TableProps<{ name: string }>["columns"] = [
     {
       align: "center",
       dataIndex: "name",
@@ -33,8 +33,9 @@ const Page: FC = () => {
   return (
     <Flex vertical gap="middle">
       <Table<{ name: string }>
+        scroll={{ y: 550 }}
         title={() => "브랜드관리"}
-        rowKey={({name})=>name}
+        rowKey={({ name }) => name}
         columns={columns}
         locale={{
           emptyText: "검색결과가 없습니다",

@@ -7,7 +7,7 @@ import Setting from "@/pages/setting";
 
 export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
 export const REFRESH_TOKEN = "REFRESH_TOKEN" as const;
-export const DEFAULT_LIST_PAGE_SIZE = 5 as const;
+export const DEFAULT_LIST_PAGE_SIZE = 10 as const;
 
 export const REQUIRED_NAME = "이름을 입력해주세요" as const;
 export const REQUIRED_EMAIL = "이메일을 입력해주세요" as const;
@@ -56,7 +56,7 @@ export const SIGN_IN_ROUTES = [
     Icon: AccountBookOutlined,
     Page: Brands,
     path: "/brands",
-    label: "브랜드",
+    label: "브랜드관리",
     searchable: false,
     accessibleRoles: new Set(["center", "admin","user"]),
   },

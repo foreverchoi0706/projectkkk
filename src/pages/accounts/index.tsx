@@ -56,8 +56,8 @@ const Page: FC = () => {
         return (
           <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
             <Select.Option value="center">중앙관리자</Select.Option>
-            <Select.Option  value="admin">관리자</Select.Option>
-            <Select.Option  value="user">회원</Select.Option>
+            <Select.Option value="admin">관리자</Select.Option>
+            <Select.Option value="user">회원</Select.Option>
           </Select>
         );
       },
@@ -67,6 +67,7 @@ const Page: FC = () => {
   return (
     <Flex vertical gap="middle">
       <Table<IAccount>
+        scroll={{ y: 550 }}
         title={() => "권한관리"}
         rowKey={({ id }) => id}
         columns={columns}

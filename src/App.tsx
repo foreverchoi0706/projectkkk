@@ -97,12 +97,12 @@ const App: FC = () => {
               {SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
                 .map(({ path }) => path)
                 .includes(pathname) && (
-                  <Input
-                    placeholder="통합검색"
-                    suffix={<SearchOutlined />}
-                    onKeyDown={onKeyDownSearch}
-                  />
-                )}
+                <Input
+                  placeholder="통합검색"
+                  suffix={<SearchOutlined />}
+                  onKeyDown={onKeyDownSearch}
+                />
+              )}
             </Flex>
             <Button type="text" icon={<LogoutOutlined />} onClick={logout} />
           </Layout.Header>
