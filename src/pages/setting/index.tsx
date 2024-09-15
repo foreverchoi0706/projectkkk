@@ -3,7 +3,7 @@ import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IMember, IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Flex, Button, FormProps } from "antd";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import {
   INVALILD_FORMAT_EMAIL,
   REQUIRED_EMAIL,
