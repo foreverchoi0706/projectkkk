@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
 import queryString from "query-string";
 import { FC, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ const Page: FC = () => {
       title: "상세",
     },
   ];
-  console.log(products.content);
+
   return (
     <Flex vertical gap="middle">
       <Form<IProductSearchParams> form={form} onFinish={onFinish}>
@@ -92,11 +92,14 @@ const Page: FC = () => {
           <Form.Item<IProductSearchParams> name="id">
             <Input min="0" type="number" placeholder="상품아이디" />
           </Form.Item>
-          <Form.Item<IProductSearchParams> name="content">
+          <Form.Item<IProductSearchParams> name="productName">
             <Input placeholder="상품명" />
           </Form.Item>
           <Form.Item<IProductSearchParams> name="brand">
             <Input placeholder="브랜드명" />
+          </Form.Item>
+          <Form.Item<IProductSearchParams> name="category">
+            <Input placeholder="카테고리" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -104,9 +107,12 @@ const Page: FC = () => {
             </Button>
           </Form.Item>
           <Form.Item>
-            <Button type="default" onClick={() => setSelectedProductId(null)}>
-              상품 추가
-            </Button>
+            <Link to="/products" onClick={() => form.resetFields()}>
+              <Button>초기화</Button>
+            </Link>
+          </Form.Item>
+          <Form.Item>
+            <Button onClick={() => setSelectedProductId(null)}>상품 추가</Button>
           </Form.Item>
         </Flex>
       </Form>
@@ -120,7 +126,14 @@ const Page: FC = () => {
         }}
         dataSource={products.content}
         pagination={{
-          onChange: (page) => navigate(`/products?page=${page}`, { replace: true }),
+          onChange: (page) => {
+            navigate(
+              `/products?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
+              {
+                replace: true,
+              },
+            );
+          },
           pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: products.page + 1,
           total: products.totalCount,

@@ -117,7 +117,7 @@ const App: FC = () => {
               {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route path="*" element={<Navigate replace to={"/members"} />} />
+              <Route path="*" element={<Navigate replace to="/products" />} />
             </Routes>
           </Layout.Content>
         </Layout>

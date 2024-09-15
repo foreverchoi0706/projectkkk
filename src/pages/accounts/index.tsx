@@ -55,9 +55,9 @@ const Page: FC = () => {
       render: (value, { id }) => {
         return (
           <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
-            <option value="center">중앙관리자</option>
-            <option value="admin">관리자</option>
-            <option value="user">회원</option>
+            <Select.Option value="center">중앙관리자</Select.Option>
+            <Select.Option  value="admin">관리자</Select.Option>
+            <Select.Option  value="user">회원</Select.Option>
           </Select>
         );
       },

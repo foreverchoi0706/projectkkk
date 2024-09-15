@@ -83,7 +83,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
-          `/member/members?${queryString}`,
+          `/member/search?${queryString}`,
         );
         return data.result;
       },

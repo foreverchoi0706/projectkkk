@@ -2,17 +2,38 @@ import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
 import { IMember, IMemberSearchParams, TError } from "@/utils/types.ts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
+import {
+  Button,
+  Col,
+  Flex,
+  Form,
+  FormProps,
+  Input,
+  Row,
+  Select,
+  Spin,
+  Table,
+  TableProps,
+} from "antd";
 import queryString from "query-string";
 import { FC } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm<IMemberSearchParams>();
   const queryClient = useQueryClient();
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE.toString(), page: "1" });
   const { data: members } = useQuery(queryKeys.members.all(searchParams.toString()));
+  const deleteMemberMutation = useMutation<unknown, TError, number>({
+    mutationFn: (memberId: number) => axiosInstance.delete(`/member/delete?memberId=${memberId}`),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(queryKeys.members.all(searchParams.toString()));
+      alert("멤버가 삭제되었습니다");
+    },
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
   const onFinish: FormProps<IMemberSearchParams>["onFinish"] = (memberSearchParams) => {
     const page = searchParams.get("page");
     navigate(
@@ -22,15 +43,6 @@ const Page: FC = () => {
       },
     );
   };
-
-  const deleteMemberMutation = useMutation<unknown, TError, number>({
-    mutationFn: (memberId: number) => axiosInstance.delete(`/member/delete?memberId=${memberId}`),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.members.all(searchParams.toString()));
-      alert("멤버가 삭제되었습니다");
-    },
-    onError: ({ responseMessage }) => alert(responseMessage),
-  });
 
   if (!members) return <Spin />;
   const columns: TableProps<IMember>["columns"] = [
@@ -89,19 +101,46 @@ const Page: FC = () => {
   return (
     <Flex vertical gap="middle">
       <Form<IMemberSearchParams> form={form} onFinish={onFinish}>
-        <Flex gap="middle">
-          <Form.Item<IMemberSearchParams> name="id">
-            <Input min="0" type="number" placeholder="멤버아이디" />
-          </Form.Item>
-          <Form.Item<IMemberSearchParams> name="email">
-            <Input placeholder="이메일" />
-          </Form.Item>
-          <Form.Item>
-            <Button htmlType="submit" type="primary">
-              검색
-            </Button>
-          </Form.Item>
-        </Flex>
+        <Row gutter={16}>
+          <Col span={4}>
+            <Form.Item<IMemberSearchParams> name="name">
+              <Input placeholder="회원명" />
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item<IMemberSearchParams> name="email">
+              <Input placeholder="이메일" />
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item<IMemberSearchParams> name="phone">
+              <Input placeholder="전화번호" />
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item<IMemberSearchParams> name="role">
+              <Select placeholder="권한">
+                <Select.Option value="center">중앙관리자</Select.Option>
+                <Select.Option value="admin">관리자</Select.Option>
+                <Select.Option value="user">회원</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Flex gap={8}>
+              <Form.Item>
+                <Button htmlType="submit" type="primary">
+                  검색
+                </Button>
+              </Form.Item>
+              <Form.Item>
+                <Link to="/members" onClick={() => form.resetFields()}>
+                  <Button>초기화</Button>
+                </Link>
+              </Form.Item>
+            </Flex>
+          </Col>
+        </Row>
       </Form>
 
       <Table<IMember>
@@ -113,7 +152,14 @@ const Page: FC = () => {
         }}
         dataSource={members.content}
         pagination={{
-          onChange: (page) => navigate(`/members?page=${page}`, { replace: true }),
+          onChange: (page) => {
+            navigate(
+              `/members?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
+              {
+                replace: true,
+              },
+            );
+          },
           pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: members.page + 1,
           total: members.totalCount,

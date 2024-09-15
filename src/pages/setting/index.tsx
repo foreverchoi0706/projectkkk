@@ -37,8 +37,7 @@ const Setting: FC = () => {
   });
 
   const onFinishVerify: FormProps<Pick<ISignInParams, "password">>["onFinish"] = ({ password }) => {
-    // memberVerifyMutation.mutate({ password });
-    console.log(password);
+    memberVerifyMutation.mutate({ password });
   };
 
   const onFinishUpdateMember: FormProps<IMember>["onFinish"] = (member) => {

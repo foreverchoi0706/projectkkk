@@ -59,9 +59,12 @@ export interface IProduct {
 
 export interface IProductSearchParams {
   id?: string;
+  category?: string;
+  productName?: string;
   brand?: string;
   content?: string;
-  page?: number | null;
+  page?: number;
+  size?: number;
 }
 
 export interface IMember {
@@ -72,8 +75,12 @@ export interface IMember {
 }
 
 export interface IMemberSearchParams {
-  id: number;
-  email: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  role?: TRole;
+  page?: number;
+  size?: number;
 }
 
 export interface IAccount {

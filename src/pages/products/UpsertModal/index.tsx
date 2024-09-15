@@ -37,7 +37,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const increaseStockMutation = useMutation({
     mutationFn: (stock: number) =>
-      axiosInstance.put(`product/IncreaseStock?productId=${productId}&stock=${stock}`),
+      axiosInstance.put(`product/increase_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -51,7 +51,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const decreaseStockStockMutation = useMutation({
     mutationFn: (stock: number) =>
-      axiosInstance.put(`/product/DecreaseStock?productId=${productId}&stock=${stock}`),
+      axiosInstance.put(`/product/decrease_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -64,8 +64,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const addProductMutation = useMutation({
-    mutationFn: (product: IProduct) =>
-      axiosInstance.post("/product/create", { ...product, image: "test" }),
+    mutationFn: (product: IProduct) => axiosInstance.post("/product/create", product),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("상품이 추가되었습니다");
@@ -76,7 +75,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const updateProductMutation = useMutation({
     mutationFn: (product: IProduct) =>
-      axiosInstance.put("/product/update", { ...product, image: "test" }),
+      axiosInstance.put("/product/update", { ...product, id: productId }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
