@@ -16,16 +16,19 @@ export const axiosInstance = axios.create({
   baseURL: import.meta.env.MODE === "development" ? "/api" : "https://projectkkk.com/api/",
 });
 
-axiosInstance.interceptors.request.use((value) => {
-  if (hasCookie(ACCESS_TOKEN)) value.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`;
-  return value;
+axiosInstance.interceptors.request.use((config) => {
+  if (hasCookie(ACCESS_TOKEN)) config.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`;
+  return config;
 });
 
 axiosInstance.interceptors.response.use(
   (value) => value,
   async (error) => {
     const { config, response } = error;
-    if (response.status === 401 && !["/auth/login", "/auth/verify"].includes(config.url)) {
+    if (
+      response.status === 401 &&
+      !["/auth/login", "/auth/verify", "/api/member/join"].includes(config.url)
+    ) {
       try {
         const { data } = await axiosInstance.post<IResponse<IUserInfo>>(
           `/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`,
@@ -48,13 +51,13 @@ axiosInstance.interceptors.response.use(
 const queryKeys = createQueryKeyStore({
   auth: {
     verify: ({ accessToken, refreshToken }: IToken) => ({
-      queryKey: [accessToken, refreshToken],
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IUserInfo>>(
           `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
         );
         return data.result;
       },
+      queryKey: [""],
     }),
   },
   accounts: {

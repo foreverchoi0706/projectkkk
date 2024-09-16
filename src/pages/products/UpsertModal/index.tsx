@@ -201,7 +201,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
                 onChange={({ target: { value } }) => setCancelSellCount(+value)}
               />
               <Button
-                disabled={cancelSellCount === 0 || increaseStockMutation.isPending}
+                disabled={cancelSellCount <= 0 || increaseStockMutation.isPending}
                 htmlType="button"
                 type="primary"
                 onClick={onClickIncreaseStock}
@@ -209,7 +209,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
                 재고 증가
               </Button>
               <Button
-                disabled={cancelSellCount === 0 || decreaseStockStockMutation.isPending}
+                disabled={cancelSellCount <= 0 || decreaseStockStockMutation.isPending}
                 htmlType="button"
                 type="primary"
                 onClick={onClickDecreaseStock}

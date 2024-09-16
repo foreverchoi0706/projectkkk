@@ -8,8 +8,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  console.log(searchParams.toString());
-
   const { data: brands } = useQuery({
     ...queryKeys.brands.all(searchParams.toString()),
     select: (data) => ({

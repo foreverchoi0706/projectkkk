@@ -1,27 +1,40 @@
-import useStore from "@/hooks/useStore.ts";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants.ts";
-import { deleteCookie, setCookie } from "@/utils/cookie.ts";
-import { IUserInfo } from "@/utils/types.ts";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
+import queryKeys from "@/utils/queryKeys";
+import { IUserInfo } from "@/utils/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useAuth = () => {
-  const store = useStore((store) => store);
+  const queryClient = useQueryClient();
 
-  const login = ({ role, accessToken, refreshToken }: IUserInfo) => {
+  const { data, ...rest } = useQuery({
+    ...queryKeys.auth.verify({
+      accessToken: getCookie(ACCESS_TOKEN)!,
+      refreshToken: getCookie(REFRESH_TOKEN)!,
+    }),
+    enabled: hasCookie(ACCESS_TOKEN) && hasCookie(REFRESH_TOKEN),
+  });
+
+  const login = ({ accessToken, refreshToken }: IUserInfo) => {
     setCookie(ACCESS_TOKEN, accessToken);
     setCookie(REFRESH_TOKEN, refreshToken);
-    store.setRole(role);
-    store.setSignIn(true);
+    queryClient.invalidateQueries();
   };
 
   const logout = () => {
     alert("로그아웃되었습니다");
     deleteCookie(ACCESS_TOKEN);
     deleteCookie(REFRESH_TOKEN);
-    store.setRole(null);
-    store.setSignIn(false);
+    queryClient.setQueryData<null>(
+      queryKeys.auth.verify({
+        accessToken: getCookie(ACCESS_TOKEN)!,
+        refreshToken: getCookie(REFRESH_TOKEN)!,
+      }).queryKey,
+      null,
+    );
   };
 
-  return { ...store, login, logout };
+  return { auth: data, ...rest, login, logout };
 };
 
 export default useAuth;

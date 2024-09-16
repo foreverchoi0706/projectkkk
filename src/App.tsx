@@ -2,41 +2,26 @@ import useAuth from "@/hooks/useAuth.ts";
 import SignIn from "@/pages/signIn";
 import SignUp from "@/pages/signUp";
 import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
-import queryKeys from "@/utils/queryKeys.ts";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Input, Layout, Menu } from "antd";
-import { FC, KeyboardEventHandler, useEffect, useState } from "react";
+import { FC, KeyboardEventHandler, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 const App: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { role, signIn, token, login, logout } = useAuth();
-  const [selectedKey, setSelectedKey] = useState<string>(
-    SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0",
-  );
+  const { auth, isLoading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
-
-  const { data: verify, isLoading } = useQuery({
-    ...queryKeys.auth.verify(token),
-    enabled: token.accessToken !== "" && token.refreshToken !== "",
-  });
-
+  const selectedKeys = SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0";
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
     if (currentTarget.value !== "" && key === "Enter")
       navigate(`${pathname}?keyword=${currentTarget.value}`);
   };
-
-  useEffect(() => {
-    if (!verify) return;
-    login(verify);
-  }, [verify]);
 
   useEffect(() => {
     let timeOut: number | null = null;
@@ -54,28 +39,25 @@ const App: FC = () => {
 
   if (isLoading) return null;
 
-  if (signIn && role !== null) {
+  if (auth) {
     return (
       <Layout style={{ height: "100vh" }}>
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={[selectedKey]}
-            selectedKeys={[selectedKey]}
-            items={SIGN_IN_ROUTES.filter(({ accessibleRoles }) => accessibleRoles.has(role)).map(
-              ({ key, Icon, label }) => ({
-                key,
-                icon: <Icon />,
-                label,
-              }),
-            )}
+            defaultSelectedKeys={[selectedKeys]}
+            selectedKeys={[selectedKeys]}
+            items={SIGN_IN_ROUTES.filter(({ accessibleRoles }) =>
+              accessibleRoles.has(auth.role),
+            ).map(({ key, Icon, label }) => ({
+              key,
+              icon: <Icon />,
+              label,
+            }))}
             onSelect={({ key }) => {
               const route = SIGN_IN_ROUTES.at(+key);
-              if (route) {
-                setSelectedKey(route.key);
-                navigate(route.path);
-              }
+              if (route) navigate(route.path);
             }}
           />
         </Layout.Sider>

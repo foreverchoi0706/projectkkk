@@ -27,7 +27,7 @@ export const deleteCookie = (name: string) => {
 };
 
 export const hasCookie = (name: string) => {
-  return getCookie(name) !== undefined;
+  return getCookie(name) !== null;
 };
 
 const serializeOptions = (options: CookieOptions): string => {
