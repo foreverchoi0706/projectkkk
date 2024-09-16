@@ -9,7 +9,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, Flex, Input, Layout, Menu } from "antd";
-import { FC, KeyboardEventHandler, useEffect, useMemo, useState } from "react";
+import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 const App: FC = () => {
