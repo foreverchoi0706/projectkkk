@@ -6,7 +6,6 @@ const useQueryDispatch = () => {
 
   return (key: keyof typeof INITIAL_STORE, value: unknown) => {
     queryClient.setQueryData<unknown>(["store", key], (input: unknown) => {
-      console.log(input);
       if (!input) return input;
       return { ...input, value };
     });
