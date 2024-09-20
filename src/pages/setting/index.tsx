@@ -21,7 +21,7 @@ const Setting: FC = () => {
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
     mutationFn: (member) => axiosInstance.put("/member/UpdateMember", member),
     onSuccess: async () => {
-      await Promise.allSettled([queryClient.invalidateQueries(queryKeys.members.detail())]);
+      await queryClient.invalidateQueries(queryKeys.members.detail());
       alert("멤버가 수정되었습니다");
     },
     onError: ({ responseMessage }) => alert(responseMessage),
