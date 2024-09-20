@@ -11,8 +11,10 @@ import {
 import { Button, Flex, Input, Layout, Menu } from "antd";
 import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import useQueryStore from "./hooks/store/useQueryStore";
 
 const App: FC = () => {
+  useQueryStore();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { auth, isLoading, logout } = useAuth();

@@ -12,8 +12,14 @@ import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+import useQuerySelector from "@/hooks/store/useQuerySelector";
+import useQueryDispatch from "@/hooks/store/useQueryDispatch";
 
 const Page: FC = () => {
+  const value = useQuerySelector("TEST");
+  console.log(value);
+
+  const dispatch = useQueryDispatch();
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -63,7 +69,18 @@ const Page: FC = () => {
         >
           <Input.Password placeholder="password" />
         </Form.Item>
-
+        <Form.Item>
+          <Button
+            onClick={() => {
+              dispatch("TEST", Date.now());
+            }}
+            style={{ flexGrow: "1" }}
+            type="primary"
+            htmlType="button"
+          >
+            로그인 {value}
+          </Button>
+        </Form.Item>
         <Form.Item>
           <Flex gap="middle">
             <Button
