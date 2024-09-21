@@ -148,9 +148,7 @@ const Page: FC = () => {
         title={() => "멤버관리"}
         rowKey={({ id }) => id}
         columns={columns}
-        locale={{
-          emptyText: "검색결과가 없습니다",
-        }}
+        locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={members.content}
         pagination={{
           onChange: (page) => {

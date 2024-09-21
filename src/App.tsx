@@ -1,6 +1,8 @@
+import useQueryStore from "@/hooks/store/useQueryStore";
 import useAuth from "@/hooks/useAuth.ts";
 import SignIn from "@/pages/signIn";
 import SignUp from "@/pages/signUp";
+import Test from "@/pages/test";
 import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import {
   LogoutOutlined,
@@ -11,7 +13,6 @@ import {
 import { Button, Flex, Input, Layout, Menu } from "antd";
 import { FC, KeyboardEventHandler, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import useQueryStore from "./hooks/store/useQueryStore";
 
 const App: FC = () => {
   useQueryStore();
@@ -113,6 +114,7 @@ const App: FC = () => {
     <Routes>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/test" element={<Test />} />
       <Route path="*" element={<Navigate replace to="/signin" />} />
     </Routes>
   );

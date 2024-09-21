@@ -71,9 +71,7 @@ const Page: FC = () => {
         title={() => "권한관리"}
         rowKey={({ id }) => id}
         columns={columns}
-        locale={{
-          emptyText: "검색결과가 없습니다",
-        }}
+        locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={accounts.content}
         pagination={{
           onChange: (page) => navigate(`/accounts?page=${page}`, { replace: true }),

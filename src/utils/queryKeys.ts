@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
     const { config, response } = error;
     if (
       response.status === 401 &&
-      !["/auth/login", "/auth/verify", "/api/member/join"].includes(config.url)
+      !["/auth/login", "/auth/verify", "/api/member/join", "/api/auth/refresh"].includes(config.url)
     ) {
       try {
         const { data } = await axiosInstance.post<IResponse<IUserInfo>>(

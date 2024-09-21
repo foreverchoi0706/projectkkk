@@ -35,9 +35,7 @@ const Page: FC = () => {
         title={() => "브랜드관리"}
         rowKey={({ name }) => name}
         columns={columns}
-        locale={{
-          emptyText: "검색결과가 없습니다",
-        }}
+        locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={brands.content}
         pagination={{
           onChange: (page) => navigate(`/brands?page=${page}`, { replace: true }),
