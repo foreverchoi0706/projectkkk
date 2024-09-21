@@ -12,7 +12,7 @@ const Page: FC = () => {
   const [searchParams] = useSearchParams();
   const { data: accounts } = useQuery(queryKeys.accounts.all(searchParams.toString()));
 
-  const useChangeRoleMuataion = useMutation<unknown, TError, { role: TRole; id: number }>({
+  const useChangeRoleMutation = useMutation<unknown, TError, { role: TRole; id: number }>({
     mutationFn: ({ id, role }) =>
       axiosInstance.post(`/auth/authorization?memberId=${id}&authority=${role}`),
     onSuccess: () => {
@@ -23,7 +23,7 @@ const Page: FC = () => {
 
   const onChangeRole = (role: TRole, id: number) => {
     if (!window.confirm("해당 회원의 권한을 변경하시겠습니까?")) return;
-    useChangeRoleMuataion.mutate({ role, id });
+    useChangeRoleMutation.mutate({ role, id });
   };
 
   if (!accounts) return <Spin />;
