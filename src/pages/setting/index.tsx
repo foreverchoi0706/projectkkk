@@ -1,9 +1,3 @@
-import { FC, useEffect, useState } from "react";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
-import { IMember, IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, Flex, Button, FormProps } from "antd";
-import { AxiosResponse } from "axios";
 import {
   ACCESS_TOKEN,
   INVALILD_FORMAT_EMAIL,
@@ -13,15 +7,24 @@ import {
   REQUIRED_PHONE,
 } from "@/utils/constants";
 import { getCookie } from "@/utils/cookie";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys";
+import { IMember, IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Flex, Form, FormProps, Input } from "antd";
+import { AxiosResponse } from "axios";
+import { FC, useEffect, useState } from "react";
 
 const Setting: FC = () => {
   const queryClient = useQueryClient();
-  const [form] = Form.useForm<IMember>();
-  const { data: member } = useQuery(queryKeys.members.detail());
+  const [updateMemberForm] = Form.useForm<IMember>();
+  const [memberVerifyForm] = Form.useForm<Pick<ISignInParams, "password">>();
   const [isVerified, setIsVerified] = useState<boolean>(true);
-
+  const { data: member } = useQuery({
+    ...queryKeys.members.detail(),
+    enabled: isVerified,
+  });
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
-    mutationFn: (member) => axiosInstance.put("/member/UpdateMember", member),
+    mutationFn: (member) => axiosInstance.put("/member/update", member),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.members.detail());
       alert("멤버가 수정되었습니다");
@@ -53,17 +56,21 @@ const Setting: FC = () => {
   };
 
   const onFinishUpdateMember: FormProps<IMember>["onFinish"] = (member) => {
-    // updateMemberMutation.mutate({ password });
-    console.log(member);
+    updateMemberMutation.mutate(member);
   };
 
   useEffect(() => {
     return () => setIsVerified(false);
-  }, []);
+  }, [member]);
 
   if (isVerified && member)
     return (
-      <Form<IMember> initialValues={member} form={form} onFinish={onFinishUpdateMember}>
+      <Form<IMember>
+        style={{ width: 400 }}
+        initialValues={member}
+        form={updateMemberForm}
+        onFinish={onFinishUpdateMember}
+      >
         <Form.Item<IMember>
           name="name"
           rules={[
@@ -110,7 +117,7 @@ const Setting: FC = () => {
     );
 
   return (
-    <Form style={{ width: 400 }} onFinish={onFinishVerify}>
+    <Form form={memberVerifyForm} style={{ width: 400 }} onFinish={onFinishVerify}>
       <Form.Item<Pick<ISignInParams, "password">>
         name="password"
         rules={[{ required: true, message: REQUIRED_PASSWORD }]}
