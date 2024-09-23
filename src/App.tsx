@@ -59,7 +59,7 @@ const App: FC = () => {
               label,
             }))}
             onSelect={({ key }) => {
-              const route = SIGN_IN_ROUTES.at(+key);
+              const route = SIGN_IN_ROUTES.at(Number(key));
               if (route) navigate(route.path);
             }}
           />

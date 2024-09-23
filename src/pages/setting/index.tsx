@@ -5,18 +5,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Flex, Button, FormProps } from "antd";
 import { AxiosResponse } from "axios";
 import {
+  ACCESS_TOKEN,
   INVALILD_FORMAT_EMAIL,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
+import { getCookie } from "@/utils/cookie";
 
 const Setting: FC = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IMember>();
   const { data: member } = useQuery(queryKeys.members.detail());
-  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [isVerified, setIsVerified] = useState<boolean>(true);
 
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
     mutationFn: (member) => axiosInstance.put("/member/UpdateMember", member),
@@ -32,8 +34,18 @@ const Setting: FC = () => {
     TError,
     Pick<ISignInParams, "password">
   >({
-    mutationFn: ({ password }) => axiosInstance.post("/member/verify", { password }),
+    mutationFn: ({ password }) =>
+      axiosInstance.post(
+        "/member/verify",
+        { password },
+        {
+          headers: {
+            Access_Token: getCookie(ACCESS_TOKEN),
+          },
+        },
+      ),
     onSuccess: () => setIsVerified(true),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onFinishVerify: FormProps<Pick<ISignInParams, "password">>["onFinish"] = ({ password }) => {
@@ -41,7 +53,7 @@ const Setting: FC = () => {
   };
 
   const onFinishUpdateMember: FormProps<IMember>["onFinish"] = (member) => {
-    // memberVerifyMutation.mutate({ password });
+    // updateMemberMutation.mutate({ password });
     console.log(member);
   };
 
@@ -98,7 +110,7 @@ const Setting: FC = () => {
     );
 
   return (
-    <Form onFinish={onFinishVerify}>
+    <Form style={{ width: 400 }} onFinish={onFinishVerify}>
       <Form.Item<Pick<ISignInParams, "password">>
         name="password"
         rules={[{ required: true, message: REQUIRED_PASSWORD }]}

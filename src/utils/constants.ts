@@ -2,7 +2,13 @@ import Accounts from "@/pages/accounts";
 import Categories from "@/pages/members";
 import Brands from "@/pages/brands";
 import Products from "@/pages/products";
-import { AccountBookOutlined, ProductOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ProductOutlined,
+  ApartmentOutlined,
+  UserOutlined,
+  SettingOutlined,
+  TagsOutlined,
+} from "@ant-design/icons";
 import Setting from "@/pages/setting";
 
 export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
@@ -14,10 +20,10 @@ export const REQUIRED_EMAIL = "이메일을 입력해주세요" as const;
 export const REQUIRED_PASSWORD = "비밀번호를 입력해주세요" as const;
 export const REQUIRED_PHONE = "연락처를 입력해주세요" as const;
 export const REQUIRED_PRODUCT_NAME = "상품명을 입력해주세요" as const;
-export const REQUIRED_BRAND_NAME  = "브랜드를 입력해주세요" as const;
-export const REQUIRED_SOLD_QUANTITY_NAME  = "현재 판매량을 입력해주세요" as const;
-export const REQUIRED_CATEGORY_NAME  = "카테고리를 입력해주세요" as const;
-export const REQUIRED_STOCK_NAME  = "재고를 입력해주세요" as const;
+export const REQUIRED_BRAND_NAME = "브랜드를 입력해주세요" as const;
+export const REQUIRED_SOLD_QUANTITY_NAME = "현재 판매량을 입력해주세요" as const;
+export const REQUIRED_CATEGORY_NAME = "카테고리를 입력해주세요" as const;
+export const REQUIRED_STOCK_NAME = "재고를 입력해주세요" as const;
 export const INVALILD_FORMAT_EMAIL = "이메일형식이 올바르지 않습니다" as const;
 export const INVALILD_FORMAT_PASSWORD = "비밀번호형식이 올바르지 않습니다" as const;
 export const INVALILD_FORMAT_PHONE = "연락처형식이 올바르지 않습니다" as const;
@@ -30,7 +36,7 @@ export const SIGN_IN_ROUTES = [
     Page: Products,
     path: "/products",
     label: "상품관리",
-    searchable: true,
+    searchable: false,
     accessibleRoles: new Set(["center", "admin", "user"]),
   },
   {
@@ -39,12 +45,12 @@ export const SIGN_IN_ROUTES = [
     Page: Categories,
     path: "/members",
     label: "멤버관리",
-    searchable: true,
+    searchable: false,
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
     key: "2",
-    Icon: AccountBookOutlined,
+    Icon: ApartmentOutlined,
     Page: Accounts,
     path: "/accounts",
     label: "권한관리",
@@ -53,20 +59,20 @@ export const SIGN_IN_ROUTES = [
   },
   {
     key: "3",
-    Icon: AccountBookOutlined,
+    Icon: TagsOutlined,
     Page: Brands,
     path: "/brands",
     label: "브랜드관리",
     searchable: false,
-    accessibleRoles: new Set(["center", "admin","user"]),
+    accessibleRoles: new Set(["center", "admin", "user"]),
   },
   {
     key: "4",
-    Icon: AccountBookOutlined,
+    Icon: SettingOutlined,
     Page: Setting,
     path: "/setting",
     label: "마이페이지",
     searchable: false,
-    accessibleRoles: new Set(["center", "admin","user"]),
+    accessibleRoles: new Set(["center", "admin", "user"]),
   },
 ];

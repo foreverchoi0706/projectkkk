@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import queryKeys, { axiosInstance } from "@/utils/queryKeys";
-import { IProduct, IResponse } from "@/utils/types";
+import { IProduct, IResponse, TError } from "@/utils/types";
 import { AxiosError } from "axios";
 import {
   REQUIRED_BRAND_NAME,
@@ -35,8 +35,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     enabled: hasProductId,
   });
 
-  const increaseStockMutation = useMutation({
-    mutationFn: (stock: number) =>
+  const increaseStockMutation = useMutation<unknown, TError, number>({
+    mutationFn: (stock) =>
       axiosInstance.put(`product/increase_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
@@ -46,11 +46,11 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       ]);
       alert("재고수량이 증가되었습니다");
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const decreaseStockStockMutation = useMutation({
-    mutationFn: (stock: number) =>
+  const decreaseStockStockMutation = useMutation<unknown, TError, number>({
+    mutationFn: (stock) =>
       axiosInstance.put(`/product/decrease_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
@@ -60,22 +60,21 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       ]);
       alert("재고수량이 감소되었습니다");
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const addProductMutation = useMutation({
+  const addProductMutation = useMutation<unknown, TError, IProduct>({
     mutationFn: (product: IProduct) => axiosInstance.post("/product/create", product),
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.products.all(queryString));
       alert("상품이 추가되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const updateProductMutation = useMutation({
-    mutationFn: (product: IProduct) =>
-      axiosInstance.put("/product/update", { ...product, id: productId }),
+  const updateProductMutation = useMutation<unknown, TError, IProduct>({
+    mutationFn: (product) => axiosInstance.put("/product/update", { ...product, id: productId , productNum : productId }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -85,7 +84,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       alert("상품이 수정되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const deleteProductMutation = useMutation({
