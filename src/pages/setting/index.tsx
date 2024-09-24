@@ -1,30 +1,32 @@
+import { FC, useEffect, useState } from "react";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys";
+import { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Form, Input, Flex, Button, FormProps } from "antd";
+import { AxiosResponse } from "axios";
 import {
-  ACCESS_TOKEN,
   INVALILD_FORMAT_EMAIL,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
-import { getCookie } from "@/utils/cookie";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
-import { IMember, IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input } from "antd";
-import { AxiosResponse } from "axios";
-import { FC, useEffect, useState } from "react";
 
 const Setting: FC = () => {
   const queryClient = useQueryClient();
-  const [updateMemberForm] = Form.useForm<IMember>();
   const [memberVerifyForm] = Form.useForm<Pick<ISignInParams, "password">>();
-  const [isVerified, setIsVerified] = useState<boolean>(true);
-  const { data: member } = useQuery({
-    ...queryKeys.members.detail(),
-    enabled: isVerified,
-  });
+  const [updateMemberForm] = Form.useForm<IMember>();
+  const { data: member } = useQuery(queryKeys.members.detail());
+  const [verificationToken, setVerificationToken] = useState<string | null>(null);
+
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
-    mutationFn: (member) => axiosInstance.put("/member/update", member),
+    mutationFn: (member) => {
+      return axiosInstance.put("/member/update", member, {
+        headers: {
+          Verification_Token: verificationToken,
+        },
+      });
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries(queryKeys.members.detail());
       alert("멤버가 수정되었습니다");
@@ -33,21 +35,17 @@ const Setting: FC = () => {
   });
 
   const memberVerifyMutation = useMutation<
-    AxiosResponse<IResponse<IUserInfo>>,
+    AxiosResponse<
+      IResponse<{
+        verificationToken: string;
+        successMessage: string;
+      }>
+    >,
     TError,
     Pick<ISignInParams, "password">
   >({
-    mutationFn: ({ password }) =>
-      axiosInstance.post(
-        "/member/verify",
-        { password },
-        {
-          headers: {
-            Access_Token: getCookie(ACCESS_TOKEN),
-          },
-        },
-      ),
-    onSuccess: () => setIsVerified(true),
+    mutationFn: ({ password }) => axiosInstance.post("/member/verify", { password }),
+    onSuccess: ({ data }) => setVerificationToken(data.result.verificationToken),
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
@@ -60,10 +58,10 @@ const Setting: FC = () => {
   };
 
   useEffect(() => {
-    return () => setIsVerified(false);
-  }, [member]);
+    return () => setVerificationToken(null);
+  }, []);
 
-  if (isVerified && member)
+  if (verificationToken && member)
     return (
       <Form<IMember>
         style={{ width: 400 }}
