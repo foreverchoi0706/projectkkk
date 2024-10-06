@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants.ts";
+import { ADMIN_ACCESS_TOKEN, ADMIN_REFRESH_TOKEN } from "@/utils/constants.ts";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
 import {
   IAccount,
@@ -17,7 +17,8 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  if (hasCookie(ACCESS_TOKEN)) config.headers.Authorization = `Bearer ${getCookie(ACCESS_TOKEN)}`;
+  if (hasCookie(ADMIN_ACCESS_TOKEN))
+    config.headers.Authorization = `Bearer ${getCookie(ADMIN_ACCESS_TOKEN)}`;
   return config;
 });
 
@@ -31,15 +32,15 @@ axiosInstance.interceptors.response.use(
     ) {
       try {
         const { data } = await axiosInstance.post<IResponse<IUserInfo>>(
-          `/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`,
+          `/auth/refresh?refreshToken=${getCookie(ADMIN_REFRESH_TOKEN)}`,
         );
-        setCookie(ACCESS_TOKEN, data.result.accessToken);
-        setCookie(REFRESH_TOKEN, data.result.refreshToken);
+        setCookie(ADMIN_ACCESS_TOKEN, data.result.accessToken);
+        setCookie(ADMIN_REFRESH_TOKEN, data.result.refreshToken);
         location.reload();
       } catch {
         alert("로그아웃 되었습니다");
-        deleteCookie(ACCESS_TOKEN);
-        deleteCookie(REFRESH_TOKEN);
+        deleteCookie(ADMIN_ACCESS_TOKEN);
+        deleteCookie(ADMIN_REFRESH_TOKEN);
         location.replace("/signIn");
       }
       return;

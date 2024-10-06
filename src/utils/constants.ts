@@ -11,8 +11,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
-export const REFRESH_TOKEN = "REFRESH_TOKEN" as const;
+export const USER_ACCESS_TOKEN = "USER_ADMIN_ACCESS_TOKEN" as const;
+export const USER_REFRESH_TOKEN = "USER_ADMIN_ACCESS_TOKEN" as const;
+export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
+export const ADMIN_REFRESH_TOKEN = "ADMIN_REFRESH_TOKEN" as const;
 export const DEFAULT_LIST_PAGE_SIZE = 10 as const;
 
 export const REQUIRED_NAME = "이름을 입력해주세요" as const;

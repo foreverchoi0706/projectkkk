@@ -1,4 +1,9 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
+import {
+  ADMIN_ACCESS_TOKEN,
+  ADMIN_REFRESH_TOKEN,
+  USER_ACCESS_TOKEN,
+  USER_REFRESH_TOKEN,
+} from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
 import queryKeys from "@/utils/queryKeys";
 import { IUserInfo } from "@/utils/types";
@@ -9,26 +14,28 @@ const useAuth = () => {
 
   const { data, ...rest } = useQuery({
     ...queryKeys.auth.verify({
-      accessToken: getCookie(ACCESS_TOKEN)!,
-      refreshToken: getCookie(REFRESH_TOKEN)!,
+      accessToken: getCookie(ADMIN_ACCESS_TOKEN)!,
+      refreshToken: getCookie(ADMIN_REFRESH_TOKEN)!,
     }),
-    enabled: hasCookie(ACCESS_TOKEN) && hasCookie(REFRESH_TOKEN),
+    enabled: hasCookie(ADMIN_ACCESS_TOKEN) && hasCookie(ADMIN_REFRESH_TOKEN),
   });
 
   const login = ({ accessToken, refreshToken }: IUserInfo) => {
-    setCookie(ACCESS_TOKEN, accessToken);
-    setCookie(REFRESH_TOKEN, refreshToken);
+    setCookie(ADMIN_ACCESS_TOKEN, accessToken);
+    setCookie(ADMIN_REFRESH_TOKEN, refreshToken);
     queryClient.invalidateQueries();
   };
 
   const logout = () => {
     alert("로그아웃되었습니다");
-    deleteCookie(ACCESS_TOKEN);
-    deleteCookie(REFRESH_TOKEN);
+    deleteCookie(USER_ACCESS_TOKEN);
+    deleteCookie(USER_REFRESH_TOKEN);
+    deleteCookie(ADMIN_ACCESS_TOKEN);
+    deleteCookie(ADMIN_REFRESH_TOKEN);
     queryClient.setQueryData<null>(
       queryKeys.auth.verify({
-        accessToken: getCookie(ACCESS_TOKEN)!,
-        refreshToken: getCookie(REFRESH_TOKEN)!,
+        accessToken: getCookie(ADMIN_ACCESS_TOKEN)!,
+        refreshToken: getCookie(ADMIN_REFRESH_TOKEN)!,
       }).queryKey,
       null,
     );
