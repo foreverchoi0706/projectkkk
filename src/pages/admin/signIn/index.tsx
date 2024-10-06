@@ -1,12 +1,12 @@
 import useAuth from "@/hooks/useAuth.ts";
 import {
-  INVALILD_FORMAT_EMAIL,
-  INVALILD_FORMAT_PASSWORD,
+  INVALID_FORMAT_EMAIL,
+  INVALID_FORMAT_PASSWORD,
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
 import { axiosInstance } from "@/utils/queryKeys";
-import { TError, IResponse, ISignInParams, IUserInfo } from "@/utils/types.ts";
+import { IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";
@@ -44,7 +44,7 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_EMAIL },
             {
               type: "email",
-              message: INVALILD_FORMAT_EMAIL,
+              message: INVALID_FORMAT_EMAIL,
             },
           ]}
         >
@@ -57,7 +57,7 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_PASSWORD },
             {
               pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALILD_FORMAT_PASSWORD,
+              message: INVALID_FORMAT_PASSWORD,
             },
           ]}
         >
@@ -73,7 +73,11 @@ const Page: FC = () => {
             >
               로그인
             </Button>
-            <Button style={{ flexGrow: "1" }} htmlType="button" onClick={() => navigate("/signup")}>
+            <Button
+              style={{ flexGrow: "1" }}
+              htmlType="button"
+              onClick={() => navigate("/admin/signup")}
+            >
               회원가입
             </Button>
           </Flex>

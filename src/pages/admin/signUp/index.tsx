@@ -1,10 +1,10 @@
 "use client";
 import useAuth from "@/hooks/useAuth.ts";
 import {
-  INVALILD_FORMAT_EMAIL,
-  INVALILD_FORMAT_PASSWORD,
-  INVALILD_FORMAT_PHONE,
-  INVALILD_REPASWORD,
+  INVALID_FORMAT_EMAIL,
+  INVALID_FORMAT_PASSWORD,
+  INVALID_FORMAT_PHONE,
+  INVALID_RE_PASSWORD,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
@@ -48,7 +48,7 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_EMAIL },
             {
               type: "email",
-              message: INVALILD_FORMAT_EMAIL,
+              message: INVALID_FORMAT_EMAIL,
             },
           ]}
         >
@@ -65,7 +65,7 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_PHONE },
             {
               pattern: /^01[0-9][0-9]{8,9}$/,
-              message: INVALILD_FORMAT_PHONE,
+              message: INVALID_FORMAT_PHONE,
             },
           ]}
         >
@@ -78,7 +78,7 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_PASSWORD },
             {
               pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALILD_FORMAT_PASSWORD,
+              message: INVALID_FORMAT_PASSWORD,
             },
           ]}
         >
@@ -92,12 +92,12 @@ const Page: FC = () => {
             { required: true, message: REQUIRED_PASSWORD },
             {
               pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALILD_FORMAT_PASSWORD,
+              message: INVALID_FORMAT_PASSWORD,
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) return Promise.resolve();
-                return Promise.reject(INVALILD_REPASWORD);
+                return Promise.reject(INVALID_RE_PASSWORD);
               },
             }),
           ]}

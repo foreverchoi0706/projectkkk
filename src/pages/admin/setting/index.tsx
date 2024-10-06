@@ -1,16 +1,16 @@
-import { FC, useEffect, useState } from "react";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
-import { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, Flex, Button, FormProps } from "antd";
-import { AxiosResponse } from "axios";
 import {
-  INVALILD_FORMAT_EMAIL,
+  INVALID_FORMAT_EMAIL,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys";
+import { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Flex, Form, FormProps, Input } from "antd";
+import { AxiosResponse } from "axios";
+import { FC, useEffect, useState } from "react";
 
 const Setting: FC = () => {
   const queryClient = useQueryClient();
@@ -100,7 +100,7 @@ const Setting: FC = () => {
             },
             {
               type: "email",
-              message: INVALILD_FORMAT_EMAIL,
+              message: INVALID_FORMAT_EMAIL,
             },
           ]}
         >

@@ -1,4 +1,4 @@
-import UpsertModal from "@/pages/products/UpsertModal";
+import UpsertModal from "@/pages/admin/products/UpsertModal";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 import queryKeys from "@/utils/queryKeys.ts";
 import { IProduct, IProductSearchParams } from "@/utils/types.ts";
