@@ -13,10 +13,10 @@ const Page: FC = () => {
   return (
     <main style={{ color: "white" }}>
       <Flex align="center" justify="space-between">
-        <Typography style={{ color: "white", fontSize: "1rem", fontWeight: 500 }}>
+        <Typography style={{ color: "white", fontSize: "0.75rem", fontWeight: 500 }}>
           2024.10.08 Autumn
         </Typography>
-        <Typography style={{ color: "white", fontSize: "1rem", fontWeight: 500 }}>
+        <Typography style={{ color: "white", fontSize: "0.75rem", fontWeight: 500 }}>
           Chef forever choi`s Dinner
         </Typography>
       </Flex>
@@ -33,34 +33,40 @@ const Page: FC = () => {
         <>
           <Flex
             style={{
-              padding: "60px",
+              padding: "50px",
               flexDirection: "column",
-              gap: "50px",
+              gap: "30px",
               textAlign: "center",
             }}
           >
             <dl>
-              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Appetizer</dt>
-              <dd style={{ margin: 0 }}>Salad</dd>
+              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Salad(Appetizer)</dt>
+              <dd style={{ margin: 0, fontSize: "0.75rem" }}>식욕을 돋구는 샐러드</dd>
             </dl>
             <dl>
-              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Meal</dt>
-              <dd style={{ margin: 0 }}>Beef Steak</dd>
+              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Beef Steak(Meal)</dt>
+              <dd style={{ margin: 0, fontSize: "0.75rem" }}>세가지 소금을 곁들인 비프 스테이크</dd>
             </dl>
             <dl>
-              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Semi-Meal</dt>
-              <dd style={{ margin: 0 }}>Aglio e Olio</dd>
+              <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Aglio e Olio(Semi-Meal)</dt>
+              <dd style={{ margin: 0, fontSize: "0.75rem" }}>
+                베이컨과 아스파라거스, 치킨스톡의 풍미를 느낄 수 있는 알리오올리오
+              </dd>
             </dl>
             <dl>
               <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Dessert</dt>
-              <dd style={{ margin: 0 }}>???</dd>
+              <dd style={{ margin: 0, fontSize: "0.75rem" }}>???</dd>
             </dl>
             <dl>
               <dt style={{ fontWeight: 500, marginBottom: "10px" }}>Ect</dt>
-              <dd style={{ margin: 0 }}>???</dd>
+              <dd style={{ margin: 0, fontSize: "0.75rem" }}>???</dd>
             </dl>
           </Flex>
-          <Flex align="center" justify="space-between">
+          <Flex
+            style={{ position: "fixed", bottom: "0", width: "100%", left: 0, padding: "20px" }}
+            align="center"
+            justify="space-between"
+          >
             Dinner For 엄쪽이
             <Button
               variant="solid"
