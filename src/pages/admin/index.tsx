@@ -17,7 +17,7 @@ const Admin: FC = () => {
   useQueryStore();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { auth, isLoading, logout } = useAuth();
+  const { data, isLoading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const selectedKeys = SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0";
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
@@ -41,7 +41,7 @@ const Admin: FC = () => {
 
   if (isLoading) return null;
 
-  if (auth) {
+  if (data) {
     return (
       <Layout style={{ height: "100vh" }}>
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
@@ -51,7 +51,7 @@ const Admin: FC = () => {
             defaultSelectedKeys={[selectedKeys]}
             selectedKeys={[selectedKeys]}
             items={SIGN_IN_ROUTES.filter(({ accessibleRoles }) =>
-              accessibleRoles.has(auth.role),
+              accessibleRoles.has(data.role),
             ).map(({ key, Icon, label }) => ({
               key,
               icon: <Icon />,

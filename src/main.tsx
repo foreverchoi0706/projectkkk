@@ -5,6 +5,7 @@ import { ConfigProvider } from "antd";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import "@/global.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

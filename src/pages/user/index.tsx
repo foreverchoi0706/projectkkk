@@ -1,48 +1,44 @@
 import useAuth from "@/hooks/useAuth.ts";
 import Setting from "@/pages/admin/setting";
+import Page from "@/pages/user/home";
+import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
-import Dinner from "@/pages/user/dinner";
-import { Flex, Layout } from "antd";
+import { HomeFilled, SearchOutlined, SettingFilled } from "@ant-design/icons";
+import { Flex, Layout, Typography } from "antd";
 import { FC } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 const User: FC = () => {
-  const { auth } = useAuth();
+  const { data } = useAuth();
+
   return (
-    <Layout
-      style={{
-        background: "#212121",
-        maxWidth: "600px",
-        margin: "0 auto",
-        height: "100vh",
-        padding: "16px",
-      }}
-    >
-      <Flex
-        style={{
-          flexDirection: "column",
-          flexGrow: "1",
-          overflowY: "auto",
-        }}
-      >
+    <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[100vh]">
+      <Flex justify="space-between" gap="middle" align="center">
+        <Typography className="flex-shrink-0">KKK</Typography>
+        <Link to="/search">
+          <SearchOutlined />
+        </Link>
+      </Flex>
+      <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
+          <Route path="/" element={<Page />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/dinner" element={<Dinner />} />
-          <Route path="/setting" element={auth ? <Setting /> : <Navigate to="/signin" replace />} />
+          <Route path="/setting" element={data ? <Setting /> : <Navigate to="/signin" replace />} />
           <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
       </Flex>
-      {/* <Flex justify="space-around">
+      <Flex className="justify-around  bottom-0 w-full">
         <Link to="/">
-          <Button>1</Button>
+          <HomeFilled />
         </Link>
         <Link to="/">
-          <Button>1</Button>
+          <HomeFilled />
         </Link>
         <Link to="/setting">
-          <Button>setting</Button>
+          <SettingFilled />
         </Link>
-      </Flex> */}
+      </Flex>
     </Layout>
   );
 };

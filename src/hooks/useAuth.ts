@@ -12,7 +12,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 const useAuth = () => {
   const queryClient = useQueryClient();
 
-  const { data, ...rest } = useQuery({
+  const query = useQuery({
     ...queryKeys.auth.verify({
       accessToken: getCookie(ADMIN_ACCESS_TOKEN)!,
       refreshToken: getCookie(ADMIN_REFRESH_TOKEN)!,
@@ -41,7 +41,7 @@ const useAuth = () => {
     );
   };
 
-  return { auth: data, ...rest, login, logout };
+  return { ...query, login, logout };
 };
 
 export default useAuth;
