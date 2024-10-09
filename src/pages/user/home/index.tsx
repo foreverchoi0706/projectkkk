@@ -1,6 +1,7 @@
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { Button, Carousel, Flex } from "antd";
+import { Button, Carousel, Flex, Typography } from "antd";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 const Page: FC = () => {
   return (
@@ -25,19 +26,20 @@ const Page: FC = () => {
           />
         </Carousel>
         <Flex className="gap-4 overflow-x-auto">
-          <Button>
-            <UnorderedListOutlined />
-          </Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
-          <Button>👖</Button>
+          <Link to="">
+            <Button>
+              <UnorderedListOutlined />
+            </Button>
+            <Typography className="text-center text-xs">카테고리</Typography>
+          </Link>
+          {[...new Array(10)].map(() => (
+            <Link to="/">
+              <Button>👖</Button>
+              <Typography className="text-center text-xs">바지</Typography>
+            </Link>
+          ))}
         </Flex>
+        <Flex className="h-[40vh]">s</Flex>
       </Flex>
     </main>
   );

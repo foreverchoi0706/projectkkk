@@ -11,18 +11,29 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Flex, Layout, Typography } from "antd";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 const User: FC = () => {
   const { data } = useAuth();
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setVH();
+    window.addEventListener("resize", setVH);
 
+    return () => {
+      window.removeEventListener("resize", setVH);
+    };
+  }, []);
   return (
-    <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[100vh]">
+    <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-screen h-[calc(var(--vh,1vh)*100)]">
       <Flex justify="space-between" gap="middle" align="center">
         <Typography className="flex-shrink-0">KKK</Typography>
         <Link to="/search">
-          <SearchOutlined />
+          <SearchOutlined className="text-xl" />
         </Link>
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
@@ -36,16 +47,16 @@ const User: FC = () => {
       </Flex>
       <Flex className="justify-around  bottom-0 w-full">
         <Link to="/">
-          <HomeOutlined />
+          <HomeOutlined className="text-xl" />
         </Link>
         <Link to="/">
-          <UnorderedListOutlined />
+          <UnorderedListOutlined className="text-xl" />
         </Link>
         <Link to="/">
-          <HeartOutlined />
+          <HeartOutlined className="text-xl" />
         </Link>
         <Link to="/setting">
-          <SettingOutlined />
+          <SettingOutlined className="text-xl" />
         </Link>
       </Flex>
     </Layout>
