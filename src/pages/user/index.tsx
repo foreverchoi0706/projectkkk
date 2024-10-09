@@ -16,22 +16,24 @@ import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 const User: FC = () => {
   const { data } = useAuth();
+
   useEffect(() => {
-    const setVH = () => {
+    const setVh = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
-    setVH();
-    window.addEventListener("resize", setVH);
-
-    return () => {
-      window.removeEventListener("resize", setVH);
-    };
+    setVh();
+    const abortController = new AbortController();
+    window.addEventListener("resize", setVh, { signal: abortController.signal });
+    return () => abortController.abort();
   }, []);
+
   return (
     <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[calc(var(--vh,1vh)*100)]">
       <Flex justify="space-between" gap="middle" align="center">
-        <Typography className="flex-shrink-0">KKK</Typography>
+        <Link to="/">
+          <Typography className="flex-shrink-0">KKK</Typography>
+        </Link>
         <Link to="/search">
           <SearchOutlined className="text-xl" />
         </Link>
