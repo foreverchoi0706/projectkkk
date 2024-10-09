@@ -3,7 +3,13 @@ import Setting from "@/pages/admin/setting";
 import Page from "@/pages/user/home";
 import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
-import { HomeFilled, SearchOutlined, SettingFilled } from "@ant-design/icons";
+import {
+  HeartOutlined,
+  HomeOutlined,
+  SearchOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import { Flex, Layout, Typography } from "antd";
 import { FC } from "react";
 import { Link, Navigate, Route, Routes } from "react-router-dom";
@@ -30,13 +36,16 @@ const User: FC = () => {
       </Flex>
       <Flex className="justify-around  bottom-0 w-full">
         <Link to="/">
-          <HomeFilled />
+          <HomeOutlined />
         </Link>
         <Link to="/">
-          <HomeFilled />
+          <UnorderedListOutlined />
+        </Link>
+        <Link to="/">
+          <HeartOutlined />
         </Link>
         <Link to="/setting">
-          <SettingFilled />
+          <SettingOutlined />
         </Link>
       </Flex>
     </Layout>
