@@ -29,7 +29,7 @@ const User: FC = () => {
     };
   }, []);
   return (
-    <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-screen h-[calc(var(--vh,1vh)*100)]">
+    <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[calc(var(--vh,1vh)*100)]">
       <Flex justify="space-between" gap="middle" align="center">
         <Typography className="flex-shrink-0">KKK</Typography>
         <Link to="/search">
