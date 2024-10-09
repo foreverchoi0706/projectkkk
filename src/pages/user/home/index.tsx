@@ -39,7 +39,6 @@ const Page: FC = () => {
             </Link>
           ))}
         </Flex>
-        <Flex className="h-[40vh]">s</Flex>
       </Flex>
     </main>
   );
