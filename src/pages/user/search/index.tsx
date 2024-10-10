@@ -1,21 +1,59 @@
+import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie.ts";
-import { Input } from "antd";
-import { FC, KeyboardEventHandler, useState } from "react";
+import { CloseOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, Typography } from "antd";
+import { FC, KeyboardEventHandler, MouseEventHandler, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const [_recentSearchKeywords, _setRecentSearchKeywords] = useState<string[]>();
+  const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
+    JSON.parse(getCookie("RECENT_SEARCH_KEYWORD") || "[]"),
+  );
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({
     key,
     currentTarget: { value },
   }) => {
     if (key !== "Enter") return;
-    setCookie("RECENT_SEARCH_KEYWORD", value);
+    setRecentSearchKeywords((prevState) => {
+      const nextState = prevState.concat(value);
+      setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
+      return nextState;
+    });
   };
+
+  const onClickDeleteRecentSearchKeyword: MouseEventHandler<HTMLSpanElement> = ({
+    currentTarget: { id },
+  }) => {
+    setRecentSearchKeywords((prevState) => {
+      const nextState = prevState.filter((ecentSearchKeyword) => ecentSearchKeyword !== id);
+      setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
+      return nextState;
+    });
+  };
+
   return (
     <main>
       <Input onKeyDown={onKeyDownSearch} />
-      최근 검색어 {JSON.stringify(getCookie("RECENT_SEARCH_KEYWORD"))}
+      {recentSearchKeywords.length > 0 && (
+        <Flex className="my-4 gap-2 items-center flex-wrap">
+          <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
+          {recentSearchKeywords.map((recentSearchKeyword) => (
+            <Link
+              onClick={(e) => e.stopPropagation()}
+              to={`/search?keyword=${recentSearchKeyword}`}
+            >
+              <Button className="text-xs">
+                {recentSearchKeyword}{" "}
+                <CloseOutlined
+                  id={recentSearchKeyword}
+                  onClick={onClickDeleteRecentSearchKeyword}
+                />
+              </Button>
+            </Link>
+          ))}
+        </Flex>
+      )}
     </main>
   );
 };

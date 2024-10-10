@@ -1,6 +1,6 @@
 import useAuth from "@/hooks/useAuth.ts";
 import Setting from "@/pages/admin/setting";
-import Page from "@/pages/user/home";
+import Home from "@/pages/user/home";
 import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
 import {
@@ -30,9 +30,9 @@ const User: FC = () => {
 
   return (
     <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[calc(var(--vh,1vh)*100)]">
-      <Flex justify="space-between" gap="middle" align="center">
+      <Flex className="justify-between pb-4">
         <Link to="/">
-          <Typography className="flex-shrink-0">KKK</Typography>
+          <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
         <Link to="/search">
           <SearchOutlined className="text-xl" />
@@ -40,14 +40,14 @@ const User: FC = () => {
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
-          <Route path="/" element={<Page />} />
+          <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/setting" element={data ? <Setting /> : <Navigate to="/signin" replace />} />
           <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
       </Flex>
-      <Flex className="justify-around  bottom-0 w-full">
+      <Flex className="justify-around pt-4">
         <Link to="/">
           <HomeOutlined className="text-xl" />
         </Link>
