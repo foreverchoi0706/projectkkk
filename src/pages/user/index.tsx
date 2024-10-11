@@ -1,21 +1,26 @@
 import useAuth from "@/hooks/useAuth.ts";
-import Setting from "@/pages/admin/setting";
+import Settings from "@/pages/user/settings";
 import Home from "@/pages/user/home";
 import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
 import {
+  HeartFilled,
   HeartOutlined,
+  HomeFilled,
   HomeOutlined,
   SearchOutlined,
+  SettingFilled,
   SettingOutlined,
+  ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Flex, Layout, Typography } from "antd";
 import { FC, useEffect } from "react";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 const User: FC = () => {
   const { data } = useAuth();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const setVh = () => {
@@ -34,31 +39,51 @@ const User: FC = () => {
         <Link to="/">
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
-        <Link to="/search">
-          <SearchOutlined className="text-xl" />
-        </Link>
+        <Flex className="gap-2">
+          <Link to="/search">
+            <SearchOutlined className="text-2xl" />
+          </Link>
+          <Link to="/carts">
+            <ShoppingCartOutlined className="text-2xl" />
+          </Link>
+        </Flex>
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/setting" element={data ? <Setting /> : <Navigate to="/signin" replace />} />
+          <Route
+            path="/setting"
+            element={!data ? <Settings /> : <Navigate to="/signin" replace />}
+          />
           <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
       </Flex>
       <Flex className="justify-around pt-4">
         <Link to="/">
-          <HomeOutlined className="text-xl" />
+          {pathname === "/" ? (
+            <HomeFilled className="text-xl" />
+          ) : (
+            <HomeOutlined className="text-xl" />
+          )}
         </Link>
         <Link to="/">
           <UnorderedListOutlined className="text-xl" />
         </Link>
-        <Link to="/">
-          <HeartOutlined className="text-xl" />
+        <Link to="/picks">
+          {pathname === "/picks" ? (
+            <HeartFilled className="text-xl" />
+          ) : (
+            <HeartOutlined className="text-xl" />
+          )}
         </Link>
         <Link to="/setting">
-          <SettingOutlined className="text-xl" />
+          {pathname === "/setting" ? (
+            <SettingFilled className="text-xl" />
+          ) : (
+            <SettingOutlined className="text-xl" />
+          )}
         </Link>
       </Flex>
     </Layout>

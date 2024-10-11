@@ -16,7 +16,7 @@ const Page: FC = () => {
   }) => {
     if (key !== "Enter") return;
     setRecentSearchKeywords((prevState) => {
-      const nextState = prevState.concat(value);
+      const nextState = prevState.includes(value) ? prevState : prevState.concat(value);
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
     });
@@ -36,7 +36,7 @@ const Page: FC = () => {
     <main>
       <Input onKeyDown={onKeyDownSearch} />
       {recentSearchKeywords.length > 0 && (
-        <Flex className="my-4 gap-2 items-center flex-wrap">
+        <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
           <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
           {recentSearchKeywords.map((recentSearchKeyword) => (
             <Link
