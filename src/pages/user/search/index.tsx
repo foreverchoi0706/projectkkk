@@ -22,10 +22,12 @@ const Page: FC = () => {
     });
   };
 
-  const onClickDeleteRecentSearchKeyword: MouseEventHandler<HTMLSpanElement> = ({
-    currentTarget: { id },
-  }) => {
+  const onClickDeleteRecentSearchKeyword: MouseEventHandler<HTMLSpanElement> = (e) => {
     setRecentSearchKeywords((prevState) => {
+      const {
+        currentTarget: { id },
+      } = e;
+      e.preventDefault();
       const nextState = prevState.filter((ecentSearchKeyword) => ecentSearchKeyword !== id);
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
@@ -39,10 +41,7 @@ const Page: FC = () => {
         <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
           <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
           {recentSearchKeywords.map((recentSearchKeyword) => (
-            <Link
-              onClick={(e) => e.stopPropagation()}
-              to={`/search?keyword=${recentSearchKeyword}`}
-            >
+            <Link to={`/search?keyword=${recentSearchKeyword}`}>
               <Button className="text-xs">
                 {recentSearchKeyword}{" "}
                 <CloseOutlined
