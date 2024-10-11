@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 const Product: FC = () => {
   return (
     <Link to="/products">
-      <Flex>
+      <Flex className="rounded">
         <img
+          className="rounded"
           width={180}
           height={300}
           loading="lazy"

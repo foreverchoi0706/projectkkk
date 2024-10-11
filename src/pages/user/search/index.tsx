@@ -34,7 +34,7 @@ const Page: FC = () => {
 
   return (
     <main>
-      <Input onKeyDown={onKeyDownSearch} />
+      <Input placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
       {recentSearchKeywords.length > 0 && (
         <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
           <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>

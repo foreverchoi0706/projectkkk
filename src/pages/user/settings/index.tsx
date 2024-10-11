@@ -1,12 +1,9 @@
-import useAuth from "@/hooks/useAuth";
 import { RightOutlined } from "@ant-design/icons";
 import { Divider, Flex, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const { data } = useAuth();
-
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">

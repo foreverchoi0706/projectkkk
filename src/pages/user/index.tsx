@@ -3,6 +3,9 @@ import Settings from "@/pages/user/settings";
 import Home from "@/pages/user/home";
 import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
+import Picks from "@/pages/user/picks";
+import Products from "@/pages/user/products";
+
 import {
   HeartFilled,
   HeartOutlined,
@@ -53,6 +56,8 @@ const User: FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/picks" element={!data ? <Picks /> : <Navigate to="/signin" replace />} />
           <Route
             path="/setting"
             element={!data ? <Settings /> : <Navigate to="/signin" replace />}
