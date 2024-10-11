@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Product: FC = () => {
   return (
-    <Link to="/products">
+    <Link draggable={false} to="/products">
       <Flex className="rounded">
         <img
           className="rounded"
