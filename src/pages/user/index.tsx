@@ -1,11 +1,5 @@
 import useAuth from "@/hooks/useAuth.ts";
-import Settings from "@/pages/user/settings";
-import Home from "@/pages/user/home";
-import Search from "@/pages/user/search";
-import SignIn from "@/pages/user/signIn";
-import Picks from "@/pages/user/picks";
-import Products from "@/pages/user/products";
-
+import { USER_SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import {
   HeartFilled,
   HeartOutlined,
@@ -53,15 +47,14 @@ const User: FC = () => {
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/picks" element={!data ? <Picks /> : <Navigate to="/signin" replace />} />
-          <Route
-            path="/setting"
-            element={!data ? <Settings /> : <Navigate to="/signin" replace />}
-          />
+          {USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }) => (
+            <Route
+              path={path}
+              element={
+                requiredAuth ? data ? <Page /> : <Navigate to="/signin" replace /> : <Page />
+              }
+            />
+          ))}
           <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
       </Flex>

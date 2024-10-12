@@ -3,6 +3,14 @@ import Brands from "@/pages/admin/brands";
 import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
 import Setting from "@/pages/admin/setting";
+import Carts from "@/pages/user/carts";
+import Home from "@/pages/user/home";
+import Picks from "@/pages/user/picks";
+import UserProducts from "@/pages/user/products";
+import Search from "@/pages/user/search";
+import UserSetting from "@/pages/user/settings";
+import SignIn from "@/pages/user/signIn";
+
 import {
   ApartmentOutlined,
   ProductOutlined,
@@ -34,7 +42,45 @@ export const INVALID_FORMAT_PASSWORD = "비밀번호형식이 올바르지 않�
 export const INVALID_FORMAT_PHONE = "연락처형식이 올바르지 않습니다" as const;
 export const INVALID_RE_PASSWORD = "비밀번호와 일치하지 않습니다" as const;
 
-export const SIGN_IN_ROUTES = [
+export const USER_SIGN_IN_ROUTES = [
+  {
+    Page: Home,
+    path: "/",
+    requiredAuth: false,
+  },
+  {
+    Page: Search,
+    path: "/search",
+    requiredAuth: false,
+  },
+  {
+    Page: SignIn,
+    path: "/signin",
+    requiredAuth: false,
+  },
+  {
+    Page: Carts,
+    path: "/carts",
+    requiredAuth: false,
+  },
+  {
+    Page: UserProducts,
+    path: "/products",
+    requiredAuth: false,
+  },
+  {
+    Page: Picks,
+    path: "/picks",
+    requiredAuth: true,
+  },
+  {
+    Page: UserSetting,
+    path: "/setting",
+    requiredAuth: true,
+  },
+];
+
+export const ADMIN_SIGN_IN_ROUTES = [
   {
     key: "0",
     Icon: ProductOutlined,

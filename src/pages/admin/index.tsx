@@ -2,7 +2,7 @@ import useQueryStore from "@/hooks/store/useQueryStore.ts";
 import useAuth from "@/hooks/useAuth.ts";
 import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
-import { SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants.ts";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
@@ -19,7 +19,7 @@ const Admin: FC = () => {
   const navigate = useNavigate();
   const { data, isLoading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const selectedKeys = SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0";
+  const selectedKeys = ADMIN_SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0";
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
     if (currentTarget.value !== "" && key === "Enter")
       navigate(`${pathname}?keyword=${currentTarget.value}`);
@@ -50,7 +50,7 @@ const Admin: FC = () => {
             mode="inline"
             defaultSelectedKeys={[selectedKeys]}
             selectedKeys={[selectedKeys]}
-            items={SIGN_IN_ROUTES.filter(({ accessibleRoles }) =>
+            items={ADMIN_SIGN_IN_ROUTES.filter(({ accessibleRoles }) =>
               accessibleRoles.has(data.role),
             ).map(({ key, Icon, label }) => ({
               key,
@@ -58,7 +58,7 @@ const Admin: FC = () => {
               label,
             }))}
             onSelect={({ key }) => {
-              const route = SIGN_IN_ROUTES.at(Number(key));
+              const route = ADMIN_SIGN_IN_ROUTES.at(Number(key));
               if (route) navigate(route.path);
             }}
           />
@@ -78,7 +78,7 @@ const Admin: FC = () => {
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => setCollapsed(!collapsed)}
               />
-              {SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
+              {ADMIN_SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
                 .map(({ path }) => path)
                 .includes(pathname) && (
                 <Input
@@ -98,7 +98,7 @@ const Admin: FC = () => {
             }}
           >
             <Routes>
-              {SIGN_IN_ROUTES.map(({ Page, path }, index) => (
+              {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
               <Route path="*" element={<Navigate replace to="/products" />} />
