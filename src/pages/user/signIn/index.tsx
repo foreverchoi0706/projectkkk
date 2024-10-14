@@ -28,14 +28,7 @@ const Page: FC = () => {
   };
 
   return (
-    <Layout
-      style={{
-        alignItems: "center",
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-      }}
-    >
+    <Layout className="flex items-center justify-center">
       <Typography.Title>로그인</Typography.Title>
       <Form onFinish={onFinish}>
         <Form.Item<ISignInParams>
@@ -67,17 +60,13 @@ const Page: FC = () => {
           <Flex gap="middle">
             <Button
               disabled={signInMutation.isPending}
-              style={{ flexGrow: "1" }}
+              className="flex-grow"
               type="primary"
               htmlType="submit"
             >
               로그인
             </Button>
-            <Button
-              style={{ flexGrow: "1" }}
-              htmlType="button"
-              onClick={() => navigate("/admin/signup")}
-            >
+            <Button className="flex-grow" htmlType="button" onClick={() => navigate("/signup")}>
               회원가입
             </Button>
           </Flex>

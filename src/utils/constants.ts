@@ -11,6 +11,7 @@ import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
 import SignIn from "@/pages/user/signIn";
 
+import SignUp from "@/pages/user/signUp";
 import {
   ApartmentOutlined,
   ProductOutlined,
@@ -56,6 +57,11 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: SignIn,
     path: "/signin",
+    requiredAuth: false,
+  },
+  {
+    Page: SignUp,
+    path: "/signup",
     requiredAuth: false,
   },
   {

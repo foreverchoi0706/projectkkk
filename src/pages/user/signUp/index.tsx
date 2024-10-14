@@ -32,7 +32,7 @@ const Page: FC = () => {
   };
 
   return (
-    <Layout className="flex items-center justify-center h-screen">
+    <Layout className="flex items-center justify-center">
       <Typography.Title>회원가입</Typography.Title>
       <Form onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams>
@@ -102,7 +102,7 @@ const Page: FC = () => {
           <Flex gap="middle">
             <Button
               disabled={signUpMutation.isPending}
-              style={{ flexGrow: "1" }}
+              className="flex-grow"
               type="primary"
               htmlType="submit"
             >
