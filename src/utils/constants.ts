@@ -4,6 +4,7 @@ import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
 import Setting from "@/pages/admin/setting";
 import Carts from "@/pages/user/carts";
+import UserCategories from "@/pages/user/categories";
 import Home from "@/pages/user/home";
 import Picks from "@/pages/user/picks";
 import UserProducts from "@/pages/user/products";
@@ -70,6 +71,12 @@ export const USER_SIGN_IN_ROUTES = [
     accessAbleAuth: false,
   },
   {
+    Page: UserCategories,
+    path: "/categories",
+    requiredAuth: false,
+    accessAbleAuth: true,
+  },
+  {
     Page: Carts,
     path: "/carts",
     requiredAuth: false,
@@ -95,7 +102,7 @@ export const USER_SIGN_IN_ROUTES = [
   },
   {
     Page: UserSetting,
-    path: "/setting",
+    path: "/settings",
     requiredAuth: true,
     accessAbleAuth: true,
   },

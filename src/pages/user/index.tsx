@@ -73,7 +73,7 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">홈</Typography>
         </Link>
-        <Link to="/" className="flex flex-col items-center">
+        <Link to="/categories" className="flex flex-col items-center">
           <UnorderedListOutlined className="text-xl" />
           <Typography className="font-bold mt-2 text-xs">카테고리</Typography>
         </Link>
@@ -85,7 +85,7 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">찜</Typography>
         </Link>
-        <Link to="/setting" className="flex flex-col items-center">
+        <Link to="/settings" className="flex flex-col items-center">
           {pathname === "/setting" ? (
             <SettingFilled className="text-lg" />
           ) : (

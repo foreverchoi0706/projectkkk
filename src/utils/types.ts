@@ -83,6 +83,15 @@ export interface IAccount {
   name: string;
 }
 
+export interface ICategory {
+  id: number;
+  code: string;
+  name: string;
+  level: number;
+  parent: null | number;
+  children: ICategory[];
+}
+
 export interface IBrand {
   id: number;
   name: string;

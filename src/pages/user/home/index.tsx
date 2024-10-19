@@ -11,6 +11,10 @@ const Page: FC = () => {
     ...user.products.new(),
   });
 
+  const { data: categories } = useQuery({
+    ...user.category.all(),
+  });
+
   return (
     <main>
       <Flex className="flex-col gap-4">
@@ -44,7 +48,7 @@ const Page: FC = () => {
             </Button>
             <Typography className="mt-2 text-center text-xs">전체</Typography>
           </Link>
-          {[...new Array(10)].map((_, index) => (
+          {categories?.content.map((_, index) => (
             <Link to="/" key={index}>
               <Button>👖</Button>
               <Typography className="mt-2 text-center text-xs">바지</Typography>

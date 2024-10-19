@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/queryKeys/admin";
-import { IPageList, IProduct, IResponse, IToken, IUserInfo } from "@/utils/types";
+import { ICategory, IPageList, IProduct, IResponse, IToken, IUserInfo } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
@@ -18,7 +18,7 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(`/category/categories`);
+          await axiosInstance.get<IResponse<IPageList<ICategory[]>>>(`/category/categories`);
         return data.result;
       },
       queryKey: [""],
@@ -33,10 +33,12 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [""],
     }),
-    all: () => ({
+    all: (pageParam?: number) => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(`/product/products`);
+        console.log(pageParam);
+        const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
+          `/product/products?size=15&page=${pageParam}`,
+        );
         return data.result;
       },
       queryKey: [""],
