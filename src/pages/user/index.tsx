@@ -5,6 +5,8 @@ import {
   HeartOutlined,
   HomeFilled,
   HomeOutlined,
+  ProductFilled,
+  ProductOutlined,
   SearchOutlined,
   SettingFilled,
   SettingOutlined,
@@ -47,7 +49,7 @@ const User: FC = () => {
           </Link>
         </Flex>
       </Flex>
-      <Flex className="flex-col flex-grow overflow-y-auto">
+      <Flex className="p-2 flex-col flex-grow overflow-y-auto">
         <Routes>
           {data
             ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
@@ -72,6 +74,14 @@ const User: FC = () => {
             <HomeOutlined className="text-lg" />
           )}
           <Typography className="font-bold mt-2 text-xs">홈</Typography>
+        </Link>
+        <Link to="/products" className="flex flex-col items-center">
+          {pathname === "/products" ? (
+            <ProductFilled className="text-lg" />
+          ) : (
+            <ProductOutlined className="text-lg" />
+          )}
+          <Typography className="font-bold mt-2 text-xs">상품</Typography>
         </Link>
         <Link to="/categories" className="flex flex-col items-center">
           <UnorderedListOutlined className="text-xl" />

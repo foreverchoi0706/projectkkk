@@ -23,7 +23,7 @@ const Page: FC = () => {
       <Row gutter={[8, 8]}>
         {productsPages.pages.map(({ content }) =>
           content.map((product) => (
-            <Col span={8} key={product.id}>
+            <Col xs={12} md={8} key={product.id}>
               <Product {...product} />
             </Col>
           )),
