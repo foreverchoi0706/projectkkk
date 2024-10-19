@@ -37,7 +37,7 @@ const Page: FC = () => {
   const onFinish: FormProps<IMemberSearchParams>["onFinish"] = (memberSearchParams) => {
     const page = searchParams.get("page");
     navigate(
-      `/members?${queryString.stringify({ ...memberSearchParams, page }, { skipEmptyString: true })}`,
+      `/admin/members?${queryString.stringify({ ...memberSearchParams, page }, { skipEmptyString: true })}`,
       {
         replace: true,
       },
@@ -134,7 +134,7 @@ const Page: FC = () => {
                 </Button>
               </Form.Item>
               <Form.Item>
-                <Link to="/members" onClick={() => form.resetFields()}>
+                <Link to="/admin/members" onClick={() => form.resetFields()}>
                   <Button>초기화</Button>
                 </Link>
               </Form.Item>
@@ -153,7 +153,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => {
             navigate(
-              `/members?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
+              `/admin/members?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
               {
                 replace: true,
               },

@@ -1,9 +1,3 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
-import { IProduct, IResponse, TError } from "@/utils/types";
-import { AxiosError } from "axios";
 import {
   REQUIRED_BRAND_NAME,
   REQUIRED_CATEGORY_NAME,
@@ -11,6 +5,12 @@ import {
   REQUIRED_SOLD_QUANTITY_NAME,
   REQUIRED_STOCK_NAME,
 } from "@/utils/constants";
+import queryKeys, { axiosInstance } from "@/utils/queryKeys";
+import { IProduct, IResponse, TError } from "@/utils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
+import { AxiosError } from "axios";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 
 interface IProps {
   productId: number | null;
@@ -74,7 +74,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const updateProductMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product) => axiosInstance.put("/product/update", { ...product, id: productId , productNum : productId }),
+    mutationFn: (product) =>
+      axiosInstance.put("/product/update", { ...product, id: productId, productNum: productId }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -115,10 +116,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     decreaseStockStockMutation.mutate(cancelSellCount);
   };
 
-  useEffect(() => {
-    if (product) form.setFieldsValue(product);
-  }, [product]);
-
+  if (hasProductId && product === undefined) return null;
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
       <Form initialValues={product} form={form} onFinish={onFinish}>

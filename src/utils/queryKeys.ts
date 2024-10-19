@@ -2,6 +2,7 @@ import { ADMIN_ACCESS_TOKEN, ADMIN_REFRESH_TOKEN } from "@/utils/constants.ts";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
 import {
   IAccount,
+  IBrand,
   IMember,
   IPageList,
   IProduct,
@@ -75,7 +76,7 @@ const queryKeys = createQueryKeyStore({
   brands: {
     all: (queryString: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<IBrand[]>>>(
           `/product/brands?${queryString}`,
         );
         return data.result;

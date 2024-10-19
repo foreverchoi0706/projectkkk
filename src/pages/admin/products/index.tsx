@@ -20,7 +20,7 @@ const Page: FC = () => {
   const onFinish: FormProps<IProductSearchParams>["onFinish"] = (productSearchParams) => {
     const page = searchParams.get("page");
     navigate(
-      `/products?${queryString.stringify({ ...productSearchParams, page }, { skipEmptyString: true })}`,
+      `/admin/products?${queryString.stringify({ ...productSearchParams, page }, { skipEmptyString: true })}`,
       {
         replace: true,
       },
@@ -107,7 +107,7 @@ const Page: FC = () => {
             </Button>
           </Form.Item>
           <Form.Item>
-            <Link to="/products" onClick={() => form.resetFields()}>
+            <Link to="/admin/products" onClick={() => form.resetFields()}>
               <Button>초기화</Button>
             </Link>
           </Form.Item>
@@ -127,7 +127,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => {
             navigate(
-              `/products?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
+              `/admin/products?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
               {
                 replace: true,
               },

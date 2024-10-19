@@ -3,15 +3,10 @@ import useAuth from "@/hooks/useAuth.ts";
 import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
 import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants.ts";
-import {
-  LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { Button, Flex, Input, Layout, Menu } from "antd";
-import { FC, KeyboardEventHandler, useEffect, useState } from "react";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Button, Flex, Layout, Menu } from "antd";
+import { FC, useEffect, useState } from "react";
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {
   useQueryStore();
@@ -19,11 +14,8 @@ const Admin: FC = () => {
   const navigate = useNavigate();
   const { data, isLoading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const selectedKeys = ADMIN_SIGN_IN_ROUTES.find(({ path }) => path === pathname)?.key ?? "0";
-  const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({ currentTarget, key }) => {
-    if (currentTarget.value !== "" && key === "Enter")
-      navigate(`${pathname}?keyword=${currentTarget.value}`);
-  };
+  const selectedKeys =
+    ADMIN_SIGN_IN_ROUTES.find(({ path }) => `/admin${path}` === pathname)?.key ?? "0";
 
   useEffect(() => {
     let timeOut: number | null = null;
@@ -43,7 +35,7 @@ const Admin: FC = () => {
 
   if (data) {
     return (
-      <Layout style={{ height: "100vh" }}>
+      <Layout className="h-screen">
         <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
           <Menu
             theme="dark"
@@ -59,49 +51,29 @@ const Admin: FC = () => {
             }))}
             onSelect={({ key }) => {
               const route = ADMIN_SIGN_IN_ROUTES.at(Number(key));
-              if (route) navigate(route.path);
+              if (route) navigate(`/admin${route.path}`);
             }}
           />
         </Layout.Sider>
         <Layout>
-          <Layout.Header
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              background: "#ffffff",
-            }}
-          >
+          <Layout.Header className="flex justify-between items-center bg-white">
             <Flex gap="middle">
               <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => setCollapsed(!collapsed)}
               />
-              {ADMIN_SIGN_IN_ROUTES.filter(({ searchable }) => searchable)
-                .map(({ path }) => path)
-                .includes(pathname) && (
-                <Input
-                  placeholder="통합검색"
-                  suffix={<SearchOutlined />}
-                  onKeyDown={onKeyDownSearch}
-                />
-              )}
             </Flex>
-            <Button type="text" icon={<LogoutOutlined />} onClick={logout} />
+            <Link to="/admin/signin" onClick={logout}>
+              <Button type="text" icon={<LogoutOutlined />} />
+            </Link>
           </Layout.Header>
-          <Layout.Content
-            style={{
-              margin: "24px 16px",
-              padding: "24px",
-              minHeight: "280px",
-            }}
-          >
+          <Layout.Content className="m-6 p-6">
             <Routes>
               {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route path="*" element={<Navigate replace to="/products" />} />
+              <Route path="*" element={<Navigate replace to="/admin/products" />} />
             </Routes>
           </Layout.Content>
         </Layout>
@@ -113,7 +85,7 @@ const Admin: FC = () => {
     <Routes>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/*" element={<Navigate replace to="/admin/signin" />} />
+      <Route path="/*" element={<Navigate replace to="/signin" />} />
     </Routes>
   );
 };

@@ -93,7 +93,6 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Products,
     path: "/products",
     label: "상품관리",
-    searchable: false,
     accessibleRoles: new Set(["center", "admin", "user"]),
   },
   {
@@ -102,7 +101,6 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Categories,
     path: "/members",
     label: "멤버관리",
-    searchable: false,
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
@@ -111,7 +109,6 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Accounts,
     path: "/accounts",
     label: "권한관리",
-    searchable: false,
     accessibleRoles: new Set(["center"]),
   },
   {
@@ -120,7 +117,6 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Brands,
     path: "/brands",
     label: "브랜드관리",
-    searchable: false,
     accessibleRoles: new Set(["center", "admin", "user"]),
   },
   {
@@ -129,7 +125,6 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Setting,
     path: "/setting",
     label: "마이페이지",
-    searchable: false,
     accessibleRoles: new Set(["center", "admin", "user"]),
   },
 ];

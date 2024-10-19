@@ -52,15 +52,13 @@ const Page: FC = () => {
       dataIndex: "role",
       key: "role",
       title: "권한",
-      render: (value, { id }) => {
-        return (
-          <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
-            <Select.Option value="center">중앙관리자</Select.Option>
-            <Select.Option value="admin">관리자</Select.Option>
-            <Select.Option value="user">회원</Select.Option>
-          </Select>
-        );
-      },
+      render: (value, { id }) => (
+        <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
+          <Select.Option value="center">중앙관리자</Select.Option>
+          <Select.Option value="admin">관리자</Select.Option>
+          <Select.Option value="user">회원</Select.Option>
+        </Select>
+      ),
     },
   ];
 
@@ -74,7 +72,7 @@ const Page: FC = () => {
         locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={accounts.content}
         pagination={{
-          onChange: (page) => navigate(`/accounts?page=${page}`, { replace: true }),
+          onChange: (page) => navigate(`/admin/accounts?page=${page}`, { replace: true }),
           pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: accounts.page + 1,
           total: accounts.totalCount,

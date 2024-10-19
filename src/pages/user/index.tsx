@@ -47,8 +47,9 @@ const User: FC = () => {
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
-          {USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }) => (
+          {USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
             <Route
+              key={index}
               path={path}
               element={
                 requiredAuth ? data ? <Page /> : <Navigate to="/signin" replace /> : <Page />

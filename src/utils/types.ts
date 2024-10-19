@@ -80,6 +80,26 @@ export interface IAccount {
   name: string;
 }
 
+export interface IBrand {
+  id: number;
+  name: string;
+  brand: string;
+  category: string;
+  productNum: string;
+  price: number;
+  discountRate: number;
+  description: string;
+  imageUrl: string;
+  productCouponResponse: {
+    id: 1;
+    productNum: "20231018BR반000100";
+    couponId: 1;
+    issuedAt: "2024-10-18T17:06:25";
+    usedAt: null;
+    used: false;
+  }[];
+}
+
 export type TRole = "center" | "admin" | "user";
 
 export type INonNullable<T> = {
