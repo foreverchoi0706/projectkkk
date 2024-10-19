@@ -1,7 +1,7 @@
 import UpsertModal from "@/pages/admin/products/UpsertModal";
+import admin from "@/queryKeys/admin";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import queryKeys from "@/utils/queryKeys.ts";
-import { IProduct, IProductSearchParams } from "@/utils/types.ts";
+import { IProduct, IProductSearchParams } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
 import queryString from "query-string";
@@ -15,7 +15,7 @@ const Page: FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
 
-  const { data: products } = useQuery(queryKeys.products.all(searchParams.toString()));
+  const { data: products } = useQuery(admin.products.all(searchParams.toString()));
 
   const onFinish: FormProps<IProductSearchParams>["onFinish"] = (productSearchParams) => {
     const page = searchParams.get("page");

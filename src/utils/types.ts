@@ -40,12 +40,15 @@ export interface IPageList<T> {
 
 export interface IProduct {
   id: number;
-  brand: string;
-  selledcount: number;
   name: string;
+  brand: string;
   category: string;
-  stock: number;
-  soldQuantity: number;
+  productNum: string;
+  price: number;
+  discountRate: number;
+  description: string;
+  imageUrl: string;
+  productCouponResponse: unknown[];
 }
 
 export interface IProductSearchParams {

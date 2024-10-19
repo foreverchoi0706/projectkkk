@@ -1,5 +1,5 @@
 import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
-import { getCookie, setCookie } from "@/utils/cookie.ts";
+import { getCookie, setCookie } from "@/utils/cookie";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Flex, Input, Typography } from "antd";
 import { FC, KeyboardEventHandler, MouseEventHandler, useState } from "react";

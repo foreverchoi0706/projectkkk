@@ -1,3 +1,4 @@
+import admin, { axiosInstance } from "@/queryKeys/admin";
 import {
   INVALID_FORMAT_EMAIL,
   REQUIRED_EMAIL,
@@ -5,7 +6,6 @@ import {
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input } from "antd";
@@ -16,22 +16,24 @@ const Setting: FC = () => {
   const queryClient = useQueryClient();
   const [memberVerifyForm] = Form.useForm<Pick<ISignInParams, "password">>();
   const [updateMemberForm] = Form.useForm<IMember>();
-  const { data: member } = useQuery(queryKeys.members.detail());
+  const { data: member } = useQuery(admin.members.detail());
   const [verificationToken, setVerificationToken] = useState<string | null>(null);
 
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
     mutationFn: (member) => {
-      return axiosInstance.put("/member/update", member, {
+      return axiosInstance.put("/admin/member/update", member, {
         headers: {
           Verification_Token: verificationToken,
         },
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.members.detail());
+      await queryClient.invalidateQueries(admin.members.detail());
       alert("멤버가 수정되었습니다");
     },
-    onError: ({ responseMessage }) => alert(responseMessage),
+    onError: ({ responseMessage }) => {
+      alert(responseMessage);
+    },
   });
 
   const memberVerifyMutation = useMutation<
@@ -44,7 +46,7 @@ const Setting: FC = () => {
     TError,
     Pick<ISignInParams, "password">
   >({
-    mutationFn: ({ password }) => axiosInstance.post("/member/verify", { password }),
+    mutationFn: ({ password }) => axiosInstance.post("/admin/member/verify", { password }),
     onSuccess: ({ data }) => setVerificationToken(data.result.verificationToken),
     onError: ({ responseMessage }) => alert(responseMessage),
   });
@@ -126,7 +128,7 @@ const Setting: FC = () => {
         <Flex gap="middle">
           <Button
             disabled={memberVerifyMutation.isPending}
-            style={{ flexGrow: "1" }}
+            className="flex-grow"
             type="primary"
             htmlType="submit"
           >

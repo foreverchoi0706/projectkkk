@@ -1,6 +1,6 @@
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
-import queryKeys from "@/utils/queryKeys.ts";
-import { IBrand } from "@/utils/types.ts";
+import admin from "@/queryKeys/admin";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import { IBrand } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Spin, Table, TableProps } from "antd";
 import { FC } from "react";
@@ -10,7 +10,7 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { data: brands } = useQuery({
-    ...queryKeys.brands.all(searchParams.toString()),
+    ...admin.brands.all(searchParams.toString()),
   });
 
   if (!brands) return <Spin />;

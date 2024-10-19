@@ -1,8 +1,8 @@
-import useQueryStore from "@/hooks/store/useQueryStore.ts";
-import useAuth from "@/hooks/useAuth.ts";
+import useQueryStore from "@/hooks/store/useQueryStore";
+import useAuth from "@/hooks/useAuth";
 import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
-import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants.ts";
+import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Flex, Layout, Menu } from "antd";
 import { FC, useEffect, useState } from "react";

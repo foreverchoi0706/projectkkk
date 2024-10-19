@@ -1,3 +1,4 @@
+import admin from "@/queryKeys/admin";
 import {
   ADMIN_ACCESS_TOKEN,
   ADMIN_REFRESH_TOKEN,
@@ -5,7 +6,6 @@ import {
   USER_REFRESH_TOKEN,
 } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
-import queryKeys from "@/utils/queryKeys";
 import { IUserInfo } from "@/utils/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -13,7 +13,7 @@ const useAuth = () => {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    ...queryKeys.auth.verify({
+    ...admin.auth.verify({
       accessToken: getCookie(ADMIN_ACCESS_TOKEN)!,
       refreshToken: getCookie(ADMIN_REFRESH_TOKEN)!,
     }),
@@ -33,7 +33,7 @@ const useAuth = () => {
     deleteCookie(ADMIN_ACCESS_TOKEN);
     deleteCookie(ADMIN_REFRESH_TOKEN);
     queryClient.setQueryData<null>(
-      queryKeys.auth.verify({
+      admin.auth.verify({
         accessToken: getCookie(ADMIN_ACCESS_TOKEN)!,
         refreshToken: getCookie(ADMIN_REFRESH_TOKEN)!,
       }).queryKey,

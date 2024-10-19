@@ -1,6 +1,6 @@
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
-import { IMember, IMemberSearchParams, TError } from "@/utils/types.ts";
+import admin, { axiosInstance } from "@/queryKeys/admin";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import { IMember, IMemberSearchParams, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -24,11 +24,12 @@ const Page: FC = () => {
   const [form] = Form.useForm<IMemberSearchParams>();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE.toString(), page: "1" });
-  const { data: members } = useQuery(queryKeys.members.all(searchParams.toString()));
+  const { data: members } = useQuery(admin.members.all(searchParams.toString()));
   const deleteMemberMutation = useMutation<unknown, TError, number>({
-    mutationFn: (memberId: number) => axiosInstance.delete(`/member/delete?memberId=${memberId}`),
+    mutationFn: (memberId: number) =>
+      axiosInstance.delete(`/admin/member/delete?memberId=${memberId}`),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.members.all(searchParams.toString()));
+      await queryClient.invalidateQueries(admin.members.all(searchParams.toString()));
       alert("멤버가 삭제되었습니다");
     },
     onError: ({ responseMessage }) => alert(responseMessage),

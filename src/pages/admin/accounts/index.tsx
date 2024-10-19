@@ -1,6 +1,6 @@
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants.ts";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys.ts";
-import { IAccount, TError, TRole } from "@/utils/types.ts";
+import admin, { axiosInstance } from "@/queryKeys/admin";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import { IAccount, TError, TRole } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Flex, Select, Spin, Table, TableProps } from "antd";
 import { FC } from "react";
@@ -10,15 +10,16 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
-  const { data: accounts } = useQuery(queryKeys.accounts.all(searchParams.toString()));
+  const { data: accounts } = useQuery(admin.accounts.all(searchParams.toString()));
 
   const useChangeRoleMutation = useMutation<unknown, TError, { role: TRole; id: number }>({
     mutationFn: ({ id, role }) =>
-      axiosInstance.post(`/auth/authorization?memberId=${id}&authority=${role}`),
+      axiosInstance.post(`/admin/auth/authorization?memberId=${id}&authority=${role}`),
     onSuccess: () => {
       alert("권한이 변경되었습니다.");
-      queryClient.invalidateQueries(queryKeys.accounts.all(searchParams.toString()));
+      queryClient.invalidateQueries(admin.accounts.all(searchParams.toString()));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onChangeRole = (role: TRole, id: number) => {

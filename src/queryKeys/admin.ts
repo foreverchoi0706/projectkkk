@@ -1,5 +1,5 @@
-import { ADMIN_ACCESS_TOKEN, ADMIN_REFRESH_TOKEN } from "@/utils/constants.ts";
-import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie.ts";
+import { ADMIN_ACCESS_TOKEN, ADMIN_REFRESH_TOKEN } from "@/utils/constants";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
 import {
   IAccount,
   IBrand,
@@ -9,7 +9,7 @@ import {
   IResponse,
   IToken,
   IUserInfo,
-} from "@/utils/types.ts";
+} from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import axios from "axios";
 
@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-const queryKeys = createQueryKeyStore({
+const queryKeyStore = createQueryKeyStore({
   auth: {
     verify: ({ accessToken, refreshToken }: IToken) => ({
       queryFn: async () => {
@@ -66,7 +66,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IAccount[]>>>(
-          `/auth/authorities?${queryString}`,
+          `/admin/auth/authorities?${queryString}`,
         );
         return data.result;
       },
@@ -77,7 +77,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IBrand[]>>>(
-          `/product/brands?${queryString}`,
+          `/admin/product/brands?${queryString}`,
         );
         return data.result;
       },
@@ -88,7 +88,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
-          `/member/search?${queryString}`,
+          `/admin/member/search?${queryString}`,
         );
         return data.result;
       },
@@ -106,7 +106,7 @@ const queryKeys = createQueryKeyStore({
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/search?${queryString}`,
+          `/admin/product/search?${queryString}`,
         );
         return data.result;
       },
@@ -115,7 +115,7 @@ const queryKeys = createQueryKeyStore({
     detail: (productId: number) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IProduct>>(
-          `/product/product?productId=${productId}`,
+          `/admin/product/product?productId=${productId}`,
         );
         return data.result;
       },
@@ -124,4 +124,4 @@ const queryKeys = createQueryKeyStore({
   },
 });
 
-export default queryKeys;
+export default queryKeyStore;

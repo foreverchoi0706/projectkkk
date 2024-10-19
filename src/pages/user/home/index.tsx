@@ -1,10 +1,16 @@
 import Product from "@/components/Product";
+import user from "@/queryKeys/user.ts";
 import { UnorderedListOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Flex, Row, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
+  const { data: newProducts } = useQuery({
+    ...user.products.new(),
+  });
+
   return (
     <main>
       <Flex className="flex-col gap-4">
@@ -46,16 +52,19 @@ const Page: FC = () => {
           ))}
         </Flex>
 
-        <Carousel arrows slidesToShow={3} dots={false}>
-          {[...new Array(10)].map((_, index) => (
-            <Product id={index} key={index} />
-          ))}
-        </Carousel>
+        <Flex className="flex-col gap-4">
+          <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
+          <Carousel arrows slidesToShow={3} dots={false}>
+            {newProducts?.content.map((product) => (
+              <Product {...product} key={product.id} />
+            ))}
+          </Carousel>
+        </Flex>
 
         <Row gutter={[8, 8]}>
-          {[...new Array(9)].map((_, index) => (
-            <Col span={8} key={index}>
-              <Product id={index} />
+          {newProducts?.content.map((product) => (
+            <Col span={8} key={product.id}>
+              <Product {...product} />
             </Col>
           ))}
         </Row>

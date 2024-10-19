@@ -1,12 +1,12 @@
-import useAuth from "@/hooks/useAuth.ts";
+import useAuth from "@/hooks/useAuth";
+import { axiosInstance } from "@/queryKeys/admin";
 import {
   INVALID_FORMAT_EMAIL,
   INVALID_FORMAT_PASSWORD,
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
-import { axiosInstance } from "@/utils/queryKeys";
-import { IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types.ts";
+import { IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";

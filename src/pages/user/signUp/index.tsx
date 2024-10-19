@@ -1,5 +1,6 @@
 "use client";
-import useAuth from "@/hooks/useAuth.ts";
+import useAuth from "@/hooks/useAuth";
+import { axiosInstance } from "@/queryKeys/admin";
 import {
   INVALID_FORMAT_EMAIL,
   INVALID_FORMAT_PASSWORD,
@@ -10,8 +11,7 @@ import {
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
-import { axiosInstance } from "@/utils/queryKeys.ts";
-import { IResponse, ISignUpParams, IUserInfo, TError } from "@/utils/types.ts";
+import { IResponse, ISignUpParams, IUserInfo, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";

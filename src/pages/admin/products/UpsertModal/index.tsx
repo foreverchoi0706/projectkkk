@@ -1,3 +1,4 @@
+import admin, { axiosInstance } from "@/queryKeys/admin";
 import {
   REQUIRED_BRAND_NAME,
   REQUIRED_CATEGORY_NAME,
@@ -5,7 +6,6 @@ import {
   REQUIRED_SOLD_QUANTITY_NAME,
   REQUIRED_STOCK_NAME,
 } from "@/utils/constants";
-import queryKeys, { axiosInstance } from "@/utils/queryKeys";
 import { IProduct, IResponse, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
@@ -31,18 +31,18 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasProductId = productId !== null;
 
   const { data: product } = useQuery({
-    ...queryKeys.products.detail(productId!),
+    ...admin.products.detail(productId!),
     enabled: hasProductId,
   });
 
   const increaseStockMutation = useMutation<unknown, TError, number>({
     mutationFn: (stock) =>
-      axiosInstance.put(`product/increase_stock?productId=${productId}&stock=${stock}`),
+      axiosInstance.put(`admin/product/increase_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(queryKeys.products.all(queryString)),
-        queryClient.invalidateQueries(queryKeys.products.detail(productId)),
+        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("재고수량이 증가되었습니다");
     },
@@ -51,12 +51,12 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const decreaseStockStockMutation = useMutation<unknown, TError, number>({
     mutationFn: (stock) =>
-      axiosInstance.put(`/product/decrease_stock?productId=${productId}&stock=${stock}`),
+      axiosInstance.put(`/admin/product/decrease_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(queryKeys.products.all(queryString)),
-        queryClient.invalidateQueries(queryKeys.products.detail(productId)),
+        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("재고수량이 감소되었습니다");
     },
@@ -64,9 +64,9 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const addProductMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product: IProduct) => axiosInstance.post("/product/create", product),
+    mutationFn: (product: IProduct) => axiosInstance.post("/admin/product/create", product),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.products.all(queryString));
+      await queryClient.invalidateQueries(admin.products.all(queryString));
       alert("상품이 추가되었습니다");
       setSelectedProductId(undefined);
     },
@@ -75,12 +75,16 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const updateProductMutation = useMutation<unknown, TError, IProduct>({
     mutationFn: (product) =>
-      axiosInstance.put("/product/update", { ...product, id: productId, productNum: productId }),
+      axiosInstance.put("/admin/product/update", {
+        ...product,
+        id: productId,
+        productNum: productId,
+      }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(queryKeys.products.all(queryString)),
-        queryClient.invalidateQueries(queryKeys.products.detail(productId)),
+        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("상품이 수정되었습니다");
       setSelectedProductId(undefined);
@@ -90,9 +94,9 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const deleteProductMutation = useMutation({
     mutationFn: (productId: number) =>
-      axiosInstance.delete(`/product/delete?productId=${productId}`),
+      axiosInstance.delete(`/admin/product/delete?productId=${productId}`),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(queryKeys.products.all(queryString));
+      await queryClient.invalidateQueries(admin.products.all(queryString));
       alert("상품이 삭제되었습니다");
       setSelectedProductId(undefined);
     },

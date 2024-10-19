@@ -1,4 +1,4 @@
-import useAuth from "@/hooks/useAuth.ts";
+import useAuth from "@/hooks/useAuth";
 import { RightOutlined } from "@ant-design/icons";
 import { Divider, Flex, Typography } from "antd";
 import { FC } from "react";
