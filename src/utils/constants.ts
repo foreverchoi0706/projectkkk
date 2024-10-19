@@ -7,6 +7,7 @@ import Carts from "@/pages/user/carts";
 import Home from "@/pages/user/home";
 import Picks from "@/pages/user/picks";
 import UserProducts from "@/pages/user/products";
+import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
 import SignIn from "@/pages/user/signIn";
@@ -77,6 +78,12 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: UserProducts,
     path: "/products",
+    requiredAuth: false,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserProductsDetail,
+    path: "/products/:id",
     requiredAuth: false,
     accessAbleAuth: true,
   },

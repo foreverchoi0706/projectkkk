@@ -1,18 +1,17 @@
-import { HeartFilled } from "@ant-design/icons";
-import { Flex } from "antd";
+import Product from "@/components/Product";
+import { Col, Row } from "antd";
 import { FC } from "react";
 
 const Page: FC = () => {
   return (
     <main>
-      <Flex>
-        <img
-          className="rounded"
-          src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/10/04/202410040917163324_093565.jpg"
-          alt="item"
-        />
-        <HeartFilled />
-      </Flex>
+      <Row gutter={[8, 8]}>
+        {[...new Array(100)].map((_, index) => (
+          <Col span={8} key={index}>
+            <Product id={index} />
+          </Col>
+        ))}
+      </Row>
     </main>
   );
 };

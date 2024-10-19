@@ -38,8 +38,8 @@ const Page: FC = () => {
             </Button>
             <Typography className="mt-2 text-center text-xs">전체</Typography>
           </Link>
-          {[...new Array(10)].map(() => (
-            <Link to="/">
+          {[...new Array(10)].map((_, index) => (
+            <Link to="/" key={index}>
               <Button>👖</Button>
               <Typography className="mt-2 text-center text-xs">바지</Typography>
             </Link>
@@ -48,14 +48,14 @@ const Page: FC = () => {
 
         <Carousel arrows slidesToShow={3} dots={false}>
           {[...new Array(10)].map((_, index) => (
-            <Product key={index} />
+            <Product id={index} key={index} />
           ))}
         </Carousel>
 
         <Row gutter={[8, 8]}>
           {[...new Array(9)].map((_, index) => (
             <Col span={8} key={index}>
-              <Product />
+              <Product id={index} />
             </Col>
           ))}
         </Row>
