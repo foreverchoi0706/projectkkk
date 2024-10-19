@@ -16,7 +16,7 @@ import { FC, useEffect } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 const User: FC = () => {
-  const { data } = useAuth();
+  const { data, isLoading } = useAuth();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -29,6 +29,8 @@ const User: FC = () => {
     window.addEventListener("resize", setVh, { signal: abortController.signal });
     return () => abortController.abort();
   }, []);
+
+  if (isLoading) return null;
 
   return (
     <Layout className="relative my-0 mx-auto max-w-[600px] p-4 h-[calc(var(--vh,1vh)*100)]">
@@ -47,15 +49,18 @@ const User: FC = () => {
       </Flex>
       <Flex className="flex-col flex-grow overflow-y-auto">
         <Routes>
-          {USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
-            <Route
-              key={index}
-              path={path}
-              element={
-                requiredAuth ? data ? <Page /> : <Navigate to="/signin" replace /> : <Page />
-              }
-            />
-          ))}
+          {data
+            ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
+                ({ Page, path }, index) => <Route key={index} path={path} element={<Page />} />,
+              )
+            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
+                <Route
+                  key={index}
+                  path={path}
+                  element={requiredAuth ? <Navigate to="/signin" replace /> : <Page />}
+                />
+              ))}
+
           <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
       </Flex>

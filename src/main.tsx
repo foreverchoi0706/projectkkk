@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ConfigProvider theme={{ token: {} }}>
+    <ConfigProvider>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
           <App />

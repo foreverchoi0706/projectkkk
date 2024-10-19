@@ -1,9 +1,11 @@
+import useAuth from "@/hooks/useAuth.ts";
 import { RightOutlined } from "@ant-design/icons";
 import { Divider, Flex, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
+  const { logout } = useAuth();
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">
@@ -59,7 +61,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
+        <Link to="/signin" onClick={logout}>
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">로그아웃</Typography>
             <Typography className="font-bold text-lg">

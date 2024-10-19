@@ -48,41 +48,49 @@ export const USER_SIGN_IN_ROUTES = [
     Page: Home,
     path: "/",
     requiredAuth: false,
+    accessAbleAuth: true,
   },
   {
     Page: Search,
     path: "/search",
     requiredAuth: false,
+    accessAbleAuth: true,
   },
   {
     Page: SignIn,
     path: "/signin",
     requiredAuth: false,
+    accessAbleAuth: false,
   },
   {
     Page: SignUp,
     path: "/signup",
     requiredAuth: false,
+    accessAbleAuth: false,
   },
   {
     Page: Carts,
     path: "/carts",
     requiredAuth: false,
+    accessAbleAuth: true,
   },
   {
     Page: UserProducts,
     path: "/products",
     requiredAuth: false,
+    accessAbleAuth: true,
   },
   {
     Page: Picks,
     path: "/picks",
     requiredAuth: true,
+    accessAbleAuth: true,
   },
   {
     Page: UserSetting,
     path: "/setting",
     requiredAuth: true,
+    accessAbleAuth: true,
   },
 ];
 
