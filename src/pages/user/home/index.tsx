@@ -1,6 +1,5 @@
 import Product from "@/components/Product";
 import user from "@/queryKeys/user.ts";
-import { UnorderedListOutlined } from "@ant-design/icons";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Flex, Row, Typography } from "antd";
 import { FC } from "react";
@@ -27,7 +26,7 @@ const Page: FC = () => {
   return (
     <main>
       <Flex className="flex-col gap-4">
-        <Carousel>
+        <Carousel autoplay>
           <img
             className="rounded"
             alt="img"
@@ -51,23 +50,19 @@ const Page: FC = () => {
         </Carousel>
 
         <Flex className="gap-4 overflow-x-auto">
-          <Link to="">
-            <Button>
-              <UnorderedListOutlined />
-            </Button>
-            <Typography className="mt-2 text-center text-xs">전체</Typography>
+          <Link to="/search">
+            <Button>전체</Button>
           </Link>
-          {categories?.content.map((_, index) => (
-            <Link to="/" key={index}>
-              <Button>👖</Button>
-              <Typography className="mt-2 text-center text-xs">바지</Typography>
+          {categories?.content.map(({ id, name }) => (
+            <Link to="/search" key={id}>
+              <Button>{name}</Button>
             </Link>
           ))}
         </Flex>
 
         <Flex className="flex-col gap-4">
           <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
-          <Carousel arrows slidesToShow={2} dots={false}>
+          <Carousel arrows autoplay slidesToShow={2} dots={false}>
             {newProducts?.content.map((product) => (
               <Product {...product} key={product.id} />
             ))}
