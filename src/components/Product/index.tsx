@@ -11,7 +11,7 @@ const Product: FC<IProps> = ({ id, name, brand, description, discountRate, price
     <Link to={`/products/${id}`}>
       <Flex className="w-fit relative">
         <img
-          className="w-[200px] h-[200px]"
+          width="100%"
           loading="lazy"
           alt={imageUrl}
           src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/10/04/202410040917163324_093565.jpg"
@@ -27,7 +27,7 @@ const Product: FC<IProps> = ({ id, name, brand, description, discountRate, price
       </Flex>
       <Flex className="flex-col p-2">
         <Typography className="font-bold">{name}</Typography>
-        <Typography className="font-medium">
+        <Typography className="font-medium text-ellipsis overflow-hidden text-nowrap">
           [{brand}] {description}
         </Typography>
         <Flex className="justify-between items-center">

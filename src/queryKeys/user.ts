@@ -25,23 +25,23 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   products: {
-    new: () => ({
+    new: (pageParam?: number) => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(`/product/newProduct`);
+        const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
+          `/product/newProduct?size=15&page=${pageParam}`,
+        );
         return data.result;
       },
-      queryKey: [""],
+      queryKey: [pageParam],
     }),
     all: (pageParam?: number) => ({
       queryFn: async () => {
-        console.log(pageParam);
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
           `/product/products?size=15&page=${pageParam}`,
         );
         return data.result;
       },
-      queryKey: [""],
+      queryKey: [pageParam],
     }),
   },
 });

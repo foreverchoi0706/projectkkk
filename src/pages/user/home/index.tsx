@@ -1,18 +1,27 @@
 import Product from "@/components/Product";
 import user from "@/queryKeys/user.ts";
 import { UnorderedListOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Flex, Row, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const { data: newProducts } = useQuery({
-    ...user.products.new(),
-  });
-
   const { data: categories } = useQuery({
     ...user.category.all(),
+  });
+
+  const { data: newProducts } = useQuery({
+    ...user.products.new(1),
+  });
+
+  const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
+    queryKey: user.products.new().queryKey,
+    queryFn: (context) => user.products.new(context.pageParam).queryFn(context),
+    getNextPageParam: (_, __, _lastPageParam) => {
+      return _lastPageParam + 1;
+    },
+    initialPageParam: 1,
   });
 
   return (
@@ -58,20 +67,27 @@ const Page: FC = () => {
 
         <Flex className="flex-col gap-4">
           <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
-          <Carousel arrows slidesToShow={3} dots={false}>
+          <Carousel arrows slidesToShow={2} dots={false}>
             {newProducts?.content.map((product) => (
               <Product {...product} key={product.id} />
             ))}
           </Carousel>
         </Flex>
 
-        <Row gutter={[8, 8]}>
-          {newProducts?.content.map((product) => (
-            <Col xs={12} md={8} key={product.id}>
-              <Product {...product} />
-            </Col>
-          ))}
-        </Row>
+        <Flex className="flex-col gap-4">
+          <Row gutter={[8, 8]}>
+            {newProductsPages?.pages.map(({ content }) =>
+              content.map((product) => (
+                <Col xs={12} md={8} key={product.id}>
+                  <Product {...product} />
+                </Col>
+              )),
+            )}
+          </Row>
+          <Flex className="justify-center p-4">
+            <Button onClick={() => fetchNextPage()}>더보기</Button>
+          </Flex>
+        </Flex>
       </Flex>
     </main>
   );
