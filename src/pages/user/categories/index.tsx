@@ -6,7 +6,7 @@ import { Button, Col, Flex, Row, Spin, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 
 const Page: FC = () => {
-  const { data: categories } = useQuery({ ...user.category.all() });
+  const { data: categories } = useQuery(user.category.all());
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
 
   const onClickCategoryMenu = (categoryId: number) => {

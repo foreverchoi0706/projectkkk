@@ -7,7 +7,6 @@ import Carts from "@/pages/user/carts";
 import UserCategories from "@/pages/user/categories";
 import Home from "@/pages/user/home";
 import Picks from "@/pages/user/picks";
-import UserProducts from "@/pages/user/products";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
@@ -55,61 +54,55 @@ export const USER_SIGN_IN_ROUTES = [
   },
   {
     Page: Search,
-    path: "/search",
+    path: "search",
     requiredAuth: false,
     accessAbleAuth: true,
   },
   {
     Page: SignIn,
-    path: "/signin",
+    path: "signin",
     requiredAuth: false,
     accessAbleAuth: false,
   },
   {
     Page: SignUp,
-    path: "/signup",
+    path: "signup",
     requiredAuth: false,
     accessAbleAuth: false,
   },
   {
     Page: UserCategories,
-    path: "/categories",
+    path: "categories",
     requiredAuth: false,
     accessAbleAuth: true,
   },
   {
     Page: Carts,
-    path: "/carts",
-    requiredAuth: false,
-    accessAbleAuth: true,
-  },
-  {
-    Page: UserProducts,
-    path: "/products",
+    path: "carts",
     requiredAuth: false,
     accessAbleAuth: true,
   },
   {
     Page: UserProductsDetail,
-    path: "/products/:id",
+    path: "products/:id",
     requiredAuth: false,
     accessAbleAuth: true,
   },
   {
     Page: Picks,
-    path: "/picks",
+    path: "picks",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserSetting,
-    path: "/settings",
+    path: "settings",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserCoupons,
-    path: "/settings/coupons",
+    path: "settings/coupons",
     requiredAuth: true,
     accessAbleAuth: true,
   },

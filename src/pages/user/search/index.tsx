@@ -41,7 +41,7 @@ const Page: FC = () => {
         <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
           <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
           {recentSearchKeywords.map((recentSearchKeyword) => (
-            <Link to={`/search?keyword=${recentSearchKeyword}`}>
+            <Link key={recentSearchKeyword} to={`/search?keyword=${recentSearchKeyword}`}>
               <Button className="text-xs">
                 {recentSearchKeyword}{" "}
                 <CloseOutlined

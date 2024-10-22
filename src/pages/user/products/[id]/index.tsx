@@ -8,13 +8,7 @@ import { Spin } from "antd";
 const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    data: product,
-    isLoading,
-    isError,
-  } = useQuery({
-    ...user.products.detail(id),
-  });
+  const { data: product, isLoading, isError } = useQuery(user.products.detail(id));
 
   useEffect(() => {
     if (isError) {

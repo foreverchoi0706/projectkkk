@@ -6,13 +6,9 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const { data: categories } = useQuery({
-    ...user.category.all(),
-  });
+  const { data: categories } = useQuery(user.category.all());
 
-  const { data: newProducts } = useQuery({
-    ...user.products.new(1),
-  });
+  const { data: newProducts } = useQuery(user.products.new(1));
 
   const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
     queryKey: user.products.new().queryKey,
