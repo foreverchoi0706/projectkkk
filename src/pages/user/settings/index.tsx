@@ -1,11 +1,20 @@
 import useAuth from "@/hooks/useAuth";
 import { RightOutlined } from "@ant-design/icons";
-import { Divider, Flex, Typography } from "antd";
+import { useQueries } from "@tanstack/react-query";
+import { Divider, Flex, Spin, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import user from "@/queryKeys/user";
 
 const Page: FC = () => {
   const { logout } = useAuth();
+
+  const queries = useQueries({ queries: [user.coupons.all(1)] });
+
+  if (queries.every(({ isLoading }) => isLoading)) return <Spin fullscreen />;
+
+  const [{ data: coupons }] = queries;
+
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">
@@ -29,11 +38,11 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
+        <Link to="/settings/coupons">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">쿠폰</Typography>
             <Typography className="font-bold text-lg">
-              0 <RightOutlined />
+              {coupons?.content.length || 0} <RightOutlined />
             </Typography>
           </Flex>
         </Link>
@@ -50,6 +59,14 @@ const Page: FC = () => {
             <Typography className="font-bold text-lg">마일리지</Typography>
             <Typography className="font-bold text-lg">
               0 <RightOutlined />
+            </Typography>
+          </Flex>
+        </Link>
+        <Link to="/settings/qnas">
+          <Flex className="items-center justify-between">
+            <Typography className="font-bold text-lg">QnA</Typography>
+            <Typography className="font-bold text-lg">
+              <RightOutlined />
             </Typography>
           </Flex>
         </Link>

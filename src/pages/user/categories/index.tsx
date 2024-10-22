@@ -2,7 +2,7 @@ import user from "@/queryKeys/user.ts";
 import { ICategory } from "@/utils/types.ts";
 import { RightOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Col, Flex, Row, Typography } from "antd";
+import { Button, Col, Flex, Row, Spin, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 
 const Page: FC = () => {
@@ -24,7 +24,7 @@ const Page: FC = () => {
     setSelectedCategory(categories.content[0]);
   }, [categories]);
 
-  if (!categories || !selectedCategory) return null;
+  if (!categories || !selectedCategory) return <Spin fullscreen />;
   return (
     <main className="h-full">
       <Flex className="h-full">

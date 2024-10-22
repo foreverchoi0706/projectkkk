@@ -1,13 +1,31 @@
+import { useQuery } from "@tanstack/react-query";
+import user from "@/queryKeys/user.ts";
+
 import { FC, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Spin } from "antd";
 
 const Page: FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useQuery({
+    ...user.products.detail(id),
+  });
 
   useEffect(() => {
-    console.log(id);
-  });
-  return <main>dasdad</main>;
+    if (isError) {
+      alert("해당 상품을 찾을 수 없습니다");
+      navigate(-1);
+    }
+  }, [isError]);
+
+  if (isLoading) return <Spin fullscreen />;
+
+  return <main>{JSON.stringify(product)}</main>;
 };
 
 export default Page;

@@ -24,6 +24,26 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [""],
     }),
   },
+  coupons: {
+    all: (pageParam?: number) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<unknown[]>>>(
+          `/coupon/coupons?size=100&page=${pageParam}`,
+        );
+        return data.result;
+      },
+      queryKey: [pageParam],
+    }),
+    detail: (id?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<unknown>>>(
+          `/coupon/coupon?couponId=${id}`,
+        );
+        return data.result;
+      },
+      queryKey: [id],
+    }),
+  },
   products: {
     new: (pageParam?: number) => ({
       queryFn: async () => {
@@ -42,6 +62,15 @@ const queryKeyStore = createQueryKeyStore({
         return data.result;
       },
       queryKey: [pageParam],
+    }),
+    detail: (id?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IProduct>>(
+          `/product/product?productId=${id}`,
+        );
+        return data.result;
+      },
+      queryKey: [id],
     }),
   },
 });

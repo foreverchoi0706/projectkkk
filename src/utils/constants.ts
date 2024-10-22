@@ -11,6 +11,7 @@ import UserProducts from "@/pages/user/products";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
+import UserCoupons from "@/pages/user/settings/coupons";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
@@ -103,6 +104,12 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: UserSetting,
     path: "/settings",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserCoupons,
+    path: "/settings/coupons",
     requiredAuth: true,
     accessAbleAuth: true,
   },

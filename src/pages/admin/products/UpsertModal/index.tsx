@@ -8,7 +8,7 @@ import {
 } from "@/utils/constants";
 import { IProduct, IResponse, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Modal, ModalProps } from "antd";
+import { Button, Flex, Form, FormProps, Input, Modal, ModalProps, Spin } from "antd";
 import { AxiosError } from "axios";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 
@@ -120,7 +120,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     decreaseStockStockMutation.mutate(cancelSellCount);
   };
 
-  if (hasProductId && product === undefined) return null;
+  if (hasProductId && product === undefined) return <Spin fullscreen />;
   return (
     <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
       <Form initialValues={product} form={form} onFinish={onFinish}>

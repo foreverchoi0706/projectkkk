@@ -1,7 +1,7 @@
 import Product from "@/components/Product";
 import user from "@/queryKeys/user";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Col, Flex, Row } from "antd";
+import { Button, Col, Flex, Row, Spin } from "antd";
 import { FC } from "react";
 
 const Page: FC = () => {
@@ -16,7 +16,7 @@ const Page: FC = () => {
 
   console.log(productsPages);
 
-  if (!productsPages) return null;
+  if (!productsPages) return <Spin fullscreen />;
 
   return (
     <main>

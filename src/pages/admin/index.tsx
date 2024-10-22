@@ -4,7 +4,7 @@ import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
 import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Flex, Layout, Menu } from "antd";
+import { Button, Flex, Layout, Menu, Spin } from "antd";
 import { FC, useEffect, useState } from "react";
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
@@ -31,7 +31,7 @@ const Admin: FC = () => {
     return () => abortController.abort();
   }, []);
 
-  if (isLoading) return null;
+  if (isLoading) return <Spin fullscreen />;
 
   if (data) {
     return (

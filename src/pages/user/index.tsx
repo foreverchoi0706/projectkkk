@@ -13,7 +13,7 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Flex, Layout, Typography } from "antd";
+import { Flex, Layout, Spin, Typography } from "antd";
 import { FC, useEffect } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const User: FC = () => {
     return () => abortController.abort();
   }, []);
 
-  if (isLoading) return null;
+  if (isLoading) return <Spin fullscreen />;
 
   return (
     <Layout className="bg-white relative my-0 mx-auto max-w-[600px] h-[calc(var(--vh,1vh)*100)]">
