@@ -6,7 +6,7 @@ import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Flex, Layout, Menu, Spin } from "antd";
 import { FC, useEffect, useState } from "react";
-import { Link, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {
   useQueryStore();
@@ -69,12 +69,7 @@ const Admin: FC = () => {
             </Link>
           </Layout.Header>
           <Layout.Content className="m-6 p-6">
-            <Routes>
-              {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
-                <Route key={index} element={<Page />} path={path} />
-              ))}
-              <Route path="*" element={<Navigate replace to="/admin/products" />} />
-            </Routes>
+            <Outlet />
           </Layout.Content>
         </Layout>
       </Layout>

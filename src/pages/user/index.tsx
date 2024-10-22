@@ -1,5 +1,3 @@
-import useAuth from "@/hooks/useAuth";
-import { USER_SIGN_IN_ROUTES } from "@/utils/constants";
 import {
   HeartFilled,
   HeartOutlined,
@@ -13,12 +11,11 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Flex, Layout, Spin, Typography } from "antd";
+import { Flex, Layout, Typography } from "antd";
 import { FC, useEffect } from "react";
-import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 
 const User: FC = () => {
-  const { data, isLoading } = useAuth();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -31,8 +28,6 @@ const User: FC = () => {
     window.addEventListener("resize", setVh, { signal: abortController.signal });
     return () => abortController.abort();
   }, []);
-
-  if (isLoading) return <Spin fullscreen />;
 
   return (
     <Layout className="bg-white relative my-0 mx-auto max-w-[600px] h-[calc(var(--vh,1vh)*100)]">
@@ -50,21 +45,7 @@ const User: FC = () => {
         </Flex>
       </Flex>
       <Flex className="p-2 flex-col flex-grow overflow-y-auto">
-        <Routes>
-          {data
-            ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
-                ({ Page, path }, index) => <Route key={index} path={path} element={<Page />} />,
-              )
-            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
-                <Route
-                  key={index}
-                  path={path}
-                  element={requiredAuth ? <Navigate to="/signin" replace /> : <Page />}
-                />
-              ))}
-
-          <Route path="/*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Outlet />
       </Flex>
       <Flex className="border rounded-t-2xl justify-around p-4">
         <Link to="/" className="flex flex-col items-center">
@@ -75,8 +56,8 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">홈</Typography>
         </Link>
-        <Link to="/products" className="flex flex-col items-center">
-          {pathname === "/products" ? (
+        <Link to="/search" className="flex flex-col items-center">
+          {pathname === "/search" ? (
             <ProductFilled className="text-lg" />
           ) : (
             <ProductOutlined className="text-lg" />
@@ -104,6 +85,7 @@ const User: FC = () => {
           <Typography className="font-bold mt-2 text-xs">마이페이지</Typography>
         </Link>
       </Flex>
+      <ScrollRestoration />
     </Layout>
   );
 };
