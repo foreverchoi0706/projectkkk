@@ -54,14 +54,14 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [pageParam],
     }),
-    all: (pageParam?: number) => ({
+    all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/products?size=15&page=${pageParam}`,
+          `/product/products?${queryString}`,
         );
         return data.result;
       },
-      queryKey: [pageParam],
+      queryKey: [queryString],
     }),
     detail: (id?: string) => ({
       queryFn: async () => {

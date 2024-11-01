@@ -14,7 +14,7 @@ import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://projectkkk.com/api/",
+  baseURL: import.meta.env.MODE === "development" ? "https://projectkkk.com/api/" : "https://projectkkk.com/api/",
 });
 
 axiosInstance.interceptors.request.use((config) => {

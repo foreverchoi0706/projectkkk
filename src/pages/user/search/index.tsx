@@ -13,17 +13,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { Link } from "react-router-dom";
-import { debounceTime, distinctUntilChanged, fromEvent, of, switchMap } from "rxjs";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const refInput = useRef<InputRef>(null);
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams({ size: "15", page: "1" });
+  const [searchKeyword, setSearchKeyword] = useState<string>(searchParams.get("keyword") || "");
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
     JSON.parse(getCookie(RECENT_SEARCH_KEYWORD) || "[]"),
   );
-
-  const { data = [] } = useQuery(user.products.all());
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({
     key,
@@ -35,6 +35,8 @@ const Page: FC = () => {
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
     });
+    searchParams.set("keyword", value);
+    navigate(`/search?${searchParams.toString()}`);
   };
 
   const onClickDeleteRecentSearchKeyword: MouseEventHandler<HTMLSpanElement> = (e) => {
@@ -49,15 +51,15 @@ const Page: FC = () => {
     });
   };
 
+  const { data = [] } = useQuery(user.products.all(searchParams.toString()));
+
   useEffect(() => {
     if (!refInput.current?.input) return;
     const subscrition = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(({ target }) => {
-          return of(target.value);
-        }),
+        map(({ target }) => target.value),
       )
       .subscribe(setSearchKeyword);
     return () => subscrition.unsubscribe();
@@ -69,19 +71,19 @@ const Page: FC = () => {
       {recentSearchKeywords.length > 0 && (
         <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
           <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
-          {recentSearchKeywords.map((recentSearchKeyword) => (
-            <Link key={recentSearchKeyword} to={`/search?keyword=${recentSearchKeyword}`}>
-              <Button className="text-xs">
-                {recentSearchKeyword}{" "}
-                <CloseOutlined
-                  id={recentSearchKeyword}
-                  onClick={onClickDeleteRecentSearchKeyword}
-                />
-              </Button>
-            </Link>
-          ))}
+          {recentSearchKeywords.map((recentSearchKeyword) => {
+            searchParams.set("keyword", recentSearchKeyword);
+            return (
+              <Link key={recentSearchKeyword} to={`/search?${searchParams.toString()}`}>
+                <Button className="text-xs">
+                  {recentSearchKeyword} <CloseOutlined onClick={onClickDeleteRecentSearchKeyword} />
+                </Button>
+              </Link>
+            );
+          })}
         </Flex>
       )}
+      {searchKeyword}
       {JSON.stringify(data)}
     </main>
   );
