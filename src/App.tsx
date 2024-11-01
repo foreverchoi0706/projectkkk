@@ -14,7 +14,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
-const getUserRoute = (data?: IUserInfo) =>
+const getRoute = (data?: IUserInfo) =>
   createBrowserRouter(
     createRoutesFromElements(
       <>
@@ -54,14 +54,10 @@ const getUserRoute = (data?: IUserInfo) =>
 
 const App: FC = () => {
   const { data, isLoading } = useAuth();
-  const userRoute = getUserRoute(data);
+  const userRoute = getRoute(data);
 
   if (isLoading) return null;
-  return (
-    <>
-      <RouterProvider router={userRoute} />
-    </>
-  );
+  return <RouterProvider router={userRoute} />;
 };
 
 export default App;
