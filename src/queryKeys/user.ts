@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/queryKeys/admin";
-import { ICategory, IPageList, IProduct, IResponse, IToken, IUserInfo } from "@/utils/types";
+import { Coupon, ICategory, IPageList, IProduct, IResponse, IToken, IUserInfo } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
@@ -27,7 +27,7 @@ const queryKeyStore = createQueryKeyStore({
   coupons: {
     all: (pageParam?: number) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<unknown[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
           `/coupon/coupons?size=100&page=${pageParam}`,
         );
         return data.result;

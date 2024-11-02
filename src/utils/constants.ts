@@ -22,8 +22,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-export const USER_ACCESS_TOKEN = "USER_ADMIN_ACCESS_TOKEN" as const;
-export const USER_REFRESH_TOKEN = "USER_ADMIN_ACCESS_TOKEN" as const;
+
 export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 export const ADMIN_REFRESH_TOKEN = "ADMIN_REFRESH_TOKEN" as const;
 
@@ -79,7 +78,7 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: Carts,
     path: "carts",
-    requiredAuth: false,
+    requiredAuth: true,
     accessAbleAuth: true,
   },
   {

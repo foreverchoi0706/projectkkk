@@ -2,8 +2,6 @@ import admin from "@/queryKeys/admin";
 import {
   ADMIN_ACCESS_TOKEN,
   ADMIN_REFRESH_TOKEN,
-  USER_ACCESS_TOKEN,
-  USER_REFRESH_TOKEN,
 } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
 import { IUserInfo } from "@/utils/types";
@@ -28,8 +26,6 @@ const useAuth = () => {
 
   const logout = () => {
     alert("로그아웃되었습니다");
-    deleteCookie(USER_ACCESS_TOKEN);
-    deleteCookie(USER_REFRESH_TOKEN);
     deleteCookie(ADMIN_ACCESS_TOKEN);
     deleteCookie(ADMIN_REFRESH_TOKEN);
     queryClient.setQueryData<null>(

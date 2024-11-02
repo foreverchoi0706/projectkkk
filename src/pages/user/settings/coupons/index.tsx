@@ -6,8 +6,18 @@ import { FC } from "react";
 const Page: FC = () => {
   const { data: coupons, isLoading } = useQuery(user.coupons.all(1));
 
-  if (isLoading) return <Spin fullscreen />;
-  return <main>{JSON.stringify(coupons)}</main>;
+  if (isLoading || !coupons?.content) return <Spin fullscreen />;
+  return (
+    <main>
+      <ul className="flex gap-4 flex-col">
+        {coupons.content.map(({ id, name }) => (
+          <li key={id} className="flex-grow border border-gray-50">
+            {id} {name}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
 };
 
 export default Page;

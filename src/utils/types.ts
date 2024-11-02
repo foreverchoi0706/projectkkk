@@ -117,3 +117,12 @@ export type TRole = "center" | "admin" | "user";
 export type INonNullable<T> = {
   [K in keyof T]: NonNullable<K>;
 };
+
+export interface Coupon {
+  id: number
+  name: string
+  discountRate: number
+  startDate: string
+  endDate: string
+  assignBy: string
+}

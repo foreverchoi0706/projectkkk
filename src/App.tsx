@@ -38,7 +38,7 @@ const getRoute = (data?: IUserInfo) =>
               {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
                 <Route key={index} element={<Page />} path={path} />
               ))}
-              <Route path="/*" element={<Navigate replace to="/products" />} />
+              <Route path="/admin/*" element={<Navigate replace to="/products" />} />
             </>
           ) : (
             <>
