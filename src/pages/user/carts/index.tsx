@@ -12,14 +12,14 @@ const Page: FC = () => {
       <Flex className="flex-col justify-center items-center gap-8 p-8">
         <Typography className="font-bold text-2xl">장바구니에 담긴 상품이 없어요</Typography>
         <Typography className="text-lg">원하는 상품을 담아보세요</Typography>
-        <Link to="/products">
+        <Link to="/search">
           <Button variant="solid" color="primary">
             상품보러가기
           </Button>
         </Link>
       </Flex>
-      <Divider />
-      <Flex className="gap-8 p-8">
+      <Divider className="border-t-8" />
+      <Flex className="flex-col gap-8">
         <Typography className="font-bold text-xl">함께 구매하면 좋은 상품</Typography>
         <Row gutter={[8, 8]}>
           {newProducts?.content.map((product) => (

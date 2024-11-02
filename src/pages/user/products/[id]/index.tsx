@@ -1,9 +1,7 @@
+import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import user from "@/queryKeys/user.ts";
-
 import { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Spin } from "antd";
 
 const Page: FC = () => {
   const { id } = useParams();
@@ -17,7 +15,7 @@ const Page: FC = () => {
     }
   }, [isError]);
 
-  if (isLoading) return <Spin fullscreen />;
+  if (isLoading) return null;
 
   return <main>{JSON.stringify(product)}</main>;
 };

@@ -1,12 +1,10 @@
 import useQueryStore from "@/hooks/store/useQueryStore";
 import useAuth from "@/hooks/useAuth";
-import SignIn from "@/pages/admin/signIn";
-import SignUp from "@/pages/admin/signUp";
 import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Flex, Layout, Menu, Spin } from "antd";
 import { FC, useEffect, useState } from "react";
-import { Link, Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {
   useQueryStore();
@@ -75,14 +73,6 @@ const Admin: FC = () => {
       </Layout>
     );
   }
-
-  return (
-    <Routes>
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/*" element={<Navigate replace to="/signin" />} />
-    </Routes>
-  );
 };
 
 export default Admin;

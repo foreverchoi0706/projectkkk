@@ -48,7 +48,7 @@ const User: FC = () => {
         <Outlet />
       </Flex>
       <Flex className="border rounded-t-2xl justify-around p-4">
-        <Link to="/" className="flex flex-col items-center">
+        <Link to="/" className="flex-1 flex flex-col items-center">
           {pathname === "/" ? (
             <HomeFilled className="text-lg" />
           ) : (
@@ -56,7 +56,7 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">홈</Typography>
         </Link>
-        <Link to="/search" className="flex flex-col items-center">
+        <Link to="/search" className="flex-1 flex flex-col items-center">
           {pathname === "/search" ? (
             <ProductFilled className="text-lg" />
           ) : (
@@ -64,11 +64,11 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">상품</Typography>
         </Link>
-        <Link to="/categories" className="flex flex-col items-center">
+        <Link to="/categories" className="flex-1 flex flex-col items-center">
           <UnorderedListOutlined className="text-xl" />
           <Typography className="font-bold mt-2 text-xs">카테고리</Typography>
         </Link>
-        <Link to="/picks" className="flex flex-col items-center">
+        <Link to="/picks" className="flex-1 flex flex-col items-center">
           {pathname === "/picks" ? (
             <HeartFilled className="text-lg" />
           ) : (
@@ -76,7 +76,7 @@ const User: FC = () => {
           )}
           <Typography className="font-bold mt-2 text-xs">찜</Typography>
         </Link>
-        <Link to="/settings" className="flex flex-col items-center">
+        <Link to="/settings" className="flex-1 flex flex-col items-center">
           {pathname === "/setting" ? (
             <SettingFilled className="text-lg" />
           ) : (

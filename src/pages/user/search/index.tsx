@@ -1,9 +1,10 @@
+import Product from "@/components/Product";
+import user from "@/queryKeys/user";
 import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie";
-import user from "@/queryKeys/user";
 import { CloseOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { Button, Flex, Input, InputRef, Typography } from "antd";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Button, Col, Flex, Input, InputRef, Typography } from "antd";
 import {
   ChangeEvent,
   FC,
@@ -15,7 +16,6 @@ import {
 } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
-import Product from "@/components/Product";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -51,9 +51,13 @@ const Page: FC = () => {
     });
   };
 
-  const { data: products } = useQuery({
-    ...user.products.all(searchParams.toString()),
-    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
+  const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
+    queryKey: user.products.all(searchParams.toString()).queryKey,
+    queryFn: (context) => user.products.all(searchParams.toString()).queryFn(context),
+    getNextPageParam: (_, __, _lastPageParam) => {
+      return _lastPageParam + 1;
+    },
+    initialPageParam: 1,
   });
 
   useEffect(() => {
@@ -67,6 +71,8 @@ const Page: FC = () => {
       .subscribe();
     return () => subscrition.unsubscribe();
   }, []);
+
+  if (!newProductsPages) return null;
 
   return (
     <main className="h-full">
@@ -89,14 +95,23 @@ const Page: FC = () => {
           </Flex>
         )}
 
-        {products.content.length > 0 ? (
-          products.content.map((product) => <Product {...product} />)
+        {newProductsPages.pages.length > 0 ? (
+          newProductsPages.pages.map(({ content }) =>
+            content.map((product) => (
+              <Col xs={12} md={8} key={product.id}>
+                <Product {...product} />
+              </Col>
+            )),
+          )
         ) : (
           <Flex className="flex-col gap-4 flex-grow justify-center items-center">
             <Typography className="text-5xl">😥</Typography>
             <Typography className="text-2xl">검색결과가 없습니다</Typography>
           </Flex>
         )}
+      </Flex>
+      <Flex className="justify-center p-4">
+        <Button onClick={() => fetchNextPage()}>더보기</Button>
       </Flex>
     </main>
   );

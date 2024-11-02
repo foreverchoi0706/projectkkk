@@ -1,5 +1,5 @@
 import { ADMIN_ACCESS_TOKEN, ADMIN_REFRESH_TOKEN } from "@/utils/constants";
-import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
+import { deleteCookie, getCookie, hasCookie } from "@/utils/cookie";
 import {
   IAccount,
   IBrand,

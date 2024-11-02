@@ -3,8 +3,6 @@ import {
   REQUIRED_BRAND_NAME,
   REQUIRED_CATEGORY_NAME,
   REQUIRED_PRODUCT_NAME,
-  REQUIRED_SOLD_QUANTITY_NAME,
-  REQUIRED_STOCK_NAME,
 } from "@/utils/constants";
 import { IProduct, IResponse, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -146,17 +144,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         >
           <Input placeholder="브랜드" />
         </Form.Item>
-        <Form.Item<IProduct>
-          name="soldQuantity"
-          rules={[
-            {
-              required: true,
-              message: REQUIRED_SOLD_QUANTITY_NAME,
-            },
-          ]}
-        >
-          <Input type="number" min="0" placeholder="현재 판매량" readOnly={hasProductId} />
-        </Form.Item>
+        {/*<Form.Item<IProduct>*/}
+        {/*  name="soldQuantity"*/}
+        {/*  rules={[*/}
+        {/*    {*/}
+        {/*      required: true,*/}
+        {/*      message: REQUIRED_SOLD_QUANTITY_NAME,*/}
+        {/*    },*/}
+        {/*  ]}*/}
+        {/*>*/}
+        {/*  <Input type="number" min="0" placeholder="현재 판매량" readOnly={hasProductId} />*/}
+        {/*</Form.Item>*/}
         <Form.Item<IProduct>
           name="category"
           rules={[
@@ -169,18 +167,18 @@ const UpsertModal: FC<IProps & ModalProps> = ({
           <Input placeholder="카테고리" />
         </Form.Item>
         <Flex gap="middle">
-          <Form.Item<IProduct>
-            name="stock"
-            style={{ flexGrow: "1" }}
-            rules={[
-              {
-                required: true,
-                message: REQUIRED_STOCK_NAME,
-              },
-            ]}
-          >
-            <Input type="number" min="0" placeholder="현재 재고" />
-          </Form.Item>
+          {/*<Form.Item<IProduct>*/}
+          {/*  name="stock"*/}
+          {/*  style={{ flexGrow: "1" }}*/}
+          {/*  rules={[*/}
+          {/*    {*/}
+          {/*      required: true,*/}
+          {/*      message: REQUIRED_STOCK_NAME,*/}
+          {/*    },*/}
+          {/*  ]}*/}
+          {/*>*/}
+          {/*  <Input type="number" min="0" placeholder="현재 재고" />*/}
+          {/*</Form.Item>*/}
           <Form.Item>
             <Button
               type="primary"
