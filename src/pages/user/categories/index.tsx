@@ -4,8 +4,10 @@ import { RightOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Flex, Row, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
+  const navigate = useNavigate();
   const { data: categories } = useQuery(user.category.all());
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
 
@@ -15,8 +17,8 @@ const Page: FC = () => {
     setSelectedCategory(category);
   };
 
-  const onClickCategory = (categoryId: number) => {
-    console.log(categoryId);
+  const onClickCategory = (code: string) => {
+    navigate(`/search?category=${code}`);
   };
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const Page: FC = () => {
         <Flex className="flex-col flex-grow p-4 gap-4">
           <Flex
             className="cursor-pointer w-full justify-between"
-            onClick={() => onClickCategory(selectedCategory.id)}
+            onClick={() => onClickCategory(selectedCategory.code)}
           >
             <Typography className="font-bold text-lg">{selectedCategory.name}</Typography>
             <Typography className="font-bold text-lg">
@@ -46,11 +48,11 @@ const Page: FC = () => {
             </Typography>
           </Flex>
           <Row gutter={[8, 8]}>
-            {selectedCategory.children.map(({ id, name }) => (
+            {selectedCategory.children.map(({ id, name, code }) => (
               <Col key={id} span={12}>
                 <Flex
                   className="cursor-pointer justify-between"
-                  onClick={() => onClickCategory(id)}
+                  onClick={() => onClickCategory(code)}
                 >
                   <Typography>{name}</Typography>
                   <Typography>
