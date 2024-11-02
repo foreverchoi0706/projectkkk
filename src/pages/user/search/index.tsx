@@ -69,26 +69,35 @@ const Page: FC = () => {
   }, []);
 
   return (
-    <main>
-      <Input ref={refInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
-      {recentSearchKeywords.length > 0 && (
-        <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
-          <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
-          {recentSearchKeywords.map((recentSearchKeyword) => {
-            searchParams.set("keyword", recentSearchKeyword);
-            return (
-              <Link key={recentSearchKeyword} to={`/search?${searchParams.toString()}`}>
-                <Button className="text-xs">
-                  {recentSearchKeyword} <CloseOutlined onClick={onClickDeleteRecentSearchKeyword} />
-                </Button>
-              </Link>
-            );
-          })}
-        </Flex>
-      )}
-      {products.content.map((product) => (
-        <Product {...product} />
-      ))}
+    <main className="h-full">
+      <Flex className="h-full">
+        <Input ref={refInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
+        {recentSearchKeywords.length > 0 && (
+          <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
+            <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
+            {recentSearchKeywords.map((recentSearchKeyword) => {
+              searchParams.set("keyword", recentSearchKeyword);
+              return (
+                <Link key={recentSearchKeyword} to={`/search?${searchParams.toString()}`}>
+                  <Button className="text-xs">
+                    {recentSearchKeyword}{" "}
+                    <CloseOutlined onClick={onClickDeleteRecentSearchKeyword} />
+                  </Button>
+                </Link>
+              );
+            })}
+          </Flex>
+        )}
+
+        {products.content.length > 0 ? (
+          products.content.map((product) => <Product {...product} />)
+        ) : (
+          <Flex className="flex-col gap-4 flex-grow justify-center items-center">
+            <Typography className="text-5xl">😥</Typography>
+            <Typography className="text-2xl">검색결과가 없습니다</Typography>
+          </Flex>
+        )}
+      </Flex>
     </main>
   );
 };

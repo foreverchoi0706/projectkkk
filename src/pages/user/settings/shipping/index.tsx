@@ -41,7 +41,7 @@ const Page: FC = () => {
   return (
     <main className="h-full">
       <Flex className="h-full flex-col">
-        <Input ref={refInput} placeholder="쿠폰을 검색해보세요" onKeyDown={onKeyDownSearch} />
+        <Input ref={refInput} placeholder="주문을 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col p-4 flex-grow">
           {coupons.content.length > 0 ? (
             coupons.content.map(({ id, name }) => (
@@ -52,7 +52,7 @@ const Page: FC = () => {
           ) : (
             <Flex className="flex-col gap-4 flex-grow justify-center items-center">
               <Typography className="text-5xl">😥</Typography>
-              <Typography className="text-2xl">쿠폰이 없습니다</Typography>
+              <Typography className="text-2xl">주문이 없습니다</Typography>
             </Flex>
           )}
         </Flex>

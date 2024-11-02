@@ -10,7 +10,10 @@ import Picks from "@/pages/user/picks";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
+import UserShipping from "@/pages/user/settings/shipping";
 import UserCoupons from "@/pages/user/settings/coupons";
+import UserReviews from "@/pages/user/settings/reviews";
+import UserPoints from "@/pages/user/settings/points";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
@@ -21,7 +24,6 @@ import {
   TagsOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-
 
 export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
 export const ADMIN_REFRESH_TOKEN = "ADMIN_REFRESH_TOKEN" as const;
@@ -100,8 +102,26 @@ export const USER_SIGN_IN_ROUTES = [
     accessAbleAuth: true,
   },
   {
+    Page: UserShipping,
+    path: "settings/shipping",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserReviews,
+    path: "settings/reviews",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
     Page: UserCoupons,
     path: "settings/coupons",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserPoints,
+    path: "settings/points",
     requiredAuth: true,
     accessAbleAuth: true,
   },

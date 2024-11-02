@@ -20,9 +20,9 @@ const Page: FC = () => {
       <Flex className="flex-col justify-center items-center gap-8 p-8">
         <Typography className="font-bold text-2xl">강민서님</Typography>
       </Flex>
-      <Divider />
+      <Divider className="border-t-8" />
       <Flex className="flex-col gap-8">
-        <Link to="/">
+        <Link to="/settings/shipping">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">주문 배송</Typography>
             <Typography className="font-bold text-lg">
@@ -30,7 +30,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
+        <Link to="/settings/reviews">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">리뷰</Typography>
             <Typography className="font-bold text-lg">
@@ -46,7 +46,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
+        <Link to="/settings/points">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">포인트</Typography>
             <Typography className="font-bold text-lg">
