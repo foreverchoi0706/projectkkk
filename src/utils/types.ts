@@ -69,6 +69,21 @@ export interface IMember {
   phone: string;
 }
 
+export interface IMemberInfo {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  role: string;
+  gender: string;
+  birthDate: string;
+  defaultAddress: string;
+  secondAddress: string | null;
+  thirdAddress: string | null;
+  grade: string;
+  point: number;
+}
+
 export interface IMemberSearchParams {
   name?: string;
   email?: string;

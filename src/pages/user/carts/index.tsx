@@ -1,8 +1,12 @@
-import { Button, Divider, Flex, Typography } from "antd";
+import Product from "@/components/Product";
+import user from "@/queryKeys/user";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Col, Divider, Flex, Row, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
+  const { data: newProducts } = useQuery(user.products.new(1));
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">
@@ -17,6 +21,13 @@ const Page: FC = () => {
       <Divider />
       <Flex className="gap-8 p-8">
         <Typography className="font-bold text-xl">함께 구매하면 좋은 상품</Typography>
+        <Row gutter={[8, 8]}>
+          {newProducts?.content.map((product) => (
+            <Col xs={12} md={8} key={product.id}>
+              <Product {...product} />
+            </Col>
+          ))}
+        </Row>
       </Flex>
     </main>
   );

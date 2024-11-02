@@ -70,7 +70,7 @@ const Page: FC = () => {
 
   return (
     <main className="h-full">
-      <Flex className="h-full">
+      <Flex className="flex-col h-full">
         <Input ref={refInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">

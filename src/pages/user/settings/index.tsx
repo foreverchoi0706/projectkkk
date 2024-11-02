@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import user from "@/queryKeys/user";
 
 const Page: FC = () => {
-  const { logout } = useAuth();
+  const { info, logout } = useAuth();
 
   const queries = useQueries({ queries: [user.coupons.all()] });
 
@@ -17,8 +17,10 @@ const Page: FC = () => {
 
   return (
     <main>
-      <Flex className="flex-col justify-center items-center gap-8 p-8">
-        <Typography className="font-bold text-2xl">강민서님</Typography>
+      <Flex className="flex-col justify-center items-center gap-2 p-8">
+        <Typography className="font-bold text-2xl">{info?.name}님</Typography>
+        <Typography className="text-lg">{info?.point}P</Typography>
+        <Typography className="text-lg">{info?.email}</Typography>
       </Flex>
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-8">
@@ -43,14 +45,6 @@ const Page: FC = () => {
             <Typography className="font-bold text-lg">쿠폰</Typography>
             <Typography className="font-bold text-lg">
               {coupons?.content.length || 0} <RightOutlined />
-            </Typography>
-          </Flex>
-        </Link>
-        <Link to="/settings/points">
-          <Flex className="items-center justify-between">
-            <Typography className="font-bold text-lg">포인트</Typography>
-            <Typography className="font-bold text-lg">
-              0 <RightOutlined />
             </Typography>
           </Flex>
         </Link>
@@ -87,6 +81,7 @@ const Page: FC = () => {
           </Flex>
         </Link>
       </Flex>
+      <Divider className="border-t-8" />
     </main>
   );
 };

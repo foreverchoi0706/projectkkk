@@ -4,6 +4,7 @@ import {
   IAccount,
   IBrand,
   IMember,
+  IMemberInfo,
   IPageList,
   IProduct,
   IResponse,
@@ -61,6 +62,13 @@ const queryKeyStore = createQueryKeyStore({
         const { data } = await axiosInstance.get<IResponse<IUserInfo>>(
           `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
         );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+    info: () => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IMemberInfo>>(`/member/member`);
         return data.result;
       },
       queryKey: [""],
