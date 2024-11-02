@@ -10,9 +10,10 @@ import Picks from "@/pages/user/picks";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
-import UserShipping from "@/pages/user/settings/shipping";
 import UserCoupons from "@/pages/user/settings/coupons";
+import UserQnas from "@/pages/user/settings/qnas";
 import UserReviews from "@/pages/user/settings/reviews";
+import UserShipping from "@/pages/user/settings/shipping";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
@@ -24,8 +25,8 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-export const ADMIN_ACCESS_TOKEN = "ADMIN_ACCESS_TOKEN" as const;
-export const ADMIN_REFRESH_TOKEN = "ADMIN_REFRESH_TOKEN" as const;
+export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
+export const REFRESH_TOKEN = "REFRESH_TOKEN" as const;
 
 export const RECENT_SEARCH_KEYWORD = "RECENT_SEARCH_KEYWORD" as const;
 
@@ -115,6 +116,12 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: UserCoupons,
     path: "settings/coupons",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserQnas,
+    path: "settings/qnas",
     requiredAuth: true,
     accessAbleAuth: true,
   },

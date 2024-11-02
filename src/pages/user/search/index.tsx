@@ -54,29 +54,29 @@ const Page: FC = () => {
   const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
     queryKey: user.products.all(searchParams.toString()).queryKey,
     queryFn: (context) => user.products.all(searchParams.toString()).queryFn(context),
-    getNextPageParam: (_, __, _lastPageParam) => {
-      return _lastPageParam + 1;
+    getNextPageParam: (_, __, lastPageParam) => {
+      return lastPageParam + 1;
     },
     initialPageParam: 1,
   });
 
   useEffect(() => {
     if (!refInput.current?.input) return;
-    const subscrition = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
+    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
         map(({ target }) => target.value),
       )
       .subscribe();
-    return () => subscrition.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
   if (!newProductsPages) return null;
 
   return (
     <main className="h-full">
-      <Flex className="flex-col h-full">
+      <Flex className="gap-4 flex-col h-full">
         <Input ref={refInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">

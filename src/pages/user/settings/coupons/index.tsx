@@ -1,9 +1,9 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Input, InputRef, Spin, Typography } from "antd";
+import { Flex, Input, InputRef, Typography } from "antd";
 import { ChangeEvent, FC, KeyboardEventHandler, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { fromEvent, debounceTime, distinctUntilChanged, map } from "rxjs";
+import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -19,24 +19,24 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons, isLoading } = useQuery({
+  const { data: coupons } = useQuery({
     ...user.coupons.all(searchParams.toString()),
     initialData: () => ({ content: [], page: 0, totalCount: 0 }),
   });
 
   useEffect(() => {
     if (!refInput.current?.input) return;
-    const subscrition = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
+    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
         map(({ target }) => target.value),
       )
       .subscribe();
-    return () => subscrition.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (isLoading) return <Spin fullscreen />;
+  if (!coupons) return null;
 
   return (
     <main className="h-full">

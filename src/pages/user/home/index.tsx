@@ -13,8 +13,8 @@ const Page: FC = () => {
   const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
     queryKey: user.products.new().queryKey,
     queryFn: (context) => user.products.new(context.pageParam).queryFn(context),
-    getNextPageParam: (_, __, _lastPageParam) => {
-      return _lastPageParam + 1;
+    getNextPageParam: (_, __, lastPageParam) => {
+      return lastPageParam + 1;
     },
     initialPageParam: 1,
   });
