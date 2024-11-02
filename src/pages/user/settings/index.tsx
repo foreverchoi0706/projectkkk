@@ -9,7 +9,7 @@ import user from "@/queryKeys/user";
 const Page: FC = () => {
   const { logout } = useAuth();
 
-  const queries = useQueries({ queries: [user.coupons.all(1)] });
+  const queries = useQueries({ queries: [user.coupons.all()] });
 
   if (queries.every(({ isLoading }) => isLoading)) return <Spin fullscreen />;
 
@@ -49,14 +49,6 @@ const Page: FC = () => {
         <Link to="/">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">포인트</Typography>
-            <Typography className="font-bold text-lg">
-              0 <RightOutlined />
-            </Typography>
-          </Flex>
-        </Link>
-        <Link to="/">
-          <Flex className="items-center justify-between">
-            <Typography className="font-bold text-lg">마일리지</Typography>
             <Typography className="font-bold text-lg">
               0 <RightOutlined />
             </Typography>

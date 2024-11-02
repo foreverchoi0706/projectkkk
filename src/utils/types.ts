@@ -24,12 +24,14 @@ export interface ISignInParams {
 }
 
 export interface ISignUpParams {
-  id: number;
   email: string;
   password: string;
   passwordConfirm: string;
   name: string;
   phone: string;
+  gender: string;
+  birthDate: string;
+  defaultAddress: string;
 }
 
 export interface IPageList<T> {
@@ -48,7 +50,6 @@ export interface IProduct {
   discountRate: number;
   description: string;
   imageUrl: string;
-  productCouponResponse: unknown[];
 }
 
 export interface IProductSearchParams {
@@ -119,10 +120,10 @@ export type INonNullable<T> = {
 };
 
 export interface Coupon {
-  id: number
-  name: string
-  discountRate: number
-  startDate: string
-  endDate: string
-  assignBy: string
+  id: number;
+  name: string;
+  discountRate: number;
+  startDate: string;
+  endDate: string;
+  assignBy: string;
 }

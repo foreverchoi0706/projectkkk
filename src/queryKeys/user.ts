@@ -1,5 +1,13 @@
 import { axiosInstance } from "@/queryKeys/admin";
-import { Coupon, ICategory, IPageList, IProduct, IResponse, IToken, IUserInfo } from "@/utils/types";
+import {
+  Coupon,
+  ICategory,
+  IPageList,
+  IProduct,
+  IResponse,
+  IToken,
+  IUserInfo,
+} from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
@@ -25,14 +33,14 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   coupons: {
-    all: (pageParam?: number) => ({
+    all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
-          `/coupon/coupons?size=100&page=${pageParam}`,
+          `/coupon/search?${queryString || ""}`,
         );
         return data.result;
       },
-      queryKey: [pageParam],
+      queryKey: [queryString],
     }),
     detail: (id?: string) => ({
       queryFn: async () => {
@@ -71,6 +79,14 @@ const queryKeyStore = createQueryKeyStore({
         return data.result;
       },
       queryKey: [id],
+    }),
+    wish: () => ({
+      queryFn: async () => {
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(`/wishList/my_wishList`);
+        return data.result;
+      },
+      queryKey: [""],
     }),
   },
 });

@@ -15,12 +15,12 @@ import {
 } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
+import Product from "@/components/Product";
 
 const Page: FC = () => {
-  const refInput = useRef<InputRef>(null);
   const navigate = useNavigate();
+  const refInput = useRef<InputRef>(null);
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
-  const [searchKeyword, setSearchKeyword] = useState<string>(searchParams.get("keyword") || "");
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
     JSON.parse(getCookie(RECENT_SEARCH_KEYWORD) || "[]"),
   );
@@ -51,7 +51,10 @@ const Page: FC = () => {
     });
   };
 
-  const { data = [] } = useQuery(user.products.all(searchParams.toString()));
+  const { data: products } = useQuery({
+    ...user.products.all(searchParams.toString()),
+    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
+  });
 
   useEffect(() => {
     if (!refInput.current?.input) return;
@@ -61,7 +64,7 @@ const Page: FC = () => {
         distinctUntilChanged(),
         map(({ target }) => target.value),
       )
-      .subscribe(setSearchKeyword);
+      .subscribe();
     return () => subscrition.unsubscribe();
   }, []);
 
@@ -83,8 +86,9 @@ const Page: FC = () => {
           })}
         </Flex>
       )}
-      {searchKeyword}
-      {JSON.stringify(data)}
+      {products.content.map((product) => (
+        <Product {...product} />
+      ))}
     </main>
   );
 };

@@ -30,8 +30,8 @@ const Page: FC = () => {
   };
 
   useEffect(() => {
-    form.setFieldValue("email", "center@center.com");
-    form.setFieldValue("password", "Ccenter123456!");
+    form.setFieldValue("email", "test@test.com");
+    form.setFieldValue("password", "Ttest1234567!");
   }, []);
 
   return (

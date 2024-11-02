@@ -13,18 +13,20 @@ import {
 } from "@/utils/constants";
 import { IResponse, ISignUpParams, IUserInfo, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
+import { Button, DatePicker, Flex, Form, FormProps, Input, Layout, Radio, Typography } from "antd";
+import { useForm } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
+  const [form] = useForm<ISignUpParams>();
   const navigate = useNavigate();
   const { login } = useAuth();
   const signUpMutation = useMutation<AxiosResponse<IResponse<IUserInfo>>, TError, ISignUpParams>({
     mutationFn: (signUpParams: ISignUpParams) => axiosInstance.post("/member/join", signUpParams),
     onSuccess: ({ data }) => login(data.result),
-    onError: ({ responseMessage }) => alert(responseMessage),
+    onError: ({ result }) => alert(result.errorMessage),
   });
 
   const onFinish: FormProps<ISignUpParams>["onFinish"] = (signUpParams) => {
@@ -34,7 +36,7 @@ const Page: FC = () => {
   return (
     <Layout className="flex items-center justify-center">
       <Typography.Title>회원가입</Typography.Title>
-      <Form onFinish={onFinish} autoComplete="off">
+      <Form form={form} onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams>
           name="email"
           rules={[
@@ -70,7 +72,7 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PASSWORD },
             {
-              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
+              pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
               message: INVALID_FORMAT_PASSWORD,
             },
           ]}
@@ -84,7 +86,7 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PASSWORD },
             {
-              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
+              pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
               message: INVALID_FORMAT_PASSWORD,
             },
             ({ getFieldValue }) => ({
@@ -98,6 +100,39 @@ const Page: FC = () => {
           <Input.Password placeholder={REQUIRED_PASSWORD} />
         </Form.Item>
 
+        <Form.Item<ISignUpParams>
+          name="gender"
+          rules={[{ required: true, message: REQUIRED_PASSWORD }]}
+        >
+          <Radio.Group>
+            <Radio value="M">남</Radio>
+            <Radio value="F">녀</Radio>
+            <Radio value="N">미선택</Radio>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item<ISignUpParams>
+          name="birthDate"
+          rules={[{ required: true, message: REQUIRED_PASSWORD }]}
+        >
+          <DatePicker className="w-full" placeholder="생년월일을 입력해주세요" />
+        </Form.Item>
+
+        <Form.Item<ISignUpParams>
+          name="defaultAddress"
+          rules={[{ required: true, message: "주소를 입력해주세요" }]}
+        >
+          <Input
+            readOnly
+            onClick={() => {
+              new window.daum.Postcode({
+                oncomplete: ({ address }: { address: string }) =>
+                  form.setFieldValue("defaultAddress", address),
+              }).open();
+            }}
+            placeholder="주소를 입력해주세요"
+          />
+        </Form.Item>
         <Form.Item>
           <Flex gap="middle">
             <Button
