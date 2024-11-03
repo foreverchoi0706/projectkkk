@@ -1,4 +1,5 @@
 import {
+  BellOutlined,
   HeartFilled,
   HeartOutlined,
   HomeFilled,
@@ -35,7 +36,10 @@ const User: FC = () => {
         <Link to="/">
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
-        <Flex className="gap-2">
+        <Flex className="gap-4">
+          <Link to="/search">
+            <BellOutlined className="text-2xl" />
+          </Link>
           <Link to="/search">
             <SearchOutlined className="text-2xl" />
           </Link>

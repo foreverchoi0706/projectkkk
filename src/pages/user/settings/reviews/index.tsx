@@ -1,6 +1,6 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Input, InputRef, Spin, Typography } from "antd";
+import { Flex, Input, InputRef, Typography } from "antd";
 import { ChangeEvent, FC, KeyboardEventHandler, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
@@ -19,9 +19,8 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons, isLoading } = useQuery({
+  const { data: coupons = { content: [], page: 0, totalCount: 0 } } = useQuery({
     ...user.coupons.all(searchParams.toString()),
-    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
   });
 
   useEffect(() => {
@@ -36,16 +35,16 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (isLoading) return <Spin fullscreen />;
+  if (!coupons) return null;
 
   return (
     <main className="h-full">
-      <Flex className="h-full flex-col">
+      <Flex className="h-full flex-col gap-4">
         <Input ref={refInput} placeholder="리뷰를 검색해보세요" onKeyDown={onKeyDownSearch} />
-        <Flex className="gap-4 flex-col p-4 flex-grow">
+        <Flex className="gap-4 flex-col flex-grow">
           {coupons.content.length > 0 ? (
             coupons.content.map(({ id, name }) => (
-              <Flex key={id} className="flex-grow border border-gray-50 p-16">
+              <Flex key={id} className="border border-gray-200 p-4">
                 {id} {name}
               </Flex>
             ))

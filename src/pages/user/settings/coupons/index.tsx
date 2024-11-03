@@ -19,9 +19,8 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons } = useQuery({
+  const { data: coupons = { content: [], page: 0, totalCount: 0 } } = useQuery({
     ...user.coupons.all(searchParams.toString()),
-    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
   });
 
   useEffect(() => {
@@ -40,13 +39,22 @@ const Page: FC = () => {
 
   return (
     <main className="h-full">
-      <Flex className="h-full flex-col">
+      <Flex className="h-full flex-col gap-4">
         <Input ref={refInput} placeholder="쿠폰을 검색해보세요" onKeyDown={onKeyDownSearch} />
-        <Flex className="gap-4 flex-col p-4 flex-grow">
+        <Flex className="gap-4 flex-col flex-grow">
           {coupons.content.length > 0 ? (
-            coupons.content.map(({ id, name }) => (
-              <Flex key={id} className="flex-grow border border-gray-50 p-16">
-                {id} {name}
+            coupons.content.map(({ id, name, startDate, endDate, discountRate }) => (
+              <Flex key={id} className="flex-col gap-4 p-4 border border-gray-200 rounded">
+                <Flex className="justify-between items-center">
+                  <Typography className="font-bold text-lg">{name}</Typography>
+                  <Typography className="text-pink-500 text-2xl font-bold">
+                    {discountRate}%
+                  </Typography>
+                </Flex>
+                <Typography className="text-end font-medium">
+                  {new Intl.DateTimeFormat("ko-KR").format(new Date(startDate))}~
+                  {new Intl.DateTimeFormat("ko-KR").format(new Date(endDate))}
+                </Typography>
               </Flex>
             ))
           ) : (

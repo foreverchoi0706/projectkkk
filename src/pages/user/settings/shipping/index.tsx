@@ -45,7 +45,7 @@ const Page: FC = () => {
         <Flex className="gap-4 flex-col p-4 flex-grow">
           {coupons.content.length > 0 ? (
             coupons.content.map(({ id, name }) => (
-              <Flex key={id} className="flex-grow border border-gray-50 p-16">
+              <Flex key={id} className="flex-grow border border-gray-200 p-16">
                 {id} {name}
               </Flex>
             ))

@@ -7,9 +7,8 @@ import { useSearchParams } from "react-router-dom";
 const Page: FC = () => {
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
 
-  const { data: qnas } = useQuery({
+  const { data: qnas = { content: [], page: 0, totalCount: 0 } } = useQuery({
     ...user.coupons.all(searchParams.toString()),
-    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
   });
 
   if (!qnas) return null;
@@ -20,7 +19,7 @@ const Page: FC = () => {
         <Flex className="gap-4 flex-col p-4 flex-grow">
           {qnas.content.length > 0 ? (
             qnas.content.map(({ id, name }) => (
-              <Flex key={id} className="flex-grow border border-gray-50 p-16">
+              <Flex key={id} className="flex-grow border border-gray-200 p-16">
                 {id} {name}
               </Flex>
             ))
