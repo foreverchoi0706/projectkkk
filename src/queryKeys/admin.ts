@@ -2,6 +2,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie } from "@/utils/cookie";
 import {
   IAccount,
+  IAuth,
   IBrand,
   IMember,
   IMemberInfo,
@@ -9,7 +10,6 @@ import {
   IProduct,
   IResponse,
   IToken,
-  IUserInfo,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import axios from "axios";
@@ -41,7 +41,7 @@ const queryKeyStore = createQueryKeyStore({
   auth: {
     verify: ({ accessToken, refreshToken }: IToken) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IUserInfo>>(
+        const { data } = await axiosInstance.get<IResponse<IAuth>>(
           `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
         );
         return data.result;

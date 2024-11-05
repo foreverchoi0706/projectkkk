@@ -1,13 +1,13 @@
 import { axiosInstance } from "@/queryKeys/admin";
 import {
   Coupon,
+  IAuth,
   ICategory,
   IPageList,
   IProduct,
   IQna,
   IResponse,
   IToken,
-  IUserInfo,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
@@ -15,7 +15,7 @@ const queryKeyStore = createQueryKeyStore({
   auth: {
     verify: ({ accessToken, refreshToken }: IToken) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IUserInfo>>(
+        const { data } = await axiosInstance.get<IResponse<IAuth>>(
           `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
         );
         return data.result;

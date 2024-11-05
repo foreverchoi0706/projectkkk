@@ -11,7 +11,7 @@ export interface IToken {
   refreshToken: string;
 }
 
-export interface IUserInfo {
+export interface IAuth {
   grantType: "Bearer";
   accessToken: string;
   refreshToken: string;
@@ -51,6 +51,8 @@ export interface IProduct {
   description: string;
   imageUrl: string;
   liked: boolean;
+  sizes: ("XL" | "L" | "M" | "S")[];
+  colors: string[];
 }
 
 export interface IProductSearchParams {

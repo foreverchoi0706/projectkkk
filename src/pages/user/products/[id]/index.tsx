@@ -26,7 +26,7 @@ const Page: FC = () => {
 
   if (!product) return null;
 
-  const { name, description, discountRate, brand, price } = product;
+  const { name, description, discountRate, brand, price, sizes } = product;
 
   return (
     <main>
@@ -87,6 +87,13 @@ const Page: FC = () => {
           }).format(Math.round((price * (100 - discountRate)) / 100))}
         </Typography>
         <Typography>{description}</Typography>
+
+        <Flex className="gap-4">
+          {sizes.map((size) => (
+            <Button key={size}>{size}</Button>
+          ))}
+        </Flex>
+
         <Button
           type="default"
           onClick={() => {

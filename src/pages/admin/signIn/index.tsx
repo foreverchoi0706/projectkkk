@@ -6,7 +6,7 @@ import {
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
-import { IResponse, ISignInParams, IUserInfo, TError } from "@/utils/types";
+import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";
@@ -17,7 +17,7 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const signInMutation = useMutation<AxiosResponse<IResponse<IUserInfo>>, TError, ISignInParams>({
+  const signInMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignInParams>({
     mutationFn: (signInParams) => axiosInstance.post("/admin/auth/login", signInParams),
     onSuccess: ({ data }) => login(data.result),
     onError: ({ responseMessage }) => alert(responseMessage),

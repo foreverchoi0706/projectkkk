@@ -4,7 +4,7 @@ import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
 import User from "@/pages/user";
 import { ADMIN_SIGN_IN_ROUTES, USER_SIGN_IN_ROUTES } from "@/utils/constants";
-import { IUserInfo } from "@/utils/types";
+import { IAuth } from "@/utils/types";
 import { FC } from "react";
 import {
   Navigate,
@@ -14,7 +14,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 
-const getRoute = (data?: IUserInfo) =>
+const getRoute = (data?: IAuth) =>
   createBrowserRouter(
     createRoutesFromElements(
       <>

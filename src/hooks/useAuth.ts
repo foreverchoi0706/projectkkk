@@ -1,7 +1,7 @@
 import admin from "@/queryKeys/admin";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
-import { IUserInfo } from "@/utils/types";
+import { IAuth } from "@/utils/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useAuth = () => {
@@ -22,7 +22,7 @@ const useAuth = () => {
     gcTime: Infinity,
   });
 
-  const login = ({ accessToken, refreshToken }: IUserInfo) => {
+  const login = ({ accessToken, refreshToken }: IAuth) => {
     setCookie(ACCESS_TOKEN, accessToken);
     setCookie(REFRESH_TOKEN, refreshToken);
     queryClient.invalidateQueries();

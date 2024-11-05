@@ -11,7 +11,7 @@ import {
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
-import { IResponse, ISignUpParams, IUserInfo, TError } from "@/utils/types";
+import { IAuth, IResponse, ISignUpParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
 import { AxiosResponse } from "axios";
@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 const Page: FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const signUpMutation = useMutation<AxiosResponse<IResponse<IUserInfo>>, TError, ISignUpParams>({
+  const signUpMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignUpParams>({
     mutationFn: (signUpParams: ISignUpParams) =>
       axiosInstance.post("/admin/member/join", signUpParams),
     onSuccess: ({ data }) => login(data.result),
