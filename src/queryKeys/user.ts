@@ -4,6 +4,7 @@ import {
   ICategory,
   IPageList,
   IProduct,
+  IQna,
   IResponse,
   IToken,
   IUserInfo,
@@ -87,6 +88,15 @@ const queryKeyStore = createQueryKeyStore({
         return data.result;
       },
       queryKey: [""],
+    }),
+  },
+  qna: {
+    all: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas`);
+        return data.result;
+      },
+      queryKey: [queryString],
     }),
   },
 });

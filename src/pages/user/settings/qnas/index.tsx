@@ -8,7 +8,7 @@ const Page: FC = () => {
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
 
   const { data: qnas = { content: [], page: 0, totalCount: 0 } } = useQuery({
-    ...user.coupons.all(searchParams.toString()),
+    ...user.qna.all(searchParams.toString()),
   });
 
   if (!qnas) return null;
@@ -18,9 +18,15 @@ const Page: FC = () => {
       <Flex className="h-full flex-col">
         <Flex className="gap-4 flex-col p-4 flex-grow">
           {qnas.content.length > 0 ? (
-            qnas.content.map(({ id, name }) => (
-              <Flex key={id} className="flex-grow border border-gray-200 p-16">
-                {id} {name}
+            qnas.content.map(({ subject, qnAId, createAt }) => (
+              <Flex key={qnAId} className="flex-col gap-4 p-4 border border-gray-200 rounded">
+                <Flex className="justify-between items-center">
+                  <Typography className="font-bold text-lg">{subject}</Typography>
+                  <Typography className="text-pink-500 text-2xl font-bold">{subject}</Typography>
+                </Flex>
+                <Typography className="text-end font-medium">
+                  {new Intl.DateTimeFormat("ko-KR").format(new Date(createAt))}
+                </Typography>
               </Flex>
             ))
           ) : (

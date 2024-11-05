@@ -1,5 +1,5 @@
-import user from "@/queryKeys/user.ts";
-import { ICategory } from "@/utils/types.ts";
+import user from "@/queryKeys/user";
+import { ICategory } from "@/utils/types";
 import { RightOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Flex, Row, Typography } from "antd";
@@ -30,7 +30,7 @@ const Page: FC = () => {
   return (
     <main className="h-full">
       <Flex className="h-full">
-        <Flex className="bg-gray-100 flex-col gap-4">
+        <Flex className="bg-gray-200 flex-col gap-4">
           {categories.content.map(({ name, id }) => (
             <Button key={id} onClick={() => onClickCategoryMenu(id)} type="text">
               {name}
@@ -42,7 +42,7 @@ const Page: FC = () => {
             className="cursor-pointer w-full justify-between"
             onClick={() => onClickCategory(selectedCategory.code)}
           >
-            <Typography className="font-bold text-lg">{selectedCategory.name}</Typography>
+            <Typography className="font-bold text-lg ">{selectedCategory.name}</Typography>
             <Typography className="font-bold text-lg">
               <RightOutlined />
             </Typography>

@@ -142,3 +142,22 @@ export interface Coupon {
   endDate: string;
   assignBy: string;
 }
+
+export type TQnaType = "SHIPPING" | "ORDER" | "REFUND" | "OTHER";
+
+export interface IQna {
+  answerStatus: "WAITING";
+  createAt: string;
+  memberEmail: string;
+  qnAId: number;
+  qnAType: TQnaType;
+  subject: string;
+}
+
+export interface IQnaParams {
+  qnAType: TQnaType;
+  subject: string;
+  productNum: string;
+  orderNum: string;
+  description: string;
+}

@@ -1,10 +1,10 @@
 import useAuth from "@/hooks/useAuth";
+import user from "@/queryKeys/user";
 import { RightOutlined } from "@ant-design/icons";
 import { useQueries } from "@tanstack/react-query";
 import { Divider, Flex, Spin, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import user from "@/queryKeys/user";
 
 const Page: FC = () => {
   const { info, logout } = useAuth();
@@ -44,7 +44,10 @@ const Page: FC = () => {
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">쿠폰</Typography>
             <Typography className="font-bold text-lg">
-              {coupons?.content.length || 0} <RightOutlined />
+              <Typography className="text-lg inline text-pink-500">
+                {coupons?.totalCount || 0}{" "}
+              </Typography>
+              <RightOutlined />
             </Typography>
           </Flex>
         </Link>

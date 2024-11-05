@@ -19,7 +19,9 @@ const Page: FC = () => {
           <Flex className="flex-col gap-4 flex-grow justify-center items-center">
             <Typography className="text-5xl">😥</Typography>
             <Typography className="text-2xl">찜한 아이템이 없습니다</Typography>
-            <Typography className="text-xl">하트를 눌러 마음에 드는 상품을 찜해보세요</Typography>
+            <Typography className="text-xl text-center">
+              하트를 눌러 마음에 드는 상품을 찜해보세요
+            </Typography>
           </Flex>
         )}
       </Flex>

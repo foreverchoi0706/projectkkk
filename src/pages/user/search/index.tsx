@@ -4,7 +4,7 @@ import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie";
 import { CloseOutlined } from "@ant-design/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Col, Flex, Input, InputRef, Typography } from "antd";
+import { Button, Col, Flex, Input, InputRef, Row, Typography } from "antd";
 import {
   ChangeEvent,
   FC,
@@ -96,13 +96,15 @@ const Page: FC = () => {
         )}
 
         {newProductsPages.pages.length > 0 ? (
-          newProductsPages.pages.map(({ content }) =>
-            content.map((product) => (
-              <Col xs={12} md={8} key={product.id}>
-                <Product {...product} />
-              </Col>
-            )),
-          )
+          <Row gutter={[16, 16]}>
+            {newProductsPages.pages.map(({ content }) =>
+              content.map((product) => (
+                <Col key={product.id} xs={12} md={8}>
+                  <Product {...product} />
+                </Col>
+              )),
+            )}
+          </Row>
         ) : (
           <Flex className="flex-col gap-4 flex-grow justify-center items-center">
             <Typography className="text-5xl">😥</Typography>

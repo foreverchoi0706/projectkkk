@@ -13,9 +13,9 @@ import {
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import axios from "axios";
-``;
+
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://www.projectkkk.com/api/",
+  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://34.64.87.216/api/",
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -27,28 +27,11 @@ axiosInstance.interceptors.response.use(
   (value) => value,
   async (error) => {
     const { config, response } = error;
-    if (
-      response.status === 401 &&
-      !["/auth/login", "/auth/verify", "/api/member/join", "/api/auth/refresh"].includes(config.url)
-    ) {
+    if (config.url.includes("/auth/verify")) {
       alert("로그아웃 되었습니다");
       deleteCookie(ACCESS_TOKEN);
       deleteCookie(REFRESH_TOKEN);
       location.replace("/signIn");
-      //   try {
-      //     const { data } = await axiosInstance.post<IResponse<IUserInfo>>(
-      //       `/auth/refresh?refreshToken=${getCookie(REFRESH_TOKEN)}`,
-      //     );
-      //     setCookie(ACCESS_TOKEN, data.result.accessToken);
-      //     setCookie(REFRESH_TOKEN, data.result.refreshToken);
-      //     location.reload();
-      //   } catch {
-      //     alert("로그아웃 되었습니다");
-      //     deleteCookie(ACCESS_TOKEN);
-      //     deleteCookie(REFRESH_TOKEN);
-      //     location.replace("/signIn");
-      //   }
-      //   return;
     }
     return Promise.reject(response.data);
   },
