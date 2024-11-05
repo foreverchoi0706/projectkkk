@@ -50,6 +50,7 @@ export interface IProduct {
   discountRate: number;
   description: string;
   imageUrl: string;
+  liked: boolean;
 }
 
 export interface IProductSearchParams {
