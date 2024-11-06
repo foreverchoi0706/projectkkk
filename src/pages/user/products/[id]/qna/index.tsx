@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/queryKeys/admin.ts";
 import { IQnaParams, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Modal, Select, Typography } from "antd";
+import { Button, Drawer, Flex, Form, FormProps, Input, Select, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { FC, useState } from "react";
@@ -9,7 +9,7 @@ import { FC, useState } from "react";
 const Page: FC = () => {
   const [form] = useForm<IQnaParams>();
 
-  const [isOpenQnaModal, setIsOpenQnaModal] = useState<boolean>(false);
+  const [isOpenQnaDrawer, setIsOpenQnaDrawer] = useState<boolean>(false);
 
   const addQnaMutation = useMutation<unknown, TError, IQnaParams>({
     mutationFn: (qnaParams: IQnaParams) => axiosInstance.post("/qna/join", qnaParams),
@@ -17,8 +17,8 @@ const Page: FC = () => {
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const onClickOpenAddQnaModal = () => {
-    setIsOpenQnaModal(true);
+  const onClickOpenAddQnaDrawer = () => {
+    setIsOpenQnaDrawer(true);
   };
 
   const onFinish: FormProps<IQnaParams>["onFinish"] = (qnaParams) => {
@@ -38,18 +38,28 @@ const Page: FC = () => {
         <Typography className="text-center">
           (답변은 '앱의 마이페이지 {">"} 문의 내역' 에서 확인하실 수 있습니다.)
         </Typography>
-        <Button type="primary" onClick={onClickOpenAddQnaModal}>
+        <Button type="primary" onClick={onClickOpenAddQnaDrawer}>
           QNA 등록
         </Button>
       </Flex>
 
-      <Modal
+      <Drawer
         title="QnA 등록"
-        okText="등록"
+        styles={{
+          wrapper: {
+            boxShadow: "none",
+          },
+          content: {
+            borderRadius : "8px 8px 0 0",
+            maxWidth: "600px",
+            width : "100%",
+            margin: "0 auto",
+          },
+        }}
+        placement="bottom"
         footer={false}
-        cancelText="취소"
-        onCancel={() => setIsOpenQnaModal(false)}
-        open={isOpenQnaModal}
+        onClose={() => setIsOpenQnaDrawer(false)}
+        open={isOpenQnaDrawer}
       >
         <Form<IQnaParams> form={form} autoComplete="off" onFinish={onFinish}>
           <Form.Item<IQnaParams>
@@ -80,13 +90,13 @@ const Page: FC = () => {
               <Button type="primary" htmlType="submit">
                 등록
               </Button>
-              <Button onClick={() => setIsOpenQnaModal(false)} htmlType="button">
+              <Button onClick={() => setIsOpenQnaDrawer(false)} htmlType="button">
                 취소
               </Button>
             </Flex>
           </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
     </section>
   );
 };

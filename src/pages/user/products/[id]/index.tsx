@@ -26,7 +26,7 @@ const Page: FC = () => {
 
   if (!product) return null;
 
-  const { name, description, discountRate, brand, price, sizes } = product;
+  const { name, description, discountRate, brand, price, sizes, colors } = product;
 
   return (
     <main>
@@ -94,12 +94,20 @@ const Page: FC = () => {
           ))}
         </Flex>
 
+        <Flex className="gap-4">
+          {colors.map((color) => (
+            <Button key={color}>{color}</Button>
+          ))}
+        </Flex>
+
         <Button
           type="default"
           onClick={() => {
-            if (!refButton.current) return;
             setActiveKey("2");
-            refButton.current.scrollIntoView();
+            setTimeout(() => {
+              if (!refButton.current) return;
+              refButton.current.scrollIntoView({ behavior: "smooth" });
+            }, 0);
           }}
         >
           리뷰보기
