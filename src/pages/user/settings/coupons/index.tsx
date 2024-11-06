@@ -19,9 +19,7 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons = { content: [], page: 0, totalCount: 0 } } = useQuery({
-    ...user.coupons.all(searchParams.toString()),
-  });
+  const { data: coupons } = useQuery(user.coupons.all(searchParams.toString()));
 
   useEffect(() => {
     if (!refInput.current?.input) return;
@@ -35,7 +33,7 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (!coupons) return null;
+  if (!coupons) return null;  
 
   return (
     <main className="h-full">

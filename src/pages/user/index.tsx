@@ -13,25 +13,14 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Flex, Layout, Typography } from "antd";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 
 const User: FC = () => {
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    const setVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setVh();
-    const abortController = new AbortController();
-    window.addEventListener("resize", setVh, { signal: abortController.signal });
-    return () => abortController.abort();
-  }, []);
-
   return (
-    <Layout className="bg-white relative my-0 mx-auto max-w-[600px] h-[calc(var(--vh,1vh)*100)]">
+    <Layout className="bg-white relative my-0 mx-auto max-w-[600px] pb-[78px]">
       <Flex className="justify-between p-4">
         <Link to="/">
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
@@ -51,7 +40,7 @@ const User: FC = () => {
       <Flex className="p-2 flex-col flex-grow overflow-y-auto">
         <Outlet />
       </Flex>
-      <Flex className="border rounded-t-2xl justify-around p-4">
+      <Flex className="border rounded-t-2xl justify-around p-4 fixed bottom-0 max-w-[600px] w-full z-10 bg-white">
         <Link to="/" className="flex-1 flex flex-col items-center">
           {pathname === "/" ? (
             <HomeFilled className="text-lg" />

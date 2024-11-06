@@ -1,23 +1,38 @@
 import Product from "@/components/Product";
 import user from "@/queryKeys/user.ts";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Col, Flex, Row, Typography } from "antd";
-import { FC } from "react";
+import { Button, Carousel, Col, Flex, Row, Spin, Typography } from "antd";
+import { FC, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const { data: categories } = useQuery(user.category.all());
+  const refFetchNextPageArear = useRef<HTMLElement>(null);
 
+  const { data: categories } = useQuery(user.category.all());
   const { data: newProducts } = useQuery(user.products.new(1));
 
-  const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
+  const {
+    data: newProductsPages,
+    fetchNextPage,
+  } = useInfiniteQuery({
     queryKey: user.products.new().queryKey,
     queryFn: (context) => user.products.new(context.pageParam).queryFn(context),
-    getNextPageParam: (_, __, lastPageParam) => {
-      return lastPageParam + 1;
+    getNextPageParam: ({ content }, __, lastPageParam) => {
+      return content.length === 0 ? undefined : lastPageParam + 1;
     },
     initialPageParam: 1,
   });
+
+  useEffect(() => {
+    if (!refFetchNextPageArear.current) return;
+    console.log(refFetchNextPageArear.current);
+
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries.some(({ isIntersecting }) => isIntersecting)) fetchNextPage();
+    });
+    intersectionObserver.observe(refFetchNextPageArear.current);
+    return () => intersectionObserver.disconnect();
+  }, []);
 
   return (
     <main>
@@ -75,8 +90,8 @@ const Page: FC = () => {
               )),
             )}
           </Row>
-          <Flex className="justify-center p-4">
-            <Button onClick={() => fetchNextPage()}>더보기</Button>
+          <Flex ref={refFetchNextPageArear} className="justify-center">
+            <Spin />
           </Flex>
         </Flex>
       </Flex>

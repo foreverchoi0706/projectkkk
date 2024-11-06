@@ -4,7 +4,7 @@ import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie";
 import { CloseOutlined } from "@ant-design/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Col, Flex, Input, InputRef, Row, Typography } from "antd";
+import { Button, Col, Drawer, Flex, Form, Input, InputRef, Row, Spin, Typography } from "antd";
 import {
   ChangeEvent,
   FC,
@@ -19,7 +19,8 @@ import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const refInput = useRef<InputRef>(null);
+  const refFetchNextPageArear = useRef(null);
+  const refSearchKewordInput = useRef<InputRef>(null);
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
     JSON.parse(getCookie(RECENT_SEARCH_KEYWORD) || "[]"),
@@ -61,8 +62,8 @@ const Page: FC = () => {
   });
 
   useEffect(() => {
-    if (!refInput.current?.input) return;
-    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
+    if (!refSearchKewordInput.current?.input) return;
+    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refSearchKewordInput.current.input, "input")
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
@@ -72,12 +73,23 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!refFetchNextPageArear.current) return;
+    console.log(refFetchNextPageArear.current);
+    
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries.some(({ isIntersecting }) => isIntersecting)) fetchNextPage();
+    });
+    intersectionObserver.observe(refFetchNextPageArear.current);
+    return () => intersectionObserver.disconnect();
+  }, []);
+
   if (!newProductsPages) return null;
 
   return (
-    <main className="h-full">
-      <Flex className="gap-4 flex-col h-full">
-        <Input ref={refInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
+    <main>
+      <Flex className="gap-4 flex-col">
+        <Input ref={refSearchKewordInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
             <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
@@ -112,9 +124,21 @@ const Page: FC = () => {
           </Flex>
         )}
       </Flex>
-      <Flex className="justify-center p-4">
-        <Button onClick={() => fetchNextPage()}>더보기</Button>
+      <Flex ref={refFetchNextPageArear} className="justify-center">
+        <Spin />
       </Flex>
+      
+      <Drawer title="필터" placement="bottom" closable open={false}>
+        <Form>
+          <Form.Item>
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Drawer>
+   
     </main>
   );
 };

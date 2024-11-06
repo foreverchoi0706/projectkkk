@@ -28,8 +28,8 @@ const Page: FC = () => {
 
   if (!categories || !selectedCategory) return null;
   return (
-    <main className="h-full">
-      <Flex className="h-full">
+    <main>
+      <Flex className="h-screen">
         <Flex className="bg-gray-200 flex-col gap-4">
           {categories.content.map(({ name, id }) => (
             <Button key={id} onClick={() => onClickCategoryMenu(id)} type="text">

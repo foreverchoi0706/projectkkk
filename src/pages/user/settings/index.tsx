@@ -2,7 +2,7 @@ import useAuth from "@/hooks/useAuth";
 import user from "@/queryKeys/user";
 import { RightOutlined } from "@ant-design/icons";
 import { useQueries } from "@tanstack/react-query";
-import { Divider, Flex, Spin, Typography } from "antd";
+import { Divider, Flex, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,7 @@ const Page: FC = () => {
 
   const queries = useQueries({ queries: [user.coupons.all()] });
 
-  if (queries.every(({ isLoading }) => isLoading)) return <Spin fullscreen />;
+  if (queries.every(({ isLoading }) => isLoading)) return null;
 
   const [{ data: coupons }] = queries;
 
