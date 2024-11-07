@@ -66,12 +66,7 @@ const Setting: FC = () => {
 
   if (verificationToken && member)
     return (
-      <Form<IMember>
-        style={{ width: 400 }}
-        initialValues={member}
-        form={updateMemberForm}
-        onFinish={onFinishUpdateMember}
-      >
+      <Form<IMember> initialValues={member} form={updateMemberForm} onFinish={onFinishUpdateMember}>
         <Form.Item<IMember>
           name="name"
           rules={[
@@ -118,7 +113,7 @@ const Setting: FC = () => {
     );
 
   return (
-    <Form form={memberVerifyForm} style={{ width: 400 }} onFinish={onFinishVerify}>
+    <Form form={memberVerifyForm} onFinish={onFinishVerify}>
       <Form.Item<Pick<ISignInParams, "password">>
         name="password"
         rules={[{ required: true, message: REQUIRED_PASSWORD }]}

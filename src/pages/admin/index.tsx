@@ -13,7 +13,7 @@ const Admin: FC = () => {
   const { data, isLoading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const selectedKeys =
-    ADMIN_SIGN_IN_ROUTES.find(({ path }) => `/admin${path}` === pathname)?.key ?? "0";
+    ADMIN_SIGN_IN_ROUTES.find(({ path }) => `/admin/${path}` === pathname)?.key ?? "0";
 
   useEffect(() => {
     let timeOut: number | null = null;
@@ -49,7 +49,8 @@ const Admin: FC = () => {
             }))}
             onSelect={({ key }) => {
               const route = ADMIN_SIGN_IN_ROUTES.at(Number(key));
-              if (route) navigate(`/admin${route.path}`);
+
+              if (route) navigate(`/admin/${route.path}`);
             }}
           />
         </Layout.Sider>
@@ -73,6 +74,7 @@ const Admin: FC = () => {
       </Layout>
     );
   }
+  return <Outlet />;
 };
 
 export default Admin;

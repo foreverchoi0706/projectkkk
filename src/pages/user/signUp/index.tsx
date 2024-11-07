@@ -143,7 +143,7 @@ const Page: FC = () => {
             >
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
+            <Button onClick={() => navigate(-1)} className="flex-grow" htmlType="button">
               뒤로
             </Button>
           </Flex>

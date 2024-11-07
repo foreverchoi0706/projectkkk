@@ -103,13 +103,13 @@ const Page: FC = () => {
           <Flex gap="middle">
             <Button
               disabled={signUpMutation.isPending}
-              style={{ flexGrow: "1" }}
+              className="flex-grow"
               type="primary"
               htmlType="submit"
             >
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} style={{ flexGrow: "1" }} htmlType="button">
+            <Button onClick={() => navigate(-1)} className="flex-grow" htmlType="button">
               뒤로
             </Button>
           </Flex>
