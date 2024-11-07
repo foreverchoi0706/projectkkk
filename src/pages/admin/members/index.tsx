@@ -1,4 +1,5 @@
-import admin, { axiosInstance } from "@/queryKeys/admin";
+import admin from "@/queryKeys/admin";
+import axiosInstance from "@/utils/axiosInstance";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 import { IMember, IMemberSearchParams, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

@@ -1,14 +1,13 @@
-import { axiosInstance } from "@/queryKeys/admin.ts";
-import { IQnaParams, TError } from "@/utils/types.ts";
+import axiosInstance from "@/utils/axiosInstance";
+import { IQnaParams, ITest, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, FormProps, Input, Select, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { FC, useState } from "react";
 
-const Page: FC = () => {
+const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => {
   const [form] = useForm<IQnaParams>();
-
   const [isOpenQnaDrawer, setIsOpenQnaDrawer] = useState<boolean>(false);
 
   const addQnaMutation = useMutation<unknown, TError, IQnaParams>({
@@ -27,6 +26,7 @@ const Page: FC = () => {
 
   return (
     <section>
+      {JSON.stringify(qnADetailResponses)}
       <Flex className="flex-col gap-4 my-4">
         <Typography className="text-center text-5xl">🛍</Typography>
         <Typography className="text-center text-lg font-bold">
@@ -50,9 +50,9 @@ const Page: FC = () => {
             boxShadow: "none",
           },
           content: {
-            borderRadius : "8px 8px 0 0",
+            borderRadius: "8px 8px 0 0",
             maxWidth: "600px",
-            width : "100%",
+            width: "100%",
             margin: "0 auto",
           },
         }}

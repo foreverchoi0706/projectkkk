@@ -1,4 +1,5 @@
-import admin, { axiosInstance } from "@/queryKeys/admin";
+import admin from "@/queryKeys/admin";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
   REQUIRED_EMAIL,

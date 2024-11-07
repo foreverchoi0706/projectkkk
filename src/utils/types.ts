@@ -40,6 +40,11 @@ export interface IPageList<T> {
   totalCount: number;
 }
 
+export interface ITest {
+  qnADetailResponses: IPageList<IReiew>;
+  reviewDetailResponses: IPageList<IReiew>;
+}
+
 export interface IProduct {
   id: number;
   name: string;
@@ -178,4 +183,17 @@ export interface IShipping {
   deliveryStatusType: string;
   deliveryCost: number;
   memberEmail: string;
+}
+
+export interface IReiew {
+  createAt: string;
+  description: string;
+  helpful: number;
+  imageUrl1: string;
+  imageUrl2: string;
+  imageUrl3: string;
+  memberEmail: string;
+  productName: string;
+  rating: string;
+  reviewId: number;
 }

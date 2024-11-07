@@ -1,4 +1,4 @@
-import admin from "@/queryKeys/admin";
+import common from "@/queryKeys/common";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
 import { IAuth } from "@/utils/types";
@@ -8,7 +8,7 @@ const useAuth = () => {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    ...admin.auth.verify({
+    ...common.auth.verify({
       accessToken: getCookie(ACCESS_TOKEN)!,
       refreshToken: getCookie(REFRESH_TOKEN)!,
     }),
@@ -16,7 +16,7 @@ const useAuth = () => {
   });
 
   const { data: info } = useQuery({
-    ...admin.auth.info(),
+    ...common.auth.info(),
     enabled: Boolean(query.data),
     staleTime: Infinity,
     gcTime: Infinity,
@@ -32,9 +32,9 @@ const useAuth = () => {
     alert("로그아웃되었습니다");
     deleteCookie(ACCESS_TOKEN);
     deleteCookie(REFRESH_TOKEN);
-    queryClient.setQueryData<null>(admin.auth.info().queryKey, null);
+    queryClient.setQueryData<null>(common.auth.info().queryKey, null);
     queryClient.setQueryData<null>(
-      admin.auth.verify({
+      common.auth.verify({
         accessToken: getCookie(ACCESS_TOKEN)!,
         refreshToken: getCookie(REFRESH_TOKEN)!,
       }).queryKey,

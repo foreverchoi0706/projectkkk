@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/queryKeys/admin.ts";
+import axiosInstance from "@/utils/axiosInstance";
 import { IProduct, TError } from "@/utils/types";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
@@ -42,12 +42,12 @@ const Product: FC<IProps> = ({
         {isLiked ? (
           <HeartFilled
             onClick={onClickLike}
-            className="text-red-500 absolute bottom-2 right-2 text-xl"
+            className="text-pink-500 absolute bottom-2 right-2 text-xl"
           />
         ) : (
           <HeartOutlined
             onClick={onClickLike}
-            className="text-red-500 absolute bottom-2 right-2 text-xl"
+            className="text-pink-500 absolute bottom-2 right-2 text-xl"
           />
         )}
       </Flex>

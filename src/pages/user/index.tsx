@@ -12,8 +12,9 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Flex, Layout, Typography } from "antd";
+import { Button, Flex, Layout, Typography } from "antd";
 import { FC } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 
 const User: FC = () => {
@@ -38,7 +39,19 @@ const User: FC = () => {
         </Flex>
       </Flex>
       <Flex className="p-2 flex-col flex-grow overflow-y-auto">
-        <Outlet />
+        <ErrorBoundary
+          fallback={
+            <Flex className="h-[calc(100vh-142px)] justify-center items-center flex-col gap-4">
+              <Typography className="text-5xl">😥</Typography>
+              <Typography className="text-2xl">오류가 발생하였습니다</Typography>
+              <Button type="primary" onClick={() => (window.location.href = "/")}>
+                메인화면으로 가기
+              </Button>
+            </Flex>
+          }
+        >
+          <Outlet />
+        </ErrorBoundary>
       </Flex>
       <Flex className="border rounded-t-2xl justify-around p-4 fixed bottom-0 max-w-[600px] w-full z-10 bg-white">
         <Link to="/" className="flex-1 flex flex-col items-center">

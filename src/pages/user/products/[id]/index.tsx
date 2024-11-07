@@ -1,5 +1,6 @@
 import Product from "@/components/Product";
 import QnaSection from "@/pages/user/products/[id]/qna";
+import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
 import { RightOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Page: FC = () => {
   const { id } = useParams();
-  const refButton = useRef<HTMLButtonElement>(null);
+  const refReviewSection = useRef<HTMLElement>(null);
   const navigate = useNavigate();
   const [activeKey, setActiveKey] = useState<string>("1");
 
@@ -26,7 +27,17 @@ const Page: FC = () => {
 
   if (!product) return null;
 
-  const { name, description, discountRate, brand, price, size, color } = product;
+  const {
+    name,
+    description,
+    discountRate,
+    brand,
+    price,
+    size,
+    color,
+    qnADetailResponses,
+    reviewDetailResponses,
+  } = product;
 
   return (
     <main>
@@ -101,8 +112,8 @@ const Page: FC = () => {
           onClick={() => {
             setActiveKey("2");
             setTimeout(() => {
-              if (!refButton.current) return;
-              refButton.current.scrollIntoView({ behavior: "smooth" });
+              if (!refReviewSection.current) return;
+              refReviewSection.current.scrollIntoView({ behavior: "smooth" });
             }, 0);
           }}
         >
@@ -145,7 +156,9 @@ const Page: FC = () => {
             className: "flex-1",
             key: "2",
             label: "리뷰",
-            children: <Button ref={refButton}>Content of Tab Pane 2</Button>,
+            children: (
+              <ReviewSection ref={refReviewSection} reviewDetailResponses={reviewDetailResponses} />
+            ),
           },
           {
             className: "flex-1",
@@ -157,7 +170,7 @@ const Page: FC = () => {
             className: "flex-1",
             key: "4",
             label: "문의",
-            children: <QnaSection />,
+            children: <QnaSection qnADetailResponses={qnADetailResponses} />,
           },
         ]}
       />

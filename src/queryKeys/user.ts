@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/queryKeys/admin";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   Coupon,
   IAuth,
@@ -8,6 +8,7 @@ import {
   IQna,
   IResponse,
   IShipping,
+  ITest,
   IToken,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
@@ -75,7 +76,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
     detail: (id?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IProduct>>(
+        const { data } = await axiosInstance.get<IResponse<IProduct & ITest>>(
           `/product/product?productId=${id}`,
         );
         return data.result;

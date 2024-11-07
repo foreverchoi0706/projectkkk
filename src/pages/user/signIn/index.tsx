@@ -1,5 +1,5 @@
 import useAuth from "@/hooks/useAuth";
-import { axiosInstance } from "@/queryKeys/admin";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
   INVALID_FORMAT_PASSWORD,

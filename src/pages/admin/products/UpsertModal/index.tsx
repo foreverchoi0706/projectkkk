@@ -1,4 +1,5 @@
-import admin, { axiosInstance } from "@/queryKeys/admin";
+import admin from "@/queryKeys/admin";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   REQUIRED_BRAND_NAME,
   REQUIRED_CATEGORY_NAME,
