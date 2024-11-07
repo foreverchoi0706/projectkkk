@@ -51,8 +51,8 @@ export interface IProduct {
   description: string;
   imageUrl: string;
   liked: boolean;
-  sizes: ("XL" | "L" | "M" | "S")[];
-  colors: string[];
+  size: "XL" | "L" | "M" | "S";
+  color: string;
 }
 
 export interface IProductSearchParams {
@@ -163,4 +163,19 @@ export interface IQnaParams {
   productNum: string;
   orderNum: string;
   description: string;
+}
+
+export interface IShipping {
+  id: number;
+  deliveryNum: string;
+  orderDate: string;
+  deliveryAddress: string;
+  totalAmount: number;
+  products: { productId: number; price: number; quantity: number; size: string; color: string }[];
+  deliveryType: string;
+  arrivedDate: string | null;
+  departureDate: string | null;
+  deliveryStatusType: string;
+  deliveryCost: number;
+  memberEmail: string;
 }

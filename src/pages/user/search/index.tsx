@@ -19,9 +19,9 @@ import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const refFetchNextPageArear = useRef(null);
+  const refFetchNextPageArear = useRef<HTMLElement>(null);
   const refSearchKewordInput = useRef<InputRef>(null);
-  const [searchParams] = useSearchParams({ size: "15", page: "1" });
+  const [searchParams] = useSearchParams({ size: "15" });
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
     JSON.parse(getCookie(RECENT_SEARCH_KEYWORD) || "[]"),
   );
@@ -52,18 +52,25 @@ const Page: FC = () => {
     });
   };
 
-  const { data: newProductsPages, fetchNextPage } = useInfiniteQuery({
+  const {
+    data: newProductsPages,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
     queryKey: user.products.all(searchParams.toString()).queryKey,
     queryFn: (context) => user.products.all(searchParams.toString()).queryFn(context),
-    getNextPageParam: (_, __, lastPageParam) => {
-      return lastPageParam + 1;
+    getNextPageParam: ({ content }, __, lastPageParam) => {
+      return content.length === 0 ? undefined : lastPageParam + 1;
     },
     initialPageParam: 1,
   });
 
   useEffect(() => {
     if (!refSearchKewordInput.current?.input) return;
-    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refSearchKewordInput.current.input, "input")
+    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(
+      refSearchKewordInput.current.input,
+      "input",
+    )
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
@@ -76,20 +83,24 @@ const Page: FC = () => {
   useEffect(() => {
     if (!refFetchNextPageArear.current) return;
     console.log(refFetchNextPageArear.current);
-    
+
     const intersectionObserver = new IntersectionObserver((entries) => {
-      if (entries.some(({ isIntersecting }) => isIntersecting)) fetchNextPage();
+      if (entries.some(({ isIntersecting }) => isIntersecting) || hasNextPage) fetchNextPage();
     });
     intersectionObserver.observe(refFetchNextPageArear.current);
     return () => intersectionObserver.disconnect();
-  }, []);
+  }, [hasNextPage]);
 
   if (!newProductsPages) return null;
 
   return (
     <main>
       <Flex className="gap-4 flex-col">
-        <Input ref={refSearchKewordInput} placeholder="아이템을 검색해보세요" onKeyDown={onKeyDownSearch} />
+        <Input
+          ref={refSearchKewordInput}
+          placeholder="아이템을 검색해보세요"
+          onKeyDown={onKeyDownSearch}
+        />
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
             <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
@@ -124,10 +135,12 @@ const Page: FC = () => {
           </Flex>
         )}
       </Flex>
-      <Flex ref={refFetchNextPageArear} className="justify-center">
-        <Spin />
-      </Flex>
-      
+      {hasNextPage && (
+        <Flex ref={refFetchNextPageArear} className="justify-center">
+          <Spin />
+        </Flex>
+      )}
+
       <Drawer title="필터" placement="bottom" closable open={false}>
         <Form>
           <Form.Item>
@@ -138,7 +151,6 @@ const Page: FC = () => {
           </Form.Item>
         </Form>
       </Drawer>
-   
     </main>
   );
 };

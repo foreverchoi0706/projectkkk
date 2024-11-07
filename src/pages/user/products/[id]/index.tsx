@@ -26,7 +26,7 @@ const Page: FC = () => {
 
   if (!product) return null;
 
-  const { name, description, discountRate, brand, price, sizes, colors } = product;
+  const { name, description, discountRate, brand, price, size, color } = product;
 
   return (
     <main>
@@ -89,15 +89,11 @@ const Page: FC = () => {
         <Typography>{description}</Typography>
 
         <Flex className="gap-4">
-          {sizes.map((size) => (
-            <Button key={size}>{size}</Button>
-          ))}
+          <Button>{size}</Button>
         </Flex>
 
         <Flex className="gap-4">
-          {colors.map((color) => (
-            <Button key={color}>{color}</Button>
-          ))}
+          <Button>{color}</Button>
         </Flex>
 
         <Button

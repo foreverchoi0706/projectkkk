@@ -7,9 +7,7 @@ import { useSearchParams } from "react-router-dom";
 const Page: FC = () => {
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
 
-  const { data: qnas = { content: [], page: 0, totalCount: 0 } } = useQuery({
-    ...user.qna.all(searchParams.toString()),
-  });
+  const { data: qnas } = useQuery(user.qnas.all(searchParams.toString()));
 
   if (!qnas) return null;
 

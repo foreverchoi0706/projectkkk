@@ -19,10 +19,7 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons, isLoading } = useQuery({
-    ...user.coupons.all(searchParams.toString()),
-    initialData: () => ({ content: [], page: 0, totalCount: 0 }),
-  });
+  const { data: shipping } = useQuery(user.shipping.all(searchParams.toString()));
 
   useEffect(() => {
     if (!refInput.current?.input) return;
@@ -36,17 +33,17 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (isLoading) return <Spin fullscreen />;
+  if (!shipping) return <Spin fullscreen />;
 
   return (
     <main className="h-full">
-      <Flex className="h-full flex-col">
+      <Flex className="h-full flex-col gap-4">
         <Input ref={refInput} placeholder="주문을 검색해보세요" onKeyDown={onKeyDownSearch} />
-        <Flex className="gap-4 flex-col p-4 flex-grow">
-          {coupons.content.length > 0 ? (
-            coupons.content.map(({ id, name }) => (
+        <Flex className="gap-4 flex-col flex-grow">
+          {shipping.content.length > 0 ? (
+            shipping.content.map(({ id, products }) => (
               <Flex key={id} className="flex-grow border border-gray-200 p-16">
-                {id} {name}
+                {id} {JSON.stringify(products)}
               </Flex>
             ))
           ) : (

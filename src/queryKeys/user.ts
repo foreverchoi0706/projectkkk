@@ -7,6 +7,7 @@ import {
   IProduct,
   IQna,
   IResponse,
+  IShipping,
   IToken,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
@@ -64,9 +65,9 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [pageParam],
     }),
     all: (queryString: string) => ({
-      queryFn: async () => {
+      queryFn: async ({ pageParam }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/products?${queryString}`,
+          `/product/products?page=${pageParam}&${queryString}`,
         );
         return data.result;
       },
@@ -90,10 +91,30 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [""],
     }),
   },
-  qna: {
+  qnas: {
     all: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas`);
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
+  reviews: {
+    all: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/review/my_reiveiw`);
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
+  shipping: {
+    all: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(`/admin/shipping/shippings`);
         return data.result;
       },
       queryKey: [queryString],

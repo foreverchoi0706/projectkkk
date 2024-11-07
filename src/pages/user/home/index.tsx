@@ -14,6 +14,7 @@ const Page: FC = () => {
   const {
     data: newProductsPages,
     fetchNextPage,
+    hasNextPage,
   } = useInfiniteQuery({
     queryKey: user.products.new().queryKey,
     queryFn: (context) => user.products.new(context.pageParam).queryFn(context),
@@ -28,11 +29,11 @@ const Page: FC = () => {
     console.log(refFetchNextPageArear.current);
 
     const intersectionObserver = new IntersectionObserver((entries) => {
-      if (entries.some(({ isIntersecting }) => isIntersecting)) fetchNextPage();
+      if (entries.some(({ isIntersecting }) => isIntersecting) || hasNextPage) fetchNextPage();
     });
     intersectionObserver.observe(refFetchNextPageArear.current);
     return () => intersectionObserver.disconnect();
-  }, []);
+  }, [hasNextPage]);
 
   return (
     <main>
@@ -90,9 +91,11 @@ const Page: FC = () => {
               )),
             )}
           </Row>
-          <Flex ref={refFetchNextPageArear} className="justify-center">
-            <Spin />
-          </Flex>
+          {hasNextPage && (
+            <Flex ref={refFetchNextPageArear} className="justify-center">
+              <Spin />
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </main>

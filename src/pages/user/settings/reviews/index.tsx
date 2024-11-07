@@ -19,9 +19,7 @@ const Page: FC = () => {
     navigate(`/settings/coupons?${searchParams.toString()}`);
   };
 
-  const { data: coupons = { content: [], page: 0, totalCount: 0 } } = useQuery({
-    ...user.coupons.all(searchParams.toString()),
-  });
+  const { data: reviews } = useQuery(user.reviews.all(searchParams.toString()));
 
   useEffect(() => {
     if (!refInput.current?.input) return;
@@ -35,17 +33,17 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (!coupons) return null;
+  if (!reviews) return null;
 
   return (
     <main className="h-full">
       <Flex className="h-full flex-col gap-4">
         <Input ref={refInput} placeholder="리뷰를 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col flex-grow">
-          {coupons.content.length > 0 ? (
-            coupons.content.map(({ id, name }) => (
-              <Flex key={id} className="border border-gray-200 p-4">
-                {id} {name}
+          {reviews.content.length > 0 ? (
+            reviews.content.map((_, index) => (
+              <Flex key={index} className="border border-gray-200 p-4">
+                {index}
               </Flex>
             ))
           ) : (
