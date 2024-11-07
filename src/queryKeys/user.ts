@@ -1,7 +1,6 @@
 import axiosInstance from "@/utils/axiosInstance";
 import {
   Coupon,
-  IAuth,
   ICategory,
   IPageList,
   IProduct,
@@ -9,22 +8,10 @@ import {
   IResponse,
   IShipping,
   ITest,
-  IToken,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
-  auth: {
-    verify: ({ accessToken, refreshToken }: IToken) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IAuth>>(
-          `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
-        );
-        return data.result;
-      },
-      queryKey: [""],
-    }),
-  },
   category: {
     all: () => ({
       queryFn: async () => {
@@ -33,26 +20,6 @@ const queryKeyStore = createQueryKeyStore({
         return data.result;
       },
       queryKey: [""],
-    }),
-  },
-  coupons: {
-    all: (queryString?: string) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
-          `/coupon/search?${queryString || ""}`,
-        );
-        return data.result;
-      },
-      queryKey: [queryString],
-    }),
-    detail: (id?: string) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<unknown>>>(
-          `/coupon/coupon?couponId=${id}`,
-        );
-        return data.result;
-      },
-      queryKey: [id],
     }),
   },
   products: {
@@ -92,8 +59,28 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [""],
     }),
   },
+  coupons: {
+    all: (queryString?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
+          `/coupon/search?${queryString || ""}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+    detail: (id?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<unknown>>>(
+          `/coupon/coupon?couponId=${id}`,
+        );
+        return data.result;
+      },
+      queryKey: [id],
+    }),
+  },
   qnas: {
-    all: (queryString: string) => ({
+    all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas`);
         return data.result;
@@ -102,7 +89,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   reviews: {
-    all: (queryString: string) => ({
+    all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } =
           await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/review/my_reiveiw`);
@@ -112,7 +99,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   shipping: {
-    all: (queryString: string) => ({
+    all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } =
           await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(`/admin/shipping/shippings`);

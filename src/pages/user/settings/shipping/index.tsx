@@ -33,7 +33,7 @@ const Page: FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (!shipping) return <Spin fullscreen />;
+  if (!shipping) return null;
 
   return (
     <main className="h-full">

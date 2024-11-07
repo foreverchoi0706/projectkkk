@@ -9,11 +9,13 @@ import { Link } from "react-router-dom";
 const Page: FC = () => {
   const { info, logout } = useAuth();
 
-  const queries = useQueries({ queries: [user.coupons.all()] });
+  const queries = useQueries({
+    queries: [user.shipping.all(), user.reviews.all(), user.coupons.all(), user.qnas.all()],
+  });
 
   if (queries.every(({ isLoading }) => isLoading)) return null;
 
-  const [{ data: coupons }] = queries;
+  const [{ data: shipping }, { data: reviews }, { data: coupons }, { data: qnas }] = queries;
 
   return (
     <main>
@@ -28,6 +30,9 @@ const Page: FC = () => {
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">주문 배송</Typography>
             <Typography className="font-bold text-lg">
+              <Typography className="text-lg inline text-pink-500">
+                {shipping?.totalCount || 0}{" "}
+              </Typography>
               <RightOutlined />
             </Typography>
           </Flex>
@@ -36,6 +41,9 @@ const Page: FC = () => {
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">리뷰</Typography>
             <Typography className="font-bold text-lg">
+              <Typography className="text-lg inline text-pink-500">
+                {reviews?.totalCount || 0}{" "}
+              </Typography>
               <RightOutlined />
             </Typography>
           </Flex>
@@ -55,6 +63,9 @@ const Page: FC = () => {
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">QnA</Typography>
             <Typography className="font-bold text-lg">
+              <Typography className="text-lg inline text-pink-500">
+                {qnas?.totalCount || 0}{" "}
+              </Typography>
               <RightOutlined />
             </Typography>
           </Flex>
