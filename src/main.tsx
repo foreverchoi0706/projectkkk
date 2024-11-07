@@ -5,7 +5,6 @@ import { ConfigProvider } from "antd";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "@/global.css";
-import { ErrorBoundary } from "react-error-boundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
