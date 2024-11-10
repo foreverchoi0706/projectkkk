@@ -6,9 +6,9 @@ import { FC, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
-  const refFetchNextPageArear = useRef<HTMLElement>(null);
+  const refFetchNextPageArea = useRef<HTMLElement>(null);
 
-  const { data: categories } = useQuery(user.category.all());
+  const { data: categories } = useQuery(user.categories.all());
   const { data: newProducts } = useQuery(user.products.new(1));
 
   const {
@@ -25,13 +25,11 @@ const Page: FC = () => {
   });
 
   useEffect(() => {
-    if (!refFetchNextPageArear.current) return;
-    console.log(refFetchNextPageArear.current);
-
+    if (!refFetchNextPageArea.current) return;
     const intersectionObserver = new IntersectionObserver((entries) => {
       if (entries.some(({ isIntersecting }) => isIntersecting) || hasNextPage) fetchNextPage();
     });
-    intersectionObserver.observe(refFetchNextPageArear.current);
+    intersectionObserver.observe(refFetchNextPageArea.current);
     return () => intersectionObserver.disconnect();
   }, [hasNextPage]);
 
@@ -92,7 +90,7 @@ const Page: FC = () => {
             )}
           </Row>
           {hasNextPage && (
-            <Flex ref={refFetchNextPageArear} className="justify-center">
+            <Flex ref={refFetchNextPageArea} className="justify-center">
               <Spin />
             </Flex>
           )}

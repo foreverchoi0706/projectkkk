@@ -1,13 +1,27 @@
 import useAuth from "@/hooks/useAuth";
 import user from "@/queryKeys/user";
+import axiosInstance from "@/utils/axiosInstance.ts";
 import { RightOutlined } from "@ant-design/icons";
-import { useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries } from "@tanstack/react-query";
 import { Divider, Flex, Typography } from "antd";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
   const { info, logout } = useAuth();
+
+  const mutation = useMutation({
+    mutationFn: () => axiosInstance.post("/member/cancel"),
+    onSuccess: () => {
+      alert("탈퇴되었습니다.");
+      logout();
+    },
+  });
+
+  const onClickWithdrawButton = () => {
+    if (!window.confirm("정말 탈퇴하시겠습니까?")) return;
+    mutation.mutate();
+  };
 
   const queries = useQueries({
     queries: [user.shipping.all(), user.reviews.all(), user.coupons.all(), user.qnas.all()],
@@ -70,7 +84,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
+        <Link to="/settings/accounts">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">회원정보 수정</Typography>
             <Typography className="font-bold text-lg">
@@ -86,14 +100,15 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/">
-          <Flex className="items-center justify-between">
-            <Typography className="font-bold text-lg">회원탈퇴</Typography>
-            <Typography className="font-bold text-lg">
-              <RightOutlined />
-            </Typography>
-          </Flex>
-        </Link>
+        <Flex
+          onClick={onClickWithdrawButton}
+          className="cursor-pointer items-center justify-between"
+        >
+          <Typography className="font-bold text-lg">회원탈퇴</Typography>
+          <Typography className="font-bold text-lg">
+            <RightOutlined />
+          </Typography>
+        </Flex>
       </Flex>
       <Divider className="border-t-8" />
     </main>

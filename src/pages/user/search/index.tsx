@@ -1,10 +1,11 @@
 import Product from "@/components/Product";
+import SearchFilterDrawer from "@/pages/user/search/SearchFilterDrawer";
 import user from "@/queryKeys/user";
 import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie";
 import { CloseOutlined } from "@ant-design/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Col, Drawer, Flex, Form, Input, InputRef, Row, Spin, Typography } from "antd";
+import { Button, Col, Flex, Input, InputRef, Row, Spin, Typography } from "antd";
 import {
   ChangeEvent,
   FC,
@@ -19,12 +20,17 @@ import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const refFetchNextPageArear = useRef<HTMLElement>(null);
-  const refSearchKewordInput = useRef<InputRef>(null);
+  const refFetchNextPageArea = useRef<HTMLElement>(null);
+  const refSearchKeywordInput = useRef<InputRef>(null);
+  const [isSearchFilterDrawerOpen, setIsSearchFilterDrawerOpen] = useState<boolean>(false);
   const [searchParams] = useSearchParams({ size: "15" });
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
     JSON.parse(getCookie(RECENT_SEARCH_KEYWORD) || "[]"),
   );
+
+  const onClickSearchFilter = () => {
+    setIsSearchFilterDrawerOpen(true);
+  };
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({
     key,
@@ -66,9 +72,9 @@ const Page: FC = () => {
   });
 
   useEffect(() => {
-    if (!refSearchKewordInput.current?.input) return;
+    if (!refSearchKeywordInput.current?.input) return;
     const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(
-      refSearchKewordInput.current.input,
+      refSearchKeywordInput.current.input,
       "input",
     )
       .pipe(
@@ -81,13 +87,11 @@ const Page: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!refFetchNextPageArear.current) return;
-    console.log(refFetchNextPageArear.current);
-
+    if (!refFetchNextPageArea.current) return;
     const intersectionObserver = new IntersectionObserver((entries) => {
       if (entries.some(({ isIntersecting }) => isIntersecting) || hasNextPage) fetchNextPage();
     });
-    intersectionObserver.observe(refFetchNextPageArear.current);
+    intersectionObserver.observe(refFetchNextPageArea.current);
     return () => intersectionObserver.disconnect();
   }, [hasNextPage]);
 
@@ -97,10 +101,14 @@ const Page: FC = () => {
     <main>
       <Flex className="gap-4 flex-col">
         <Input
-          ref={refSearchKewordInput}
+          ref={refSearchKeywordInput}
           placeholder="아이템을 검색해보세요"
           onKeyDown={onKeyDownSearch}
         />
+        <Flex className="gap-4">
+          <Button onClick={onClickSearchFilter}>브랜드</Button>
+          <Button onClick={onClickSearchFilter}>카테고리</Button>
+        </Flex>
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
             <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
@@ -136,21 +144,18 @@ const Page: FC = () => {
         )}
       </Flex>
       {hasNextPage && (
-        <Flex ref={refFetchNextPageArear} className="justify-center">
+        <Flex ref={refFetchNextPageArea} className="justify-center">
           <Spin />
         </Flex>
       )}
 
-      <Drawer title="필터" placement="bottom" closable open={false}>
-        <Form>
-          <Form.Item>
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Drawer>
+      <SearchFilterDrawer
+        title="필터"
+        placement="bottom"
+        closable
+        onClose={() => setIsSearchFilterDrawerOpen(false)}
+        open={isSearchFilterDrawerOpen}
+      />
     </main>
   );
 };

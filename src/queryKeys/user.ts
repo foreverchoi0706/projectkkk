@@ -12,7 +12,18 @@ import {
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
-  category: {
+  brands: {
+    all: () => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
+          `/product/brands?page=1&size=100`,
+        );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+  },
+  categories: {
     all: () => ({
       queryFn: async () => {
         const { data } =
@@ -61,9 +72,9 @@ const queryKeyStore = createQueryKeyStore({
   },
   coupons: {
     all: (queryString?: string) => ({
-      queryFn: async () => {
+      queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
-          `/coupon/search?${queryString || ""}`,
+          `/coupon/search?page=${pageParam}&${queryString || ""}`,
         );
         return data.result;
       },
@@ -99,13 +110,14 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   shipping: {
-    all: (queryString?: string) => ({
-      queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(`/admin/shipping/shippings`);
+    all: () => ({
+      queryFn: async ({ pageParam = 1 }) => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+          `/admin/shipping/shippings?size=10&page=${pageParam}`,
+        );
         return data.result;
       },
-      queryKey: [queryString],
+      queryKey: [""],
     }),
   },
 });

@@ -10,6 +10,7 @@ import Picks from "@/pages/user/picks";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
+import UserAccounts from "@/pages/user/settings/accounts";
 import UserCoupons from "@/pages/user/settings/coupons";
 import UserQnas from "@/pages/user/settings/qnas";
 import UserReviews from "@/pages/user/settings/reviews";
@@ -122,6 +123,12 @@ export const USER_SIGN_IN_ROUTES = [
   {
     Page: UserQnas,
     path: "settings/qnas",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserAccounts,
+    path: "settings/accounts",
     requiredAuth: true,
     accessAbleAuth: true,
   },

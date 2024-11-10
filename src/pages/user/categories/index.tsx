@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const { data: categories } = useQuery(user.category.all());
+  const { data: categories } = useQuery(user.categories.all());
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
 
   const onClickCategoryMenu = (categoryId: number) => {

@@ -10,7 +10,9 @@ const Page: FC = () => {
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">
-        <Typography className="font-bold text-2xl">장바구니에 담긴 상품이 없어요</Typography>
+        <Typography className="text-center font-bold text-2xl">
+          장바구니에 담긴 상품이 없어요
+        </Typography>
         <Typography className="text-lg">원하는 상품을 담아보세요</Typography>
         <Link to="/search">
           <Button variant="solid" color="primary">
