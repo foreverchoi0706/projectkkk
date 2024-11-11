@@ -2,20 +2,29 @@ import Product from "@/components/Product";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
-import { RightOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
+import axiosInstance from "@/utils/axiosInstance.ts";
+import { TError } from "@/utils/types.ts";
+import { HeartFilled, HeartOutlined, RightOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, Carousel, Col, Divider, Drawer, Flex, Form, Row, Tabs, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Page: FC = () => {
   const { id } = useParams();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState<boolean>(false);
   const refReviewSection = useRef<HTMLElement>(null);
   const navigate = useNavigate();
   const [activeKey, setActiveKey] = useState<string>("1");
 
-  const { data: product, isError } = useQuery(user.products.detail(id));
+  const likeMutation = useMutation<unknown, TError, boolean>({
+    mutationFn: (liked: boolean) => axiosInstance.post(`/wishList/toggle/${id}?liked=${liked}`),
+    onSuccess: () => setIsLiked(!isLiked),
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
 
+  const { data: product, isError } = useQuery(user.products.detail(id));
   const { data: newProducts } = useQuery(user.products.new(1));
 
   useEffect(() => {
@@ -24,6 +33,11 @@ const Page: FC = () => {
       navigate(-1);
     }
   }, [isError]);
+
+  useEffect(() => {
+    if (!product) return;
+    setIsLiked(product.liked);
+  }, [product]);
 
   if (!product) return null;
 
@@ -35,6 +49,7 @@ const Page: FC = () => {
     price,
     size,
     color,
+    liked,
     qnADetailResponses,
     reviewDetailResponses,
   } = product;
@@ -179,6 +194,43 @@ const Page: FC = () => {
           },
         ]}
       />
+      <Flex className="border rounded-t-2xl justify-around gap-4 p-4 fixed bottom-0 max-w-[584px] w-full z-10 bg-white">
+        <Button
+          type="text"
+          onClick={() => likeMutation.mutate(liked)}
+          icon={
+            isLiked ? (
+              <HeartFilled className="text-pink-500 text-xl" />
+            ) : (
+              <HeartOutlined className="text-pink-500 text-xl" />
+            )
+          }
+        />
+        <Button type="primary" className="flex-grow" onClick={() => setIsOrderDrawerOpen(true)}>
+          구매하기
+        </Button>
+      </Flex>
+      <Drawer
+        styles={{
+          wrapper: {
+            boxShadow: "none",
+          },
+          content: {
+            borderRadius: "8px 8px 0 0",
+            maxWidth: "600px",
+            width: "100%",
+            margin: "0 auto",
+          },
+        }}
+        onClose={() => setIsOrderDrawerOpen(false)}
+        title="구매"
+        placement="bottom"
+        open={isOrderDrawerOpen}
+      >
+        <Form>
+          <Form.Item>dasds</Form.Item>
+        </Form>
+      </Drawer>
     </main>
   );
 };

@@ -53,44 +53,46 @@ const User: FC = () => {
           <Outlet />
         </ErrorBoundary>
       </Flex>
-      <Flex className="border rounded-t-2xl justify-around p-4 fixed bottom-0 max-w-[600px] w-full z-10 bg-white">
-        <Link to="/" className="flex-1 flex flex-col items-center">
-          {pathname === "/" ? (
-            <HomeFilled className="text-lg" />
-          ) : (
-            <HomeOutlined className="text-lg" />
-          )}
-          <Typography className="font-bold mt-2 text-xs">홈</Typography>
-        </Link>
-        <Link to="/search" className="flex-1 flex flex-col items-center">
-          {pathname === "/search" ? (
-            <ProductFilled className="text-lg" />
-          ) : (
-            <ProductOutlined className="text-lg" />
-          )}
-          <Typography className="font-bold mt-2 text-xs">상품</Typography>
-        </Link>
-        <Link to="/categories" className="flex-1 flex flex-col items-center">
-          <UnorderedListOutlined className="text-xl" />
-          <Typography className="font-bold mt-2 text-xs">카테고리</Typography>
-        </Link>
-        <Link to="/picks" className="flex-1 flex flex-col items-center">
-          {pathname === "/picks" ? (
-            <HeartFilled className="text-lg" />
-          ) : (
-            <HeartOutlined className="text-lg" />
-          )}
-          <Typography className="font-bold mt-2 text-xs">찜</Typography>
-        </Link>
-        <Link to="/settings" className="flex-1 flex flex-col items-center">
-          {pathname === "/setting" ? (
-            <SettingFilled className="text-lg" />
-          ) : (
-            <SettingOutlined className="text-lg" />
-          )}
-          <Typography className="font-bold mt-2 text-xs">마이페이지</Typography>
-        </Link>
-      </Flex>
+      {!pathname.includes("/products") && (
+        <Flex className="border rounded-t-2xl justify-around p-4 fixed bottom-0 max-w-[584px] w-full z-10 bg-white">
+          <Link to="/" className="flex-1 flex flex-col items-center">
+            {pathname === "/" ? (
+              <HomeFilled className="text-lg" />
+            ) : (
+              <HomeOutlined className="text-lg" />
+            )}
+            <Typography className="font-bold mt-2 text-xs">홈</Typography>
+          </Link>
+          <Link to="/search" className="flex-1 flex flex-col items-center">
+            {pathname === "/search" ? (
+              <ProductFilled className="text-lg" />
+            ) : (
+              <ProductOutlined className="text-lg" />
+            )}
+            <Typography className="font-bold mt-2 text-xs">상품</Typography>
+          </Link>
+          <Link to="/categories" className="flex-1 flex flex-col items-center">
+            <UnorderedListOutlined className="text-xl" />
+            <Typography className="font-bold mt-2 text-xs">카테고리</Typography>
+          </Link>
+          <Link to="/picks" className="flex-1 flex flex-col items-center">
+            {pathname === "/picks" ? (
+              <HeartFilled className="text-lg" />
+            ) : (
+              <HeartOutlined className="text-lg" />
+            )}
+            <Typography className="font-bold mt-2 text-xs">찜</Typography>
+          </Link>
+          <Link to="/settings" className="flex-1 flex flex-col items-center">
+            {pathname === "/setting" ? (
+              <SettingFilled className="text-lg" />
+            ) : (
+              <SettingOutlined className="text-lg" />
+            )}
+            <Typography className="font-bold mt-2 text-xs">마이페이지</Typography>
+          </Link>
+        </Flex>
+      )}
       <ScrollRestoration />
     </Layout>
   );
