@@ -4,7 +4,7 @@ import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
 import { RightOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Divider, Flex, Tabs, Typography } from "antd";
+import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -150,24 +150,29 @@ const Page: FC = () => {
           {
             key: "1",
             label: "상품정보",
-            children: "Content of Tab Pane 1",
+            children: "상품정보입니다",
           },
           {
-            className: "flex-1",
             key: "2",
-            label: "리뷰",
+            label: `리뷰 ${reviewDetailResponses.totalCount}`,
             children: (
               <ReviewSection ref={refReviewSection} reviewDetailResponses={reviewDetailResponses} />
             ),
           },
           {
-            className: "flex-1",
             key: "3",
             label: "추천",
-            children: "Content of Tab Pane 3",
+            children: (
+              <Row gutter={[8, 8]}>
+                {newProducts?.content.map((product) => (
+                  <Col xs={12} md={8} key={product.id}>
+                    <Product {...product} />
+                  </Col>
+                ))}
+              </Row>
+            ),
           },
           {
-            className: "flex-1",
             key: "4",
             label: "문의",
             children: <QnaSection qnADetailResponses={qnADetailResponses} />,

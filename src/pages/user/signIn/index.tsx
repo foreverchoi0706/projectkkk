@@ -9,13 +9,12 @@ import {
 import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
-import { useForm } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
-  const [form] = useForm();
+  const [form] = Form.useForm<ISignInParams>();
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -37,7 +36,7 @@ const Page: FC = () => {
   return (
     <Layout className="flex items-center justify-center">
       <Typography.Title>로그인</Typography.Title>
-      <Form form={form} autoComplete="off" onFinish={onFinish}>
+      <Form<ISignInParams> form={form} autoComplete="off" onFinish={onFinish}>
         <Form.Item<ISignInParams>
           name="email"
           rules={[

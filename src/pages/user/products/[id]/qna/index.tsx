@@ -2,17 +2,16 @@ import axiosInstance from "@/utils/axiosInstance";
 import { IQnaParams, ITest, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, FormProps, Input, Select, Typography } from "antd";
-import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { FC, useState } from "react";
 
 const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => {
-  const [form] = useForm<IQnaParams>();
+  const [form] = Form.useForm<IQnaParams>();
   const [isOpenQnaDrawer, setIsOpenQnaDrawer] = useState<boolean>(false);
 
   const addQnaMutation = useMutation<unknown, TError, IQnaParams>({
     mutationFn: (qnaParams: IQnaParams) => axiosInstance.post("/qna/join", qnaParams),
-    onSuccess: async () => alert("Qna가 등록되었습니다"),
+    onSuccess: async () => alert("QnA가 등록되었습니다"),
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
@@ -26,7 +25,14 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
 
   return (
     <section>
-      {JSON.stringify(qnADetailResponses)}
+      {qnADetailResponses.content.length > 0 ? (
+        qnADetailResponses.content.map(() => <Flex>dsadd</Flex>)
+      ) : (
+        <Flex className="flex-col gap-4 flex-grow justify-center items-center my-4">
+          <Typography className="text-5xl">😥</Typography>
+          <Typography className="text-2xl">아직 작성된 QnA가 없습니다</Typography>
+        </Flex>
+      )}
       <Flex className="flex-col gap-4 my-4">
         <Typography className="text-center text-5xl">🛍</Typography>
         <Typography className="text-center text-lg font-bold">
@@ -87,10 +93,14 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
           </Form.Item>
           <Form.Item<IQnaParams>>
             <Flex className="gap-4">
-              <Button type="primary" htmlType="submit">
+              <Button className="flex-grow" type="primary" htmlType="submit">
                 등록
               </Button>
-              <Button onClick={() => setIsOpenQnaDrawer(false)} htmlType="button">
+              <Button
+                className="flex-grow"
+                onClick={() => setIsOpenQnaDrawer(false)}
+                htmlType="button"
+              >
                 취소
               </Button>
             </Flex>

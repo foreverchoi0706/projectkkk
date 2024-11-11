@@ -14,13 +14,12 @@ import {
 import { IAuth, IResponse, ISignUpParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, DatePicker, Flex, Form, FormProps, Input, Layout, Radio, Typography } from "antd";
-import { useForm } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
-  const [form] = useForm<ISignUpParams>();
+  const [form] = Form.useForm<ISignUpParams>();
   const navigate = useNavigate();
   const { login } = useAuth();
   const signUpMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignUpParams>({

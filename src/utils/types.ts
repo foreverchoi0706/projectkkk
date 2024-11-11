@@ -41,8 +41,8 @@ export interface IPageList<T> {
 }
 
 export interface ITest {
-  qnADetailResponses: IPageList<IReiew>;
-  reviewDetailResponses: IPageList<IReiew>;
+  qnADetailResponses: IPageList<IReiew[]>;
+  reviewDetailResponses: IPageList<IReiew[]>;
 }
 
 export interface IProduct {
@@ -69,6 +69,8 @@ export interface IProductSearchParams {
   page?: number;
   size?: number;
 }
+
+export type TProductSearchParams = Pick<IProductSearchParams, "brand" | "category">;
 
 export interface IMember {
   id: number;
