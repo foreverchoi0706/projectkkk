@@ -1,6 +1,6 @@
 import user from "@/queryKeys/user";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Flex, Spin, Typography } from "antd";
+import { Divider, Flex, Spin, Typography } from "antd";
 import { FC, useEffect, useRef } from "react";
 
 const Page: FC = () => {
@@ -13,9 +13,8 @@ const Page: FC = () => {
   } = useInfiniteQuery({
     queryKey: user.shipping.all().queryKey,
     queryFn: (context) => user.shipping.all().queryFn(context),
-    getNextPageParam: ({ content }, __, lastPageParam) => {
-      return content.length === 0 ? undefined : lastPageParam + 1;
-    },
+    getNextPageParam: ({ content }, __, lastPageParam) =>
+      content.length === 0 ? undefined : lastPageParam + 1,
     initialPageParam: 1,
   });
 
@@ -35,9 +34,23 @@ const Page: FC = () => {
       <Flex className="gap-4 flex-col flex-grow">
         {shippingPages.pages.length > 0 ? (
           shippingPages.pages.map(({ content }) =>
-            content.map(({ id, products }) => (
-              <Flex key={id} className="flex-grow border border-gray-200 p-16">
-                {id} {JSON.stringify(products)}
+            content.map(({ id, deliveryAddress, deliveryType, deliveryStatusType }) => (
+              <Flex key={id} className=" flex-col flex-grow border border-gray-200 p-4">
+                <Flex className="justify-between items-center">
+                  <img
+                    className="rounded"
+                    width="80"
+                    height="80"
+                    alt="img"
+                    src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/09/27/202409270520214482_061783.jpg?width=1029&height=1029&quality=100&format=webp&transparent=true"
+                  />
+                  <Typography>{deliveryType}</Typography>
+                </Flex>
+                <Divider />
+                <Flex className="justify-between">
+                  <Typography>{deliveryStatusType}</Typography>
+                  <Typography>{deliveryAddress}</Typography>
+                </Flex>
               </Flex>
             )),
           )

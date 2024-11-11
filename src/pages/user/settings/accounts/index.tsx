@@ -105,9 +105,16 @@ const Setting: FC = () => {
           <Input placeholder="이메일" />
         </Form.Item>
         <Form.Item>
-          <Button disabled={updateMemberMutation.isPending} htmlType="submit" type="primary">
-            수정
-          </Button>
+          <Flex>
+            <Button
+              className="flex-grow"
+              disabled={updateMemberMutation.isPending}
+              htmlType="submit"
+              type="primary"
+            >
+              수정
+            </Button>
+          </Flex>
         </Form.Item>
       </Form>
     );
@@ -121,7 +128,7 @@ const Setting: FC = () => {
         <Input.Password placeholder="password" />
       </Form.Item>
       <Form.Item>
-        <Flex gap="middle">
+        <Flex>
           <Button
             disabled={memberVerifyMutation.isPending}
             className="flex-grow"

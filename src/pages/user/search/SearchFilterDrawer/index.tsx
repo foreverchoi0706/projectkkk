@@ -4,16 +4,19 @@ import { useQueries } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, Typography } from "antd";
 import { DrawerProps } from "antd/es/drawer";
 import queryString from "query-string";
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const SearchFilterDrawer: FC<DrawerProps> = (props) => {
+const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  console.log(searchParams);
+
   const [searchFilterForm] = Form.useForm<TProductSearchParams>();
   const queries = useQueries({
     queries: [
-      { ...user.brands.all(), enabled: props.open },
-      { ...user.categories.all(), enabled: props.open },
+      { ...user.brands.all(), enabled: rest.open },
+      { ...user.categories.all(), enabled: rest.open },
     ],
   });
   const [{ data: brands }, { data: categories }] = queries;
@@ -21,6 +24,12 @@ const SearchFilterDrawer: FC<DrawerProps> = (props) => {
   const onFinishApplySearchFilter = (productSearchParams: TProductSearchParams) => {
     navigate(`/search?${queryString.stringify(productSearchParams)}`, { replace: true });
   };
+
+  useEffect(() => {
+    [...searchParams.entries()].forEach(([key, value]) => {
+      searchFilterForm.setFieldValue(key as keyof TProductSearchParams, value);
+    });
+  }, []);
 
   if (queries.every(({ isLoading }) => isLoading)) return null;
 
@@ -35,7 +44,11 @@ const SearchFilterDrawer: FC<DrawerProps> = (props) => {
           boxShadow: "none",
         },
       }}
-      {...props}
+      onClose={(e) => {
+        searchFilterForm.resetFields();
+        if (onClose) onClose(e);
+      }}
+      {...rest}
     >
       <Form<TProductSearchParams> form={searchFilterForm} onFinish={onFinishApplySearchFilter}>
         <Form.Item<TProductSearchParams> name="brand">

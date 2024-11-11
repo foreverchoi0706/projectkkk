@@ -44,8 +44,8 @@ const User: FC = () => {
             <Flex className="h-[calc(100vh-142px)] justify-center items-center flex-col gap-4">
               <Typography className="text-5xl">😥</Typography>
               <Typography className="text-2xl">오류가 발생하였습니다</Typography>
-              <Button type="primary" onClick={() => (window.location.href = "/")}>
-                메인화면으로 가기
+              <Button type="primary" onClick={window.location.reload}>
+                새로고침하기
               </Button>
             </Flex>
           }
