@@ -10,7 +10,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  console.log(searchParams);
 
   const [searchFilterForm] = Form.useForm<TProductSearchParams>();
   const queries = useQueries({
@@ -42,6 +41,7 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
         },
         wrapper: {
           boxShadow: "none",
+          height: "fit-content",
         },
       }}
       onClose={(e) => {

@@ -1,4 +1,5 @@
 import Product from "@/components/Product";
+import useAuth from "@/hooks/useAuth";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
@@ -6,20 +7,22 @@ import axiosInstance from "@/utils/axiosInstance.ts";
 import { TError } from "@/utils/types.ts";
 import { HeartFilled, HeartOutlined, RightOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Col, Divider, Drawer, Flex, Form, Row, Tabs, Typography } from "antd";
+import { Button, Carousel, Col, Divider, Flex, Form, FormProps, Row, Tabs, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import OrderDrawer from "../OrderDrawer";
 
 const Page: FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { data } = useAuth();
+  const refReviewSection = useRef<HTMLElement>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState<boolean>(false);
-  const refReviewSection = useRef<HTMLElement>(null);
-  const navigate = useNavigate();
   const [activeKey, setActiveKey] = useState<string>("1");
 
   const likeMutation = useMutation<unknown, TError, boolean>({
-    mutationFn: (liked: boolean) => axiosInstance.post(`/wishList/toggle/${id}?liked=${liked}`),
+    mutationFn: (liked) => axiosInstance.post(`/wishList/toggle/${id}?liked=${liked}`),
     onSuccess: () => setIsLiked(!isLiked),
     onError: ({ responseMessage }) => alert(responseMessage),
   });
@@ -105,7 +108,6 @@ const Page: FC = () => {
             }).format(price)}
           </Typography>
         </Flex>
-
         <Typography className="font-bold text-3xl text-pink-500">
           {new Intl.NumberFormat("ko-KR", {
             style: "currency",
@@ -113,15 +115,12 @@ const Page: FC = () => {
           }).format(Math.round((price * (100 - discountRate)) / 100))}
         </Typography>
         <Typography>{description}</Typography>
-
         <Flex className="gap-4">
           <Button>{size}</Button>
         </Flex>
-
         <Flex className="gap-4">
           <Button>{color}</Button>
         </Flex>
-
         <Button
           type="default"
           onClick={() => {
@@ -206,14 +205,23 @@ const Page: FC = () => {
             )
           }
         />
-        <Button type="primary" className="flex-grow" onClick={() => setIsOrderDrawerOpen(true)}>
+        <Button
+          type="primary"
+          className="flex-grow"
+          onClick={() => {
+            if (!data) navigate("/signin");
+            setIsOrderDrawerOpen(true);
+          }}
+        >
           구매하기
         </Button>
       </Flex>
-      <Drawer
+      <OrderDrawer
+        product={product}
         styles={{
           wrapper: {
             boxShadow: "none",
+            height: "fit-content",
           },
           content: {
             borderRadius: "8px 8px 0 0",
@@ -223,14 +231,10 @@ const Page: FC = () => {
           },
         }}
         onClose={() => setIsOrderDrawerOpen(false)}
-        title="구매"
-        placement="bottom"
         open={isOrderDrawerOpen}
-      >
-        <Form>
-          <Form.Item>dasds</Form.Item>
-        </Form>
-      </Drawer>
+        closeIcon={false}
+        placement="bottom"
+      />
     </main>
   );
 };

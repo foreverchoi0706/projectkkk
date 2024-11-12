@@ -150,9 +150,8 @@ const Page: FC = () => {
       )}
 
       <SearchFilterDrawer
-        title="필터"
         placement="bottom"
-        closable
+        closeIcon={false}
         onClose={() => setIsSearchFilterDrawerOpen(false)}
         open={isSearchFilterDrawerOpen}
       />

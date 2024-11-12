@@ -50,10 +50,11 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
       </Flex>
 
       <Drawer
-        title="QnA 등록"
+        closeIcon={false}
         styles={{
           wrapper: {
             boxShadow: "none",
+            height: "fit-content",
           },
           content: {
             borderRadius: "8px 8px 0 0",

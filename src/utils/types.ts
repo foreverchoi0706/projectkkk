@@ -199,3 +199,22 @@ export interface IReiew {
   rating: string;
   reviewId: number;
 }
+
+export interface IOrderParams {
+  productOrders: {
+    productId: number;
+    price: number;
+    quantity: number;
+    size: string;
+    color: string;
+  }[];
+  shippingInfo: {
+    deliveryType: string;
+    deliveryAddressType: string;
+    deliveryAddress: string;
+    shippingMessages: string;
+    customMessage: string;
+  };
+  pointsUsed: number;
+  couponId: number;
+}
