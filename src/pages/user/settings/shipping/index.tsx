@@ -11,8 +11,8 @@ const Page: FC = () => {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: user.shipping.all().queryKey,
-    queryFn: (context) => user.shipping.all().queryFn(context),
+    queryKey: user.shipping.pages().queryKey,
+    queryFn: (context) => user.shipping.pages().queryFn(context),
     getNextPageParam: ({ content }, __, lastPageParam) =>
       content.length === 0 ? undefined : lastPageParam + 1,
     initialPageParam: 1,

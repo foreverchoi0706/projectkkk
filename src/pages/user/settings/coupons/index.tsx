@@ -25,8 +25,8 @@ const Page: FC = () => {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: user.coupons.all(searchParams.toString()).queryKey,
-    queryFn: (context) => user.coupons.all(searchParams.toString()).queryFn(context),
+    queryKey: user.coupons.pages(searchParams.toString()).queryKey,
+    queryFn: (context) => user.coupons.pages(searchParams.toString()).queryFn(context),
     getNextPageParam: ({ content }, __, lastPageParam) => {
       return content.length === 0 ? undefined : lastPageParam + 1;
     },

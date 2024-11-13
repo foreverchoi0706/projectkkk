@@ -1,11 +1,28 @@
+import useAuth from "@/hooks/useAuth";
 import axiosInstance from "@/utils/axiosInstance";
 import { IOrderParams, IProduct, TError } from "@/utils/types";
-import { useMutation } from "@tanstack/react-query";
-import { Drawer, Form, Flex, Typography, Button, Input, DrawerProps, FormProps } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Drawer,
+  Form,
+  Flex,
+  Typography,
+  Button,
+  Input,
+  DrawerProps,
+  FormProps,
+  InputRef,
+  Select,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { FC, useEffect } from "react";
+import { ChangeEvent, FC, useEffect, useRef } from "react";
+import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
+import user from "@/queryKeys/user";
 
 const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest }) => {
+  const { id, discountRate, price, size, color } = product;
+  const { info } = useAuth();
+  const refPointInput = useRef<InputRef>(null);
   const [orderForm] = Form.useForm<IOrderParams>();
 
   const orderMutation = useMutation<unknown, TError, IOrderParams>({
@@ -19,36 +36,49 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
     orderMutation.mutate(orderParams);
   };
 
-  useEffect(() => {
-    if (!product) return;
-    orderForm.setFieldValue("productOrders", [
-      {
-        productId: product.id,
-        price: product.price,
-        size: product.size,
-        color: product.color,
-      },
-    ]);
-  }, [product]);
+  const { data: coupons } = useQuery(user.coupons.all());
 
-  const { discountRate, price, size, color } = product;
+  console.log(coupons);
+
+  useEffect(() => {
+    if (!product || !rest.open) return;
+    orderForm.setFieldValue("productId", id);
+    orderForm.setFieldValue("price", price);
+    orderForm.setFieldValue("size", size);
+    orderForm.setFieldValue("color", color);
+  }, [product, rest.open]);
+
+  useEffect(() => {
+    if (!refPointInput.current?.input || !rest.open) return;
+    const inputEvent = fromEvent<ChangeEvent<HTMLInputElement>>(
+      refPointInput.current.input,
+      "input",
+    )
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        map(({ target }) => +target),
+      )
+      .subscribe((value) => orderForm.setFieldValue("pointsUsed", value));
+    return () => inputEvent.unsubscribe();
+  }, [rest.open]);
 
   return (
     <Drawer {...rest}>
       <Form<IOrderParams> form={orderForm} onFinish={onFinishOrder}>
-        <Form.Item<IOrderParams>>
+        <Form.Item<IOrderParams> name="size">
           <Flex className="gap-4 flex-col">
             <Typography>사이즈</Typography>
             <Button className="w-fit">{size}</Button>
           </Flex>
         </Form.Item>
-        <Form.Item<IOrderParams>>
+        <Form.Item<IOrderParams> name="color">
           <Flex className="gap-4 flex-col">
             <Typography>색상</Typography>
             <Button className="w-fit">{color}</Button>
           </Flex>
         </Form.Item>
-        <Form.Item<IOrderParams>>
+        <Form.Item<IOrderParams> name="price">
           <Flex className="gap-2 items-center">
             <Typography className="line-through">
               {new Intl.NumberFormat("ko-KR", {
@@ -65,9 +95,37 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
           </Flex>
         </Form.Item>
         <Form.Item<IOrderParams>>
-          <Input placeholder="포인트" />
+          <Input
+            type="number"
+            ref={refPointInput}
+            placeholder="0"
+            addonAfter={`잔여 포인트 : ${info?.point || 0}P`}
+            disabled={(info?.point || 0) === 0}
+          />
         </Form.Item>
-        <Form.Item<IOrderParams>>
+        {coupons && coupons.content.length > 0 && (
+          <Form.Item<IOrderParams> name="couponId">
+            <Select placeholder="쿠폰">
+              {coupons.content.map(({ id, name, startDate, discountRate, endDate }) => (
+                <Select.Option key={id}>
+                  <Flex key={id} className="flex-col gap-4 p-4 border border-gray-200 rounded">
+                    <Flex className="justify-between items-center">
+                      <Typography className="font-bold text-lg">{name}</Typography>
+                      <Typography className="text-pink-500 text-2xl font-bold">
+                        {discountRate}%
+                      </Typography>
+                    </Flex>
+                    <Typography className="text-end font-medium">
+                      {new Intl.DateTimeFormat("ko-KR").format(new Date(startDate))}~
+                      {new Intl.DateTimeFormat("ko-KR").format(new Date(endDate))}
+                    </Typography>
+                  </Flex>
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        <Form.Item<IOrderParams> name="customMessage">
           <TextArea placeholder="배송시 메모" />
         </Form.Item>
         <Form.Item<IOrderParams>>

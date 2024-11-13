@@ -7,7 +7,7 @@ import axiosInstance from "@/utils/axiosInstance.ts";
 import { TError } from "@/utils/types.ts";
 import { HeartFilled, HeartOutlined, RightOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Col, Divider, Flex, Form, FormProps, Row, Tabs, Typography } from "antd";
+import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import OrderDrawer from "../OrderDrawer";
@@ -216,25 +216,27 @@ const Page: FC = () => {
           구매하기
         </Button>
       </Flex>
-      <OrderDrawer
-        product={product}
-        styles={{
-          wrapper: {
-            boxShadow: "none",
-            height: "fit-content",
-          },
-          content: {
-            borderRadius: "8px 8px 0 0",
-            maxWidth: "600px",
-            width: "100%",
-            margin: "0 auto",
-          },
-        }}
-        onClose={() => setIsOrderDrawerOpen(false)}
-        open={isOrderDrawerOpen}
-        closeIcon={false}
-        placement="bottom"
-      />
+      {isOrderDrawerOpen && (
+        <OrderDrawer
+          product={product}
+          styles={{
+            wrapper: {
+              boxShadow: "none",
+              height: "fit-content",
+            },
+            content: {
+              borderRadius: "8px 8px 0 0",
+              maxWidth: "600px",
+              width: "100%",
+              margin: "0 auto",
+            },
+          }}
+          onClose={() => setIsOrderDrawerOpen(false)}
+          open={isOrderDrawerOpen}
+          closeIcon={false}
+          placement="bottom"
+        />
+      )}
     </main>
   );
 };

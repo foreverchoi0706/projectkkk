@@ -16,7 +16,7 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
-          `/product/brands?page=1&size=100`,
+          `/product/brands?page=1&size=1000`,
         );
         return data.result;
       },
@@ -26,8 +26,9 @@ const queryKeyStore = createQueryKeyStore({
   categories: {
     all: () => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<ICategory[]>>>(`/category/categories`);
+        const { data } = await axiosInstance.get<IResponse<IPageList<ICategory[]>>>(
+          `/category/categories?size=1000`,
+        );
         return data.result;
       },
       queryKey: [""],
@@ -43,7 +44,7 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [pageParam],
     }),
-    all: (queryString: string) => ({
+    pages: (queryString: string) => ({
       queryFn: async ({ pageParam }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
           `/product/products?page=${pageParam}&${queryString}`,
@@ -71,7 +72,15 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   coupons: {
-    all: (queryString?: string) => ({
+    all: () => ({
+      queryFn: async () => {
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(`/coupon/search?size=1000`);
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+    pages: (queryString?: string) => ({
       queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
           `/coupon/search?page=${pageParam}&${queryString || ""}`,
@@ -93,7 +102,8 @@ const queryKeyStore = createQueryKeyStore({
   qnas: {
     all: (queryString?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas`);
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas?size=1000`);
         return data.result;
       },
       queryKey: [queryString],
@@ -102,8 +112,9 @@ const queryKeyStore = createQueryKeyStore({
   reviews: {
     all: (queryString?: string) => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/review/my_reiveiw`);
+        const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(
+          `/review/my_reiveiw?size=1000`,
+        );
         return data.result;
       },
       queryKey: [queryString],
@@ -111,6 +122,15 @@ const queryKeyStore = createQueryKeyStore({
   },
   shipping: {
     all: () => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+          `/admin/shipping/shippings?size=1000`,
+        );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+    pages: () => ({
       queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
           `/admin/shipping/shippings?size=10&page=${pageParam}`,
