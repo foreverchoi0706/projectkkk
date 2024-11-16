@@ -1,14 +1,13 @@
+import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance";
 import { IProduct, TError } from "@/utils/types";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Flex, Typography } from "antd";
 import { FC, MouseEventHandler, useState } from "react";
 import { Link } from "react-router-dom";
 
-interface IProps extends IProduct {}
-
-const Product: FC<IProps> = ({
+const Product: FC<IProduct> = ({
   id,
   name,
   brand,
@@ -18,16 +17,31 @@ const Product: FC<IProps> = ({
   imageUrl,
   liked,
 }) => {
+  const queryClient = useQueryClient();
   const [isLiked, setIsLiked] = useState<boolean>(liked);
-  const likeMutation = useMutation<unknown, TError, boolean>({
-    mutationFn: (liked: boolean) => axiosInstance.post(`/wishList/toggle/${id}?liked=${liked}`),
-    onSuccess: () => setIsLiked(!isLiked),
+  const likeMutation = useMutation<unknown, TError>({
+    mutationFn: () => axiosInstance.post(`/wishList/add?productId=${id}`),
+    onSuccess: () => {
+      setIsLiked(!isLiked);
+      queryClient.invalidateQueries(user.products.wish());
+    },
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
+  const unlikeMutation = useMutation<unknown, TError>({
+    mutationFn: () => axiosInstance.delete(`/wishList/remove?productId=${id}`),
+    onSuccess: () => {
+      setIsLiked(!isLiked);
+      queryClient.invalidateQueries(user.products.wish());
+    },
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();
-    likeMutation.mutate(!liked);
+    const mutation = liked ? unlikeMutation : likeMutation;
+    if (mutation.isPending) return;
+    mutation.mutate();
   };
 
   return (
@@ -41,6 +55,7 @@ const Product: FC<IProps> = ({
         />
         {isLiked ? (
           <HeartFilled
+            disabled
             onClick={onClickLike}
             className="text-pink-500 absolute bottom-2 right-2 text-xl"
           />

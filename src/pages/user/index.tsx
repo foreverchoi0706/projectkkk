@@ -16,7 +16,7 @@ import { Client } from "@stomp/stompjs";
 import { Button, Flex, Layout, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Link, Outlet, ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 
 const User: FC = () => {
@@ -29,18 +29,13 @@ const User: FC = () => {
       webSocketFactory: () => sockJs,
       onConnect: () => {
         console.log("Connected to WebSocket");
-
         // 서버 메시지 구독
-        client.subscribe("/topic/messages", (message) => {
-          console.log(message);
+        client.subscribe("/topic/1", (message) => {
+          console.log(`Received: ${message.body}`);
         });
       },
-      onStompError: (e) => {
-        console.log(e);
-      },
-      onDisconnect: () => {
-        console.log("Disconnected from WebSocket");
-      },
+      onStompError: console.error,
+      onDisconnect: () => console.log("Disconnected from WebSocket"),
     });
 
     client.activate();
@@ -62,9 +57,7 @@ const User: FC = () => {
         <Flex className="gap-4">
           <BellOutlined
             className="text-2xl"
-            onClick={() => {
-              client?.publish({ destination: "test" });
-            }}
+            onClick={() => client?.publish({ destination: "/chat/send", body: "First Message" })}
           />
           <Link to="/search" className="flex items-center">
             <SearchOutlined className="text-2xl" />

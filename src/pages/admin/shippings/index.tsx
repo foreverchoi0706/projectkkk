@@ -1,6 +1,6 @@
 import admin from "@/queryKeys/admin";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IBrand, IShipping } from "@/utils/types";
+import { IShipping } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Spin, Table, TableProps } from "antd";
 import { FC } from "react";
