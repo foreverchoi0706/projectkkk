@@ -2,6 +2,7 @@ import Product from "@/components/Product";
 import useAuth from "@/hooks/useAuth";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
+import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance.ts";
 import { TError } from "@/utils/types.ts";
@@ -10,7 +11,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import OrderDrawer from "../OrderDrawer";
 
 const Page: FC = () => {
   const { id } = useParams();
@@ -222,7 +222,6 @@ const Page: FC = () => {
           styles={{
             wrapper: {
               boxShadow: "none",
-              height: "fit-content",
             },
             content: {
               borderRadius: "8px 8px 0 0",
@@ -233,7 +232,6 @@ const Page: FC = () => {
           }}
           onClose={() => setIsOrderDrawerOpen(false)}
           open={isOrderDrawerOpen}
-          closeIcon={false}
           placement="bottom"
         />
       )}

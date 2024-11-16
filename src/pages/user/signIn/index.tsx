@@ -34,7 +34,7 @@ const Page: FC = () => {
   }, []);
 
   return (
-    <Layout className="flex items-center justify-center">
+    <main>
       <Typography.Title>로그인</Typography.Title>
       <Form<ISignInParams> form={form} autoComplete="off" onFinish={onFinish}>
         <Form.Item<ISignInParams>
@@ -78,7 +78,7 @@ const Page: FC = () => {
           </Flex>
         </Form.Item>
       </Form>
-    </Layout>
+    </main>
   );
 };
 

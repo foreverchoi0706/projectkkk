@@ -1,3 +1,5 @@
+import { DELIVERY_ADDRESS_TYPE, SHIPPING_MESSAGES } from "@/utils/constants";
+
 export interface IResponse<T = unknown> {
   result: T;
   responseMessage: string;
@@ -219,6 +221,10 @@ export interface IReiew {
 //   couponId: number;
 // }
 
+export type TShippingMessages = keyof typeof SHIPPING_MESSAGES;
+
+export type TDelieryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
+
 export interface IOrderParams {
   productId: number;
   price: number;
@@ -226,9 +232,9 @@ export interface IOrderParams {
   size: string;
   color: string;
   deliveryType: string;
-  deliveryAddressType: string;
+  deliveryAddressType: TDelieryAddressType;
   deliveryAddress: string;
-  shippingMessages: string;
+  shippingMessages: TShippingMessages;
   customMessage: string;
   pointsUsed: number;
   couponId: number;

@@ -1,6 +1,6 @@
 import useAuth from "@/hooks/useAuth";
 import axiosInstance from "@/utils/axiosInstance";
-import { IOrderParams, IProduct, TError } from "@/utils/types";
+import { IOrderParams, IProduct, TError, TShippingMessages } from "@/utils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Drawer,
@@ -11,19 +11,18 @@ import {
   Input,
   DrawerProps,
   FormProps,
-  InputRef,
   Select,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { ChangeEvent, FC, useEffect, useRef } from "react";
-import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
+import { FC, useEffect } from "react";
 import user from "@/queryKeys/user";
+import { DELIVERY_ADDRESS_TYPE, SHIPPING_MESSAGES } from "@/utils/constants";
 
 const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest }) => {
   const { id, discountRate, price, size, color } = product;
   const { info } = useAuth();
-  const refPointInput = useRef<InputRef>(null);
   const [orderForm] = Form.useForm<IOrderParams>();
+  const shippingMessages = Form.useWatch<TShippingMessages>("shippingMessages", orderForm);
 
   const orderMutation = useMutation<unknown, TError, IOrderParams>({
     mutationFn: (orderParams) => axiosInstance.post(`/order/join`, orderParams),
@@ -38,30 +37,17 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
 
   const { data: coupons } = useQuery(user.coupons.all());
 
-  console.log(coupons);
-
   useEffect(() => {
     if (!product || !rest.open) return;
     orderForm.setFieldValue("productId", id);
     orderForm.setFieldValue("price", price);
     orderForm.setFieldValue("size", size);
     orderForm.setFieldValue("color", color);
+    orderForm.setFieldValue("pointsUsed", 0);
+    orderForm.setFieldValue("deliveryAddressType", info?.defaultAddress || "");
   }, [product, rest.open]);
 
-  useEffect(() => {
-    if (!refPointInput.current?.input || !rest.open) return;
-    const inputEvent = fromEvent<ChangeEvent<HTMLInputElement>>(
-      refPointInput.current.input,
-      "input",
-    )
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        map(({ target }) => +target),
-      )
-      .subscribe((value) => orderForm.setFieldValue("pointsUsed", value));
-    return () => inputEvent.unsubscribe();
-  }, [rest.open]);
+  console.log(shippingMessages);
 
   return (
     <Drawer {...rest}>
@@ -94,11 +80,18 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
             </Typography>
           </Flex>
         </Form.Item>
-        <Form.Item<IOrderParams>>
+        <Form.Item<IOrderParams>
+          name="pointsUsed"
+          rules={[
+            {
+              max: info?.point,
+              message: "사용 포인트는 잔여 포인트보다 많을 수 없습니다",
+            },
+          ]}
+        >
           <Input
             type="number"
-            ref={refPointInput}
-            placeholder="0"
+            placeholder={`${info?.point || 0}`}
             addonAfter={`잔여 포인트 : ${info?.point || 0}P`}
             disabled={(info?.point || 0) === 0}
           />
@@ -125,9 +118,78 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
             </Select>
           </Form.Item>
         )}
-        <Form.Item<IOrderParams> name="customMessage">
-          <TextArea placeholder="배송시 메모" />
+        <Form.Item<IOrderParams>
+          name="deliveryType"
+          rules={[
+            {
+              required: true,
+              message: "배송 형태를 입력해주세요",
+            },
+          ]}
+        >
+          <Select placeholder="배송 형태">
+            <Select.Option value={DELIVERY_ADDRESS_TYPE.STRAIGHT_DELIVERY}>
+              {DELIVERY_ADDRESS_TYPE.STRAIGHT_DELIVERY}
+            </Select.Option>
+            <Select.Option value={DELIVERY_ADDRESS_TYPE.ORDINARY_DELIVERY}>
+              {DELIVERY_ADDRESS_TYPE.ORDINARY_DELIVERY}
+            </Select.Option>
+            <Select.Option value={DELIVERY_ADDRESS_TYPE.REMOTE_DELIVERY}>
+              {DELIVERY_ADDRESS_TYPE.REMOTE_DELIVERY}
+            </Select.Option>
+          </Select>
         </Form.Item>
+        <Form.Item<IOrderParams>
+          name="deliveryAddressType"
+          rules={[
+            {
+              required: true,
+              message: "기본 배송지를 입력해주세요",
+            },
+          ]}
+        >
+          <Input placeholder="기본 배송지" />
+        </Form.Item>
+        <Form.Item<IOrderParams>
+          name="shippingMessages"
+          rules={[
+            {
+              required: true,
+              message: "배송시 메모를 입력해주세요",
+            },
+          ]}
+        >
+          <Select placeholder="배송시 메모">
+            <Select.Option value={SHIPPING_MESSAGES.LEAVE_AT_DOOR}>
+              {SHIPPING_MESSAGES.LEAVE_AT_DOOR}
+            </Select.Option>
+            <Select.Option value={SHIPPING_MESSAGES.DIRECT_HANDOFF}>
+              {SHIPPING_MESSAGES.DIRECT_HANDOFF}
+            </Select.Option>
+            <Select.Option value={SHIPPING_MESSAGES.LEAVE_WITH_CONCIERGE}>
+              {SHIPPING_MESSAGES.LEAVE_WITH_CONCIERGE}
+            </Select.Option>
+            <Select.Option value={SHIPPING_MESSAGES.CONTACT_BEFORE_DELIVERY}>
+              {SHIPPING_MESSAGES.CONTACT_BEFORE_DELIVERY}
+            </Select.Option>
+            <Select.Option value={SHIPPING_MESSAGES.CUSTOM}>
+              {SHIPPING_MESSAGES.CUSTOM}
+            </Select.Option>
+          </Select>
+        </Form.Item>
+        {shippingMessages === SHIPPING_MESSAGES.CUSTOM && (
+          <Form.Item<IOrderParams>
+            name="customMessage"
+            rules={[
+              {
+                required: true,
+                message: "요청사항을 입력해주세요",
+              },
+            ]}
+          >
+            <TextArea placeholder="요청사항" />
+          </Form.Item>
+        )}
         <Form.Item<IOrderParams>>
           <Flex className="gap-4 flex-col">
             <Button htmlType="submit" type="primary">

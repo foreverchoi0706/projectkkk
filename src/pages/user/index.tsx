@@ -12,13 +12,46 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import { Client } from "@stomp/stompjs";
 import { Button, Flex, Layout, Typography } from "antd";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
+import { Link, Outlet, ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
+import SockJS from "sockjs-client";
 
 const User: FC = () => {
   const { pathname } = useLocation();
+  const [client, setClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const sockJs = new SockJS("/ws");
+    const client = new Client({
+      webSocketFactory: () => sockJs,
+      onConnect: () => {
+        console.log("Connected to WebSocket");
+
+        // 서버 메시지 구독
+        client.subscribe("/topic/messages", (message) => {
+          console.log(message);
+        });
+      },
+      onStompError: (e) => {
+        console.log(e);
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      },
+    });
+
+    client.activate();
+
+    setClient(client);
+
+    // 컴포넌트 언마운트 시 연결 해제
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   return (
     <Layout className="bg-white relative my-0 mx-auto max-w-[600px] pb-[78px]">
@@ -27,13 +60,16 @@ const User: FC = () => {
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
         <Flex className="gap-4">
-          <Link to="/search">
-            <BellOutlined className="text-2xl" />
-          </Link>
-          <Link to="/search">
+          <BellOutlined
+            className="text-2xl"
+            onClick={() => {
+              client?.publish({ destination: "test" });
+            }}
+          />
+          <Link to="/search" className="flex items-center">
             <SearchOutlined className="text-2xl" />
           </Link>
-          <Link to="/carts">
+          <Link to="/carts" className="flex items-center">
             <ShoppingCartOutlined className="text-2xl" />
           </Link>
         </Flex>

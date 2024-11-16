@@ -13,7 +13,7 @@ const Page: FC = () => {
   const mutation = useMutation({
     mutationFn: () => axiosInstance.post("/member/cancel"),
     onSuccess: () => {
-      alert("탈퇴되었습니다.");
+      alert("탈퇴되었습니다");
       logout();
     },
   });
@@ -24,12 +24,12 @@ const Page: FC = () => {
   };
 
   const queries = useQueries({
-    queries: [user.reviews.all(), user.coupons.all(), user.qnas.all()],
+    queries: [user.shipping.all(), user.reviews.all(), user.coupons.all(), user.qnas.all()],
   });
 
-  if (queries.every(({ data }) => !data)) return null;
+  if (queries.every(({ isLoading }) => isLoading)) return null;
 
-  const [{ data: reviews }, { data: coupons }, { data: qnas }] = queries;
+  const [{ data: shipping }, { data: reviews }, { data: coupons }, { data: qnas }] = queries;
 
   return (
     <main>
@@ -44,6 +44,9 @@ const Page: FC = () => {
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">주문 배송</Typography>
             <Typography className="font-bold text-lg">
+              <Typography className="text-lg inline text-pink-500">
+                {shipping?.totalCount || 0}{" "}
+              </Typography>
               <RightOutlined />
             </Typography>
           </Flex>
