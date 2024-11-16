@@ -25,12 +25,12 @@ const Page: FC = () => {
   const [form] = Form.useForm<IMemberSearchParams>();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams({ size: DEFAULT_LIST_PAGE_SIZE.toString(), page: "1" });
-  const { data: members } = useQuery(admin.members.all(searchParams.toString()));
+  const { data: members } = useQuery(admin.members.pages(searchParams.toString()));
   const deleteMemberMutation = useMutation<unknown, TError, number>({
     mutationFn: (memberId: number) =>
       axiosInstance.delete(`/admin/member/delete?memberId=${memberId}`),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(admin.members.all(searchParams.toString()));
+      await queryClient.invalidateQueries(admin.members.pages(searchParams.toString()));
       alert("멤버가 삭제되었습니다");
     },
     onError: ({ responseMessage }) => alert(responseMessage),
