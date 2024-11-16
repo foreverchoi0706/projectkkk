@@ -6,6 +6,7 @@ import {
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
+import supabaseClient from "@/utils/supabaseClient.ts";
 import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Typography } from "antd";
@@ -14,9 +15,9 @@ import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
-  const [form] = Form.useForm<ISignInParams>();
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
+  const [form] = Form.useForm<ISignInParams>();
 
   const signInMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignInParams>({
     mutationFn: (signInParams) => axiosInstance.post("/auth/login", signInParams),
@@ -27,6 +28,23 @@ const Page: FC = () => {
   const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
     signInMutation.mutate(signInParams);
   };
+
+  const onClickKakaoSignin = () => {
+    supabaseClient.auth.signInWithOAuth({
+      provider: "kakao",
+      options: {
+        redirectTo: "http://localhost:5173/signin",
+      },
+    });
+  };
+
+  useEffect(() => {
+    supabaseClient.auth.getUser().then(({ data: { user } }) => {
+      if (user === null) return;
+      console.log(user);
+      // _kakaoSignInMutation.mutate();
+    });
+  }, []);
 
   useEffect(() => {
     form.setFieldValue("email", "center@center.com");
@@ -63,7 +81,7 @@ const Page: FC = () => {
           <Input.Password placeholder="password" />
         </Form.Item>
         <Form.Item>
-          <Flex gap="middle">
+          <Flex className="gap-4">
             <Button
               disabled={signInMutation.isPending}
               className="flex-grow"
@@ -76,6 +94,16 @@ const Page: FC = () => {
               회원가입
             </Button>
           </Flex>
+        </Form.Item>
+        <Form.Item>
+          <img
+            className="my-0 mx-auto cursor-pointer hover:brightness-90"
+            width={183}
+            height={45}
+            alt="kakao_login_medium_narrow"
+            src="/kakao_login_medium_narrow.png"
+            onClick={onClickKakaoSignin}
+          />
         </Form.Item>
       </Form>
     </main>

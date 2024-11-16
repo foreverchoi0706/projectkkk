@@ -24,12 +24,12 @@ const Page: FC = () => {
   };
 
   const queries = useQueries({
-    queries: [user.shipping.all(), user.reviews.all(), user.coupons.all(), user.qnas.all()],
+    queries: [user.order.all(), user.reviews.all(), user.coupons.all(), user.qnas.all()],
   });
 
   if (queries.every(({ isLoading }) => isLoading)) return null;
 
-  const [{ data: shipping }, { data: reviews }, { data: coupons }, { data: qnas }] = queries;
+  const [{ data: order }, { data: reviews }, { data: coupons }, { data: qnas }] = queries;
 
   return (
     <main>
@@ -40,12 +40,12 @@ const Page: FC = () => {
       </Flex>
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-8">
-        <Link to="/settings/shipping">
+        <Link to="/settings/orders">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">주문 배송</Typography>
             <Typography className="font-bold text-lg">
               <Typography className="text-lg inline text-pink-500">
-                {shipping?.totalCount || 0}{" "}
+                {order?.totalCount || 0}{" "}
               </Typography>
               <RightOutlined />
             </Typography>

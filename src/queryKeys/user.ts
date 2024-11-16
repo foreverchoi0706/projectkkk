@@ -2,6 +2,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import {
   Coupon,
   ICategory,
+  IOrder,
   IPageList,
   IProduct,
   IQna,
@@ -89,15 +90,6 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [queryString],
     }),
-    detail: (id?: string) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<unknown>>>(
-          `/coupon/coupon?couponId=${id}`,
-        );
-        return data.result;
-      },
-      queryKey: [id],
-    }),
   },
   qnas: {
     all: (queryString?: string) => ({
@@ -120,7 +112,44 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [queryString],
     }),
   },
+  order: {
+    all: () => ({
+      queryFn: async () => {
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<IOrder[]>>>(`/order/my_order?size=1000`);
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+    pages: () => ({
+      queryFn: async ({ pageParam = 1 }) => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IOrder[]>>>(
+          `/order/my_order?size=10&page=${pageParam}`,
+        );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+    detail: (id?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+          `/order/order?orderId=${id}`,
+        );
+        return data.result;
+      },
+      queryKey: [id],
+    }),
+  },
   shipping: {
+    detail: (id?: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+          `/shipping/shipping?shippingId=${id}`,
+        );
+        return data.result;
+      },
+      queryKey: [id],
+    }),
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(

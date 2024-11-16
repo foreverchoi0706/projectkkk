@@ -5,7 +5,7 @@ import {
   IMember,
   IPageList,
   IProduct,
-  IQnaWating,
+  IQuaWaiting,
   IResponse,
   IShipping,
 } from "@/utils/types";
@@ -37,7 +37,7 @@ const queryKeyStore = createQueryKeyStore({
   qnas: {
     pages: (queryString: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IQnaWating[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<IQuaWaiting[]>>>(
           `/admin/qna/waiting?${queryString}`,
         );
         return data.result;

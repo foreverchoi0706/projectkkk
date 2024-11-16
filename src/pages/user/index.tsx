@@ -57,7 +57,9 @@ const User: FC = () => {
         <Flex className="gap-4">
           <BellOutlined
             className="text-2xl"
-            onClick={() => client?.publish({ destination: "/chat/send", body: "First Message" })}
+            onClick={() =>
+              client?.publish({ destination: "/app/chat/send", body: "First Message" })
+            }
           />
           <Link to="/search" className="flex items-center">
             <SearchOutlined className="text-2xl" />

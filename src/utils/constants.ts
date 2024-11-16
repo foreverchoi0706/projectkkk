@@ -2,8 +2,8 @@ import Accounts from "@/pages/admin/accounts";
 import Brands from "@/pages/admin/brands";
 import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
-import Setting from "@/pages/admin/setting";
 import AdminQnas from "@/pages/admin/qnas";
+import Setting from "@/pages/admin/setting";
 import AdminShipping from "@/pages/admin/shippings";
 import Carts from "@/pages/user/carts";
 import UserCategories from "@/pages/user/categories";
@@ -14,19 +14,20 @@ import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/settings";
 import UserAccounts from "@/pages/user/settings/accounts";
 import UserCoupons from "@/pages/user/settings/coupons";
+import UserOrders from "@/pages/user/settings/orders";
+import UserOrdersDetail from "@/pages/user/settings/orders/[id]";
 import UserQnas from "@/pages/user/settings/qnas";
 import UserReviews from "@/pages/user/settings/reviews";
-import UserShipping from "@/pages/user/settings/shipping";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
 import {
   ApartmentOutlined,
+  MessageOutlined,
   ProductOutlined,
   SettingOutlined,
   TagsOutlined,
   UserOutlined,
-  MessageOutlined,
 } from "@ant-design/icons";
 
 export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
@@ -106,8 +107,20 @@ export const USER_SIGN_IN_ROUTES = [
     accessAbleAuth: true,
   },
   {
-    Page: UserShipping,
-    path: "settings/shipping",
+    Page: UserOrders,
+    path: "settings/orders",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserOrdersDetail,
+    path: "settings/orders/:id",
+    requiredAuth: true,
+    accessAbleAuth: true,
+  },
+  {
+    Page: UserOrders,
+    path: "settings/orders",
     requiredAuth: true,
     accessAbleAuth: true,
   },
@@ -196,10 +209,15 @@ export const ADMIN_SIGN_IN_ROUTES = [
   },
 ];
 
-export const DELIVERY_ADDRESS_TYPE = {
+export const DELIVERY_TYPE = {
   STRAIGHT_DELIVERY: "STRAIGHT_DELIVERY",
   ORDINARY_DELIVERY: "ORDINARY_DELIVERY",
   REMOTE_DELIVERY: "REMOTE_DELIVERY",
+} as const;
+
+export const DELIVERY_ADDRESS_TYPE = {
+  DEFAULT_ADDRESS: "DEFAULT_ADDRESS",
+  NEW_ADDRESS: "NEW_ADDRESS",
 } as const;
 
 export const SHIPPING_MESSAGES = {

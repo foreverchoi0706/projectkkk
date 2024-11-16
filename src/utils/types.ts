@@ -1,4 +1,4 @@
-import { DELIVERY_ADDRESS_TYPE, SHIPPING_MESSAGES } from "@/utils/constants";
+import { DELIVERY_ADDRESS_TYPE, DELIVERY_TYPE, SHIPPING_MESSAGES } from "@/utils/constants";
 
 export interface IResponse<T = unknown> {
   result: T;
@@ -43,8 +43,8 @@ export interface IPageList<T> {
 }
 
 export interface ITest {
-  qnADetailResponses: IPageList<IReiew[]>;
-  reviewDetailResponses: IPageList<IReiew[]>;
+  qnADetailResponses: IPageList<IReview[]>;
+  reviewDetailResponses: IPageList<IReview[]>;
 }
 
 export interface IProduct {
@@ -174,7 +174,7 @@ export interface IQnaParams {
   description: string;
 }
 
-export interface IQnaWating {
+export interface IQuaWaiting {
   id: number;
   qnAType: TQnaType;
   subject: string;
@@ -204,7 +204,7 @@ export interface IShipping {
   memberEmail: string;
 }
 
-export interface IReiew {
+export interface IReview {
   createAt: string;
   description: string;
   helpful: number;
@@ -217,28 +217,11 @@ export interface IReiew {
   reviewId: number;
 }
 
-// export interface IOrderParams {
-//   productOrders: {
-//     productId: number;
-//     price: number;
-//     quantity: number;
-//     size: string;
-//     color: string;
-//   }[];
-//   shippingInfo: {
-//     deliveryType: string;
-//     deliveryAddressType: string;
-//     deliveryAddress: string;
-//     shippingMessages: string;
-//     customMessage: string;
-//   };
-//   pointsUsed: number;
-//   couponId: number;
-// }
+export type TDeliveryType = keyof typeof DELIVERY_TYPE;
+
+export type TDeliveryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
 
 export type TShippingMessages = keyof typeof SHIPPING_MESSAGES;
-
-export type TDelieryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
 
 export interface IOrderParams {
   productId: number;
@@ -246,11 +229,22 @@ export interface IOrderParams {
   quantity: number;
   size: string;
   color: string;
-  deliveryType: string;
-  deliveryAddressType: TDelieryAddressType;
+  deliveryType: TDeliveryType;
+  deliveryAddressType: TDeliveryAddressType;
   deliveryAddress: string;
   shippingMessages: TShippingMessages;
   customMessage: string;
   pointsUsed: number;
   couponId: number;
+}
+
+export interface IOrder {
+  id: number;
+  orderNum: string;
+  orderDate: string;
+  deliveryAddress: string;
+  totalAmount: number;
+  pointsUsed: number;
+  pointsEarned: number;
+  products: { productId: number; price: number; quantity: number }[];
 }

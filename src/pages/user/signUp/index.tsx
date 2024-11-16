@@ -13,7 +13,7 @@ import {
 } from "@/utils/constants";
 import { IAuth, IResponse, ISignUpParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
-import { Button, DatePicker, Flex, Form, FormProps, Input, Layout, Radio, Typography } from "antd";
+import { Button, DatePicker, Flex, Form, FormProps, Input, Radio, Typography } from "antd";
 import { AxiosResponse } from "axios";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const Page: FC = () => {
   };
 
   return (
-    <Layout className="flex items-center justify-center">
+    <main className="h-full flex flex-col items-center">
       <Typography.Title>회원가입</Typography.Title>
       <Form form={form} onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams>
@@ -148,7 +148,7 @@ const Page: FC = () => {
           </Flex>
         </Form.Item>
       </Form>
-    </Layout>
+    </main>
   );
 };
 

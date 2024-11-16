@@ -1,6 +1,6 @@
 import admin from "@/queryKeys/admin";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IQnaWating } from "@/utils/types";
+import { IQuaWaiting } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Spin, Table, TableProps } from "antd";
 import { FC } from "react";
@@ -12,7 +12,7 @@ const Page: FC = () => {
   const { data: brands } = useQuery(admin.qnas.pages(searchParams.toString()));
 
   if (!brands) return <Spin />;
-  const columns: TableProps<IQnaWating>["columns"] = [
+  const columns: TableProps<IQuaWaiting>["columns"] = [
     {
       align: "center",
       dataIndex: "id",
@@ -101,7 +101,7 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
-      <Table<IQnaWating>
+      <Table<IQuaWaiting>
         scroll={{ y: 550 }}
         title={() => "QnA관리"}
         rowKey={({ id }) => id}
