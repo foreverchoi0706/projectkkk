@@ -25,6 +25,12 @@ const Page: FC = () => {
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
+  const signInOauthMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, string>({
+    mutationFn: (email) => axiosInstance.post("/social/login", { email }),
+    onSuccess: ({ data }) => login(data.result),
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
   const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
     signInMutation.mutate(signInParams);
   };
@@ -42,7 +48,7 @@ const Page: FC = () => {
     supabaseClient.auth.getUser().then(({ data: { user } }) => {
       if (user === null) return;
       console.log(user);
-      // _kakaoSignInMutation.mutate();
+      signInOauthMutation();
     });
   }, []);
 

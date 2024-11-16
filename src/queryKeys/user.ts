@@ -95,10 +95,17 @@ const queryKeyStore = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/qnas?size=1000`);
+          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/my_qna?size=1000`);
         return data.result;
       },
       queryKey: [queryString],
+    }),
+    detail: (id: number) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IQna>>(`/qna/qna_detail?qnAId=${id}`);
+        return data.result;
+      },
+      queryKey: [id],
     }),
   },
   reviews: {

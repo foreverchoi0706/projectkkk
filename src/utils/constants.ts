@@ -4,6 +4,7 @@ import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
 import AdminQnas from "@/pages/admin/qnas";
 import Setting from "@/pages/admin/setting";
+import Dashboard from "@/pages/admin/dashboard";
 import AdminShipping from "@/pages/admin/shippings";
 import Carts from "@/pages/user/carts";
 import UserCategories from "@/pages/user/categories";
@@ -23,6 +24,7 @@ import SignIn from "@/pages/user/signIn";
 import SignUp from "@/pages/user/signUp";
 import {
   ApartmentOutlined,
+  DashboardOutlined,
   MessageOutlined,
   ProductOutlined,
   SettingOutlined,
@@ -205,6 +207,14 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Setting,
     path: "setting",
     label: "마이페이지",
+    accessibleRoles: new Set(["center", "admin"]),
+  },
+  {
+    key: "7",
+    Icon: DashboardOutlined,
+    Page: Dashboard,
+    path: "dashboard",
+    label: "대시보드",
     accessibleRoles: new Set(["center", "admin"]),
   },
 ];

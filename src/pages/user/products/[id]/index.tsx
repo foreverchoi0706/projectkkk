@@ -144,7 +144,7 @@ const Page: FC = () => {
         <Button
           type="default"
           onClick={() => {
-            setActiveKey("2");
+            setActiveKey("1");
             setTimeout(() => {
               if (!refReviewSection.current) return;
               refReviewSection.current.scrollIntoView({ behavior: "smooth" });
@@ -183,7 +183,7 @@ const Page: FC = () => {
         items={[
           {
             key: "1",
-            label: `리뷰 ${reviewDetailResponses.totalCount}`,
+            label: "리뷰",
             children: (
               <ReviewSection ref={refReviewSection} reviewDetailResponses={reviewDetailResponses} />
             ),

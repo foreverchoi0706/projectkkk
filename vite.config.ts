@@ -18,7 +18,7 @@ export default defineConfig({
         ws: true,
       },
       "/ws": {
-        target: "https://www.projectkkk.com/ws/",
+        target: "https://34.64.87.216/ws/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/ws/, ""),
         secure: false,
