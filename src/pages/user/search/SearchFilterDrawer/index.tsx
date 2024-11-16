@@ -1,7 +1,7 @@
 import user from "@/queryKeys/user.ts";
 import { TProductSearchParams } from "@/utils/types";
 import { useQueries } from "@tanstack/react-query";
-import { Button, Drawer, Flex, Form, Typography } from "antd";
+import { Button, Drawer, Flex, Form, FormProps, Typography } from "antd";
 import { DrawerProps } from "antd/es/drawer";
 import queryString from "query-string";
 import { FC, useEffect } from "react";
@@ -10,8 +10,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const [searchFilterForm] = Form.useForm<TProductSearchParams>();
+  const brandName = Form.useWatch<string>("brand", searchFilterForm);
+  const categoryId = Form.useWatch<string>("category", searchFilterForm);
+
   const queries = useQueries({
     queries: [
       { ...user.brands.all(), enabled: rest.open },
@@ -20,7 +22,9 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
   });
   const [{ data: brands }, { data: categories }] = queries;
 
-  const onFinishApplySearchFilter = (productSearchParams: TProductSearchParams) => {
+  const onFinishApplySearchFilter: FormProps<TProductSearchParams>["onFinish"] = (
+    productSearchParams,
+  ) => {
     navigate(`/search?${queryString.stringify(productSearchParams)}`, { replace: true });
   };
 
@@ -44,10 +48,7 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
           height: "fit-content",
         },
       }}
-      onClose={(e) => {
-        searchFilterForm.resetFields();
-        if (onClose) onClose(e);
-      }}
+      onClose={onClose}
       {...rest}
     >
       <Form<TProductSearchParams> form={searchFilterForm} onFinish={onFinishApplySearchFilter}>
@@ -57,7 +58,7 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
             <Flex className="gap-4 overflow-x-auto">
               {brands?.content.map((brand, index) => (
                 <Button
-                  type={searchFilterForm.getFieldValue("brand") === brand ? "primary" : "default"}
+                  type={brandName === brand ? "primary" : "default"}
                   onClick={() => searchFilterForm.setFieldValue("brand", brand)}
                   key={index}
                 >
@@ -73,7 +74,7 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
             <Flex className="gap-4 overflow-x-auto">
               {categories?.content.map(({ id, name }) => (
                 <Button
-                  type={searchFilterForm.getFieldValue("category") === id ? "primary" : "default"}
+                  type={+categoryId === id ? "primary" : "default"}
                   onClick={() => searchFilterForm.setFieldValue("category", id)}
                   key={id}
                 >

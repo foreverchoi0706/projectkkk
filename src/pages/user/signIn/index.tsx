@@ -97,7 +97,7 @@ const Page: FC = () => {
         </Form.Item>
         <Form.Item>
           <img
-            className="my-0 mx-auto cursor-pointer hover:brightness-90"
+            className="my-0 mx-auto cursor-pointer hover:brightness-95"
             width={183}
             height={45}
             alt="kakao_login_medium_narrow"

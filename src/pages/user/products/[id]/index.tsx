@@ -183,18 +183,13 @@ const Page: FC = () => {
         items={[
           {
             key: "1",
-            label: "상품정보",
-            children: "상품정보입니다",
-          },
-          {
-            key: "2",
             label: `리뷰 ${reviewDetailResponses.totalCount}`,
             children: (
               <ReviewSection ref={refReviewSection} reviewDetailResponses={reviewDetailResponses} />
             ),
           },
           {
-            key: "3",
+            key: "2",
             label: "추천",
             children: (
               <Row gutter={[8, 8]}>
@@ -207,7 +202,7 @@ const Page: FC = () => {
             ),
           },
           {
-            key: "4",
+            key: "3",
             label: "문의",
             children: <QnaSection qnADetailResponses={qnADetailResponses} />,
           },

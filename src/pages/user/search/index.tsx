@@ -3,25 +3,15 @@ import SearchFilterDrawer from "@/pages/user/search/SearchFilterDrawer";
 import user from "@/queryKeys/user";
 import { RECENT_SEARCH_KEYWORD } from "@/utils/constants";
 import { getCookie, setCookie } from "@/utils/cookie";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, RollbackOutlined } from "@ant-design/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Button, Col, Flex, Input, InputRef, Row, Spin, Typography } from "antd";
-import {
-  ChangeEvent,
-  FC,
-  KeyboardEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Button, Col, Flex, Input, Row, Spin, Typography } from "antd";
+import { FC, KeyboardEventHandler, MouseEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
   const refFetchNextPageArea = useRef<HTMLElement>(null);
-  const refSearchKeywordInput = useRef<InputRef>(null);
   const [isSearchFilterDrawerOpen, setIsSearchFilterDrawerOpen] = useState<boolean>(false);
   const [searchParams] = useSearchParams({ size: "15" });
   const [recentSearchKeywords, setRecentSearchKeywords] = useState<string[]>(
@@ -42,24 +32,21 @@ const Page: FC = () => {
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
     });
-    searchParams.set("keyword", value);
+    searchParams.set("productName", value);
     navigate(`/search?${searchParams.toString()}`);
   };
 
-  const onClickDeleteRecentSearchKeyword: MouseEventHandler<HTMLSpanElement> = (e) => {
+  const onClickDeleteRecentSearchKeyword = (e: MouseEvent<HTMLSpanElement>, keyword: string) => {
+    e.preventDefault();
     setRecentSearchKeywords((prevState) => {
-      const {
-        currentTarget: { id },
-      } = e;
-      e.preventDefault();
-      const nextState = prevState.filter((recentSearchKeyword) => recentSearchKeyword !== id);
+      const nextState = prevState.filter((recentSearchKeyword) => recentSearchKeyword !== keyword);
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
     });
   };
 
   const {
-    data: newProductsPages,
+    data: productPages,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
@@ -72,21 +59,6 @@ const Page: FC = () => {
   });
 
   useEffect(() => {
-    if (!refSearchKeywordInput.current?.input) return;
-    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(
-      refSearchKeywordInput.current.input,
-      "input",
-    )
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        map(({ target }) => target.value),
-      )
-      .subscribe();
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
     if (!refFetchNextPageArea.current) return;
     const intersectionObserver = new IntersectionObserver((entries) => {
       if (entries.some(({ isIntersecting }) => isIntersecting) || hasNextPage) fetchNextPage();
@@ -95,30 +67,34 @@ const Page: FC = () => {
     return () => intersectionObserver.disconnect();
   }, [hasNextPage]);
 
-  if (!newProductsPages) return null;
+  if (!productPages) return <Spin fullscreen />;
 
   return (
     <main>
       <Flex className="gap-4 flex-col">
         <Input
-          ref={refSearchKeywordInput}
           placeholder="아이템을 검색해보세요"
+          defaultValue={searchParams.get("productName") || ""}
           onKeyDown={onKeyDownSearch}
         />
         <Flex className="gap-4">
           <Button onClick={onClickSearchFilter}>브랜드</Button>
           <Button onClick={onClickSearchFilter}>카테고리</Button>
+          <Button type="text" onClick={() => navigate("/search")} icon={<RollbackOutlined />} />
         </Flex>
         {recentSearchKeywords.length > 0 && (
           <Flex className="my-4 gap-2 items-center flex-wrap max-h-32 overflow-y-auto">
             <Typography className="text-xs flex-shrink-0 ">최근검색어</Typography>
             {recentSearchKeywords.map((recentSearchKeyword) => {
-              searchParams.set("keyword", recentSearchKeyword);
+              const urlSearchParams = new URLSearchParams(searchParams.toString());
+              urlSearchParams.set("keyword", recentSearchKeyword);
               return (
-                <Link key={recentSearchKeyword} to={`/search?${searchParams.toString()}`}>
+                <Link key={recentSearchKeyword} to={`/search?${urlSearchParams.toString()}`}>
                   <Button className="text-xs">
                     {recentSearchKeyword}{" "}
-                    <CloseOutlined onClick={onClickDeleteRecentSearchKeyword} />
+                    <CloseOutlined
+                      onClick={(e) => onClickDeleteRecentSearchKeyword(e, recentSearchKeyword)}
+                    />
                   </Button>
                 </Link>
               );
@@ -126,9 +102,9 @@ const Page: FC = () => {
           </Flex>
         )}
 
-        {newProductsPages.pages.length > 0 ? (
+        {productPages.pages[0].content.length > 0 ? (
           <Row gutter={[16, 16]}>
-            {newProductsPages.pages.map(({ content }) =>
+            {productPages.pages.map(({ content }) =>
               content.map((product) => (
                 <Col key={product.id} xs={12} md={8}>
                   <Product {...product} />

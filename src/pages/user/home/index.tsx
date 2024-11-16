@@ -64,7 +64,7 @@ const Page: FC = () => {
             <Button>전체</Button>
           </Link>
           {categories?.content.map(({ id, name }) => (
-            <Link to="/search" key={id}>
+            <Link to={`/search?category=${id}`} key={id}>
               <Button>{name}</Button>
             </Link>
           ))}
