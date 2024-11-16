@@ -174,6 +174,21 @@ export interface IQnaParams {
   description: string;
 }
 
+export interface IQnaWating {
+  id: number;
+  qnAType: TQnaType;
+  subject: string;
+  productNum: number | null;
+  orderNum: number | null;
+  description: string;
+  memberEmail: string;
+  createAt: string;
+  answer: number | null;
+  answerDate: number | null;
+  answererEmail: number | null;
+  answerStatus: string;
+}
+
 export interface IShipping {
   id: number;
   deliveryNum: string;

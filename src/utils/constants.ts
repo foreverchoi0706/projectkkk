@@ -3,6 +3,8 @@ import Brands from "@/pages/admin/brands";
 import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
 import Setting from "@/pages/admin/setting";
+import AdminQnas from "@/pages/admin/qnas";
+import AdminShipping from "@/pages/admin/shippings";
 import Carts from "@/pages/user/carts";
 import UserCategories from "@/pages/user/categories";
 import Home from "@/pages/user/home";
@@ -24,6 +26,7 @@ import {
   SettingOutlined,
   TagsOutlined,
   UserOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 
 export const ACCESS_TOKEN = "ACCESS_TOKEN" as const;
@@ -141,7 +144,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Products,
     path: "products",
     label: "상품관리",
-    accessibleRoles: new Set(["center", "admin", "user"]),
+    accessibleRoles: new Set(["center", "admin"]),
   },
   {
     key: "1",
@@ -165,15 +168,31 @@ export const ADMIN_SIGN_IN_ROUTES = [
     Page: Brands,
     path: "brands",
     label: "브랜드관리",
-    accessibleRoles: new Set(["center", "admin", "user"]),
+    accessibleRoles: new Set(["center", "admin"]),
   },
   {
     key: "4",
+    Icon: MessageOutlined,
+    Page: AdminQnas,
+    path: "qnas",
+    label: "QnA관리",
+    accessibleRoles: new Set(["center", "admin"]),
+  },
+  {
+    key: "5",
+    Icon: ProductOutlined,
+    Page: AdminShipping,
+    path: "shippings",
+    label: "배송관리",
+    accessibleRoles: new Set(["center", "admin"]),
+  },
+  {
+    key: "6",
     Icon: SettingOutlined,
     Page: Setting,
     path: "setting",
     label: "마이페이지",
-    accessibleRoles: new Set(["center", "admin", "user"]),
+    accessibleRoles: new Set(["center", "admin"]),
   },
 ];
 

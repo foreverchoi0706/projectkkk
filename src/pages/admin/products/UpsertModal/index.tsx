@@ -40,7 +40,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.pages(queryString)),
         queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("재고수량이 증가되었습니다");
@@ -54,7 +54,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.pages(queryString)),
         queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("재고수량이 감소되었습니다");
@@ -65,7 +65,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const addProductMutation = useMutation<unknown, TError, IProduct>({
     mutationFn: (product: IProduct) => axiosInstance.post("/admin/product/create", product),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(admin.products.all(queryString));
+      await queryClient.invalidateQueries(admin.products.pages(queryString));
       alert("상품이 추가되었습니다");
       setSelectedProductId(undefined);
     },
@@ -82,7 +82,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
-        queryClient.invalidateQueries(admin.products.all(queryString)),
+        queryClient.invalidateQueries(admin.products.pages(queryString)),
         queryClient.invalidateQueries(admin.products.detail(productId)),
       ]);
       alert("상품이 수정되었습니다");
@@ -95,7 +95,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     mutationFn: (productId: number) =>
       axiosInstance.delete(`/admin/product/delete?productId=${productId}`),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(admin.products.all(queryString));
+      await queryClient.invalidateQueries(admin.products.pages(queryString));
       alert("상품이 삭제되었습니다");
       setSelectedProductId(undefined);
     },

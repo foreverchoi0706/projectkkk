@@ -8,7 +8,7 @@ import {
 } from "@/utils/constants";
 import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
+import { Button, Flex, Form, FormProps, Input, Typography } from "antd";
 import { AxiosResponse } from "axios";
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,7 @@ const Page: FC = () => {
   }, []);
 
   return (
-    <main>
+    <main className="h-full flex flex-col items-center">
       <Typography.Title>로그인</Typography.Title>
       <Form<ISignInParams> form={form} autoComplete="off" onFinish={onFinish}>
         <Form.Item<ISignInParams>

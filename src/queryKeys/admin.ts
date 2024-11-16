@@ -1,36 +1,17 @@
 import axiosInstance from "@/utils/axiosInstance";
 import {
   IAccount,
-  IAuth,
   IBrand,
   IMember,
-  IMemberInfo,
   IPageList,
   IProduct,
+  IQnaWating,
   IResponse,
-  IToken,
+  IShipping,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
-  auth: {
-    verify: ({ accessToken, refreshToken }: IToken) => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IAuth>>(
-          `/auth/verify?accessToken=${accessToken}&refreshToken=${refreshToken}`,
-        );
-        return data.result;
-      },
-      queryKey: [""],
-    }),
-    info: () => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IMemberInfo>>(`/member/member`);
-        return data.result;
-      },
-      queryKey: [""],
-    }),
-  },
   accounts: {
     all: (queryString?: string) => ({
       queryFn: async () => {
@@ -43,7 +24,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   brands: {
-    all: (queryString: string) => ({
+    pages: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IBrand[]>>>(
           `/admin/product/brands?${queryString}`,
@@ -53,8 +34,30 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [queryString],
     }),
   },
+  qnas: {
+    pages: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IQnaWating[]>>>(
+          `/admin/qna/waiting?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
+  shippings: {
+    pages: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+          `/admin/shipping/shippings?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
   members: {
-    all: (queryString?: string) => ({
+    pages: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IMember[]>>>(
           `/admin/member/search?${queryString}`,
@@ -72,7 +75,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   products: {
-    all: (queryString: string) => ({
+    pages: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
           `/admin/product/search?${queryString}`,

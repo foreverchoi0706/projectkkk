@@ -57,6 +57,8 @@ const getRoute = (data?: IAuth) =>
         v7_partialHydration: true,
         v7_relativeSplatPath: true,
         v7_skipActionErrorRevalidation: true,
+        //@ts-ignore
+        v7_startTransition: true,
       },
     },
   );

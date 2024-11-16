@@ -15,7 +15,7 @@ const Page: FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
 
-  const { data: products } = useQuery(admin.products.all(searchParams.toString()));
+  const { data: products } = useQuery(admin.products.pages(searchParams.toString()));
 
   const onFinish: FormProps<IProductSearchParams>["onFinish"] = (productSearchParams) => {
     const page = searchParams.get("page");
