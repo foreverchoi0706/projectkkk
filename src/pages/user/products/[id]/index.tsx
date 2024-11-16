@@ -1,8 +1,8 @@
 import Product from "@/components/Product";
 import useAuth from "@/hooks/useAuth";
+import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
-import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance.ts";
 import { TError } from "@/utils/types.ts";
@@ -183,7 +183,7 @@ const Page: FC = () => {
         items={[
           {
             key: "1",
-            label: "리뷰",
+            label: `리뷰 ${reviewDetailResponses.length}`,
             children: (
               <ReviewSection ref={refReviewSection} reviewDetailResponses={reviewDetailResponses} />
             ),
@@ -203,7 +203,7 @@ const Page: FC = () => {
           },
           {
             key: "3",
-            label: "문의",
+            label: `문의 ${reviewDetailResponses.length}`,
             children: <QnaSection qnADetailResponses={qnADetailResponses} />,
           },
         ]}

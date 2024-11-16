@@ -8,15 +8,18 @@ import {
 } from "@/utils/constants";
 import supabaseClient from "@/utils/supabaseClient.ts";
 import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
+import { User } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, FormProps, Input, Typography } from "antd";
 import { AxiosResponse } from "axios";
-import { FC, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useEffect, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const refOauthUser = useRef<User>();
   const [form] = Form.useForm<ISignInParams>();
 
   const signInMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignInParams>({
@@ -25,10 +28,13 @@ const Page: FC = () => {
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const signInOauthMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, string>({
+  const oauthSignInMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, string>({
     mutationFn: (email) => axiosInstance.post("/social/login", { email }),
     onSuccess: ({ data }) => login(data.result),
-    onError: ({ responseMessage }) => alert(responseMessage),
+    onError: ({ responseMessage, status }) => {
+      if (status !== 404) return alert(responseMessage);
+      navigate("/signup", { state: refOauthUser.current });
+    },
   });
 
   const onFinish: FormProps<ISignInParams>["onFinish"] = (signInParams) => {
@@ -36,19 +42,22 @@ const Page: FC = () => {
   };
 
   const onClickKakaoSignin = () => {
-    supabaseClient.auth.signInWithOAuth({
-      provider: "kakao",
-      options: {
-        redirectTo: "http://localhost:5173/signin",
-      },
-    });
+    supabaseClient.auth
+      .signInWithOAuth({
+        provider: "kakao",
+        options: {
+          redirectTo: "http://localhost:5173/signin?oauth=true",
+        },
+      })
+      .finally();
   };
 
   useEffect(() => {
+    if (!searchParams.has("oauth")) return;
     supabaseClient.auth.getUser().then(({ data: { user } }) => {
-      if (user === null) return;
-      console.log(user);
-      signInOauthMutation();
+      if (user === null || !user.email) return;
+      refOauthUser.current = user;
+      oauthSignInMutation.mutate(user.email);
     });
   }, []);
 

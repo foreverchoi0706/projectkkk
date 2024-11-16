@@ -61,7 +61,7 @@ const Page: FC = () => {
       <Flex className="h-full flex-col gap-4">
         <Input ref={refInput} placeholder="쿠폰을 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col flex-grow">
-          {couponsPages.pages.length > 0 ? (
+          {couponsPages.pages[0].content.length > 0 ? (
             couponsPages.pages.map(({ content }) =>
               content.map(({ id, name, discountRate, startDate, endDate }) => (
                 <Flex key={id} className="flex-col gap-4 p-4 border border-gray-200 rounded">

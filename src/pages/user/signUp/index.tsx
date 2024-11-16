@@ -12,30 +12,46 @@ import {
   REQUIRED_PHONE,
 } from "@/utils/constants";
 import { IAuth, IResponse, ISignUpParams, TError } from "@/utils/types";
+import { User } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { Button, DatePicker, Flex, Form, FormProps, Input, Radio, Typography } from "antd";
 import { AxiosResponse } from "axios";
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
-  const [form] = Form.useForm<ISignUpParams>();
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
+  const { state }: { state: User } = useLocation();
+  const [signUpForm] = Form.useForm<ISignUpParams>();
+
   const signUpMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignUpParams>({
     mutationFn: (signUpParams: ISignUpParams) => axiosInstance.post("/member/join", signUpParams),
     onSuccess: ({ data }) => login(data.result),
     onError: ({ result }) => alert(result.errorMessage),
   });
 
+  const oauthSignUpMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignUpParams>({
+    mutationFn: (signUpParams: ISignUpParams) => axiosInstance.post("/social/join", signUpParams),
+    onSuccess: ({ data }) => login(data.result),
+    onError: ({ result }) => alert(result.errorMessage),
+  });
+
   const onFinish: FormProps<ISignUpParams>["onFinish"] = (signUpParams) => {
-    signUpMutation.mutate(signUpParams);
+    const mutation = state ? oauthSignUpMutation : signUpMutation;
+    mutation.mutate(signUpParams);
   };
+
+  useEffect(() => {
+    if (!state) return;
+    signUpForm.setFieldValue("email", state.email);
+    signUpForm.setFieldValue("name", state.user_metadata.name);
+  }, [state]);
 
   return (
     <main className="h-full flex flex-col items-center">
       <Typography.Title>회원가입</Typography.Title>
-      <Form form={form} onFinish={onFinish} autoComplete="off">
+      <Form form={signUpForm} onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams>
           name="email"
           rules={[
@@ -66,42 +82,45 @@ const Page: FC = () => {
           <Input type="number" placeholder={REQUIRED_PHONE} />
         </Form.Item>
 
-        <Form.Item<ISignUpParams>
-          name="password"
-          rules={[
-            { required: true, message: REQUIRED_PASSWORD },
-            {
-              pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
-              message: INVALID_FORMAT_PASSWORD,
-            },
-          ]}
-        >
-          <Input.Password placeholder={REQUIRED_PASSWORD} />
-        </Form.Item>
-
-        <Form.Item<ISignUpParams>
-          name="passwordConfirm"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: REQUIRED_PASSWORD },
-            {
-              pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
-              message: INVALID_FORMAT_PASSWORD,
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) return Promise.resolve();
-                return Promise.reject(INVALID_RE_PASSWORD);
-              },
-            }),
-          ]}
-        >
-          <Input.Password placeholder={REQUIRED_PASSWORD} />
-        </Form.Item>
+        {!state && (
+          <>
+            <Form.Item<ISignUpParams>
+              name="password"
+              rules={[
+                { required: true, message: REQUIRED_PASSWORD },
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
+                  message: INVALID_FORMAT_PASSWORD,
+                },
+              ]}
+            >
+              <Input.Password placeholder={REQUIRED_PASSWORD} />
+            </Form.Item>
+            <Form.Item<ISignUpParams>
+              name="passwordConfirm"
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: REQUIRED_PASSWORD },
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
+                  message: INVALID_FORMAT_PASSWORD,
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) return Promise.resolve();
+                    return Promise.reject(INVALID_RE_PASSWORD);
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder={REQUIRED_PASSWORD} />
+            </Form.Item>
+          </>
+        )}
 
         <Form.Item<ISignUpParams>
           name="gender"
-          rules={[{ required: true, message: REQUIRED_PASSWORD }]}
+          rules={[{ required: true, message: "성별을 입력해주세요" }]}
         >
           <Radio.Group>
             <Radio value="M">남</Radio>
@@ -126,7 +145,7 @@ const Page: FC = () => {
             onClick={() => {
               new window.daum.Postcode({
                 oncomplete: ({ address }: { address: string }) =>
-                  form.setFieldValue("defaultAddress", address),
+                  signUpForm.setFieldValue("defaultAddress", address),
               }).open();
             }}
             placeholder="주소를 입력해주세요"
@@ -142,7 +161,7 @@ const Page: FC = () => {
             >
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} className="flex-grow" htmlType="button">
+            <Button onClick={() => navigate("/signin")} className="flex-grow" htmlType="button">
               뒤로
             </Button>
           </Flex>

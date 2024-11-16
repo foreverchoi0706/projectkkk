@@ -25,8 +25,8 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
 
   return (
     <section>
-      {qnADetailResponses.content.length > 0 ? (
-        qnADetailResponses.content.map(() => <Flex>dsadd</Flex>)
+      {qnADetailResponses.length > 0 ? (
+        qnADetailResponses.map(() => <Flex>dsadd</Flex>)
       ) : (
         <Flex className="flex-col gap-4 flex-grow justify-center items-center my-4">
           <Typography className="text-5xl">😥</Typography>

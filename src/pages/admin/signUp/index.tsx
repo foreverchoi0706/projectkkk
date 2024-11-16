@@ -19,8 +19,9 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
+
   const signUpMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignUpParams>({
     mutationFn: (signUpParams: ISignUpParams) =>
       axiosInstance.post("/admin/member/join", signUpParams),
@@ -109,7 +110,11 @@ const Page: FC = () => {
             >
               회원가입
             </Button>
-            <Button onClick={() => navigate(-1)} className="flex-grow" htmlType="button">
+            <Button
+              onClick={() => navigate("/admin/signin")}
+              className="flex-grow"
+              htmlType="button"
+            >
               뒤로
             </Button>
           </Flex>

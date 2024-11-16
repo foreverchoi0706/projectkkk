@@ -8,7 +8,7 @@ const Page: FC = () => {
   const refFetchNextPageArea = useRef<HTMLElement>(null);
 
   const {
-    data: shippingPages,
+    data: orderPages,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
@@ -28,13 +28,13 @@ const Page: FC = () => {
     return () => intersectionObserver.disconnect();
   }, [hasNextPage]);
 
-  if (!shippingPages) return null;
+  if (!orderPages) return null;
 
   return (
     <main className="h-full">
       <Flex className="gap-4 flex-col flex-grow">
-        {shippingPages.pages.length > 0 ? (
-          shippingPages.pages.map(({ content }) =>
+        {orderPages.pages[0].content.length > 0 ? (
+          orderPages.pages.map(({ content }) =>
             content.map(({ id, deliveryAddress, orderNum, totalAmount, orderDate }) => (
               <Link key={id} to={`/settings/orders/${id}`}>
                 <Flex className="flex-col flex-grow border border-gray-200 p-4">

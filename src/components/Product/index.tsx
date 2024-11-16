@@ -29,6 +29,8 @@ const Product: FC<IProduct> = ({
       "https://cf.product-image.s.zigzag.kr/original/d/2024/11/5/10213_202411051857430235_14188.jpeg?width=400&height=400&quality=80&format=jpeg",
       "https://cf.product-image.s.zigzag.kr/original/d/2024/11/6/11864_202411060849430590_17808.gif?width=400&height=400&quality=80&format=jpeg",
       "https://cf.product-image.s.zigzag.kr/original/d/2024/9/20/92_202409201508010184_62129.gif?width=400&height=400&quality=80&format=jpeg",
+      "https://cf.product-image.s.zigzag.kr/original/c/12/842/622/128426225-4524107513318078167.gif?width=400&height=400&quality=80&format=jpeg",
+      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/13/46030_202411131533480522_55776.gif?width=400&height=400&quality=80&format=jpeg",
     ];
     return imagePaths[Math.floor(Math.random() * imagePaths.length)];
   }, []);

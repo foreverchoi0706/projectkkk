@@ -43,8 +43,8 @@ export interface IPageList<T> {
 }
 
 export interface ITest {
-  qnADetailResponses: IPageList<IReview[]>;
-  reviewDetailResponses: IPageList<IReview[]>;
+  qnADetailResponses: IReview[];
+  reviewDetailResponses: IReview[];
 }
 
 export interface IProduct {

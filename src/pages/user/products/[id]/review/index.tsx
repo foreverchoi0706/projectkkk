@@ -7,8 +7,8 @@ const Page = forwardRef<HTMLElement, Pick<ITest, "reviewDetailResponses">>(
   ({ reviewDetailResponses }, ref) => {
     return (
       <section ref={ref}>
-        {reviewDetailResponses.content.length > 0 ? (
-          reviewDetailResponses.content.map(() => <Flex>dsadd</Flex>)
+        {reviewDetailResponses.length > 0 ? (
+          reviewDetailResponses.map(() => <Flex>dsadd</Flex>)
         ) : (
           <Flex className="flex-col gap-4 flex-grow justify-center items-center my-4">
             <Typography className="text-5xl">😥</Typography>
