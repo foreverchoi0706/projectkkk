@@ -3,7 +3,7 @@ import { deleteCookie, getCookie, hasCookie } from "@/utils/cookie";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://34.64.87.216/api/",
+  baseURL: import.meta.env.MODE === "development" ? "/api" : "https://www.projectkkk.com/api/",
 });
 
 axiosInstance.interceptors.request.use((config) => {

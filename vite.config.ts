@@ -11,14 +11,14 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://34.64.87.216/api/",
+        target: "https://www.projectkkk.com/api/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         secure: false,
         ws: true,
       },
       "/ws": {
-        target: "https://34.64.87.216/ws/",
+        target: "https://www.projectkkk.com/ws/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/ws/, ""),
         secure: false,
