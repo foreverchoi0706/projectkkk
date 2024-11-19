@@ -1,17 +1,31 @@
 import {
+  ANSWER_STATUS,
   DELIVERY_ADDRESS_TYPE,
   DELIVERY_STATUS_TYPE,
   DELIVERY_TYPE,
+  QNA_TYPE,
   SHIPPING_MESSAGES,
 } from "@/utils/constants";
+
+export type TError = IResponse<{ errorMessage: string }>;
+
+export type TQnaType = keyof typeof QNA_TYPE;
+
+export type TAnswerStatus = keyof typeof ANSWER_STATUS;
+
+export type TDeliveryType = keyof typeof DELIVERY_TYPE;
+
+export type TDeliveryStatusType = keyof typeof DELIVERY_STATUS_TYPE;
+
+export type TDeliveryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
+
+export type TShippingMessages = keyof typeof SHIPPING_MESSAGES;
 
 export interface IResponse<T = unknown> {
   result: T;
   responseMessage: string;
   status: number;
 }
-
-export type TError = IResponse<{ errorMessage: string }>;
 
 export interface IToken {
   accessToken: string;
@@ -160,10 +174,8 @@ export interface Coupon {
   assignBy: string;
 }
 
-export type TQnaType = "SHIPPING" | "ORDER" | "REFUND" | "OTHER";
-
 export interface IQna {
-  answerStatus: "WAITING";
+  answerStatus: TAnswerStatus;
   createAt: string;
   memberEmail: string;
   qnAId: number;
@@ -179,7 +191,7 @@ export interface IQnaParams {
   description: string;
 }
 
-export interface IQuaWaiting {
+export interface IQnAWaiting {
   id: number;
   qnAType: TQnaType;
   subject: string;
@@ -188,11 +200,13 @@ export interface IQuaWaiting {
   description: string;
   memberEmail: string;
   createAt: string;
-  answer: number | null;
+  answer: string | null;
   answerDate: number | null;
   answererEmail: number | null;
-  answerStatus: string;
+  answerStatus: TAnswerStatus;
 }
+
+export type TAnswer = Pick<IQnAWaiting, "answer">;
 
 export interface IShipping {
   id: number;
@@ -221,14 +235,6 @@ export interface IReview {
   rating: string;
   reviewId: number;
 }
-
-export type TDeliveryType = keyof typeof DELIVERY_TYPE;
-
-export type TDeliveryStatusType = keyof typeof DELIVERY_STATUS_TYPE;
-
-export type TDeliveryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
-
-export type TShippingMessages = keyof typeof SHIPPING_MESSAGES;
 
 export interface IOrderParams {
   productId: number;

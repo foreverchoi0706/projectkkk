@@ -6,7 +6,7 @@ import {
   IPageList,
   IProduct,
   IQna,
-  IQuaWaiting,
+  IQnAWaiting,
   IResponse,
   IShipping,
   ITest,
@@ -103,7 +103,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
     detail: (id: number) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IQuaWaiting>>(
+        const { data } = await axiosInstance.get<IResponse<IQnAWaiting>>(
           `/qna/qna_detail?qnAId=${id}`,
         );
         return data.result;

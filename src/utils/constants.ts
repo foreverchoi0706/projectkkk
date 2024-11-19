@@ -219,6 +219,17 @@ export const ADMIN_SIGN_IN_ROUTES = [
   },
 ];
 
+export const QNA_TYPE = {
+  SHIPPING: "SHIPPING",
+  ORDER: "ORDER",
+  REFUND: "REFUND",
+  OTHER: "OTHER",
+};
+
+export const ANSWER_STATUS = {
+  WAITING: "WAITING",
+};
+
 export const DELIVERY_TYPE = {
   STRAIGHT_DELIVERY: "STRAIGHT_DELIVERY",
   ORDINARY_DELIVERY: "ORDINARY_DELIVERY",
