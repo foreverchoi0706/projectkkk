@@ -1,4 +1,5 @@
 import user from "@/queryKeys/user";
+import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Divider, Flex, Spin, Typography } from "antd";
 import { FC, useEffect, useRef } from "react";
@@ -44,7 +45,7 @@ const Page: FC = () => {
                       width="80"
                       height="80"
                       alt="img"
-                      src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/09/27/202409270520214482_061783.jpg?width=1029&height=1029&quality=100&format=webp&transparent=true"
+                      src={getRandomProdcutImage()}
                     />
                     <Flex className="flex-col">
                       <Typography>주문번호 {orderNum}</Typography>

@@ -1,5 +1,6 @@
 import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance";
+import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
 import { IProduct, TError } from "@/utils/types";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,36 +8,10 @@ import { Flex, Typography } from "antd";
 import { FC, MouseEventHandler, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Product: FC<IProduct> = ({
-  id,
-  name,
-  brand,
-  description,
-  discountRate,
-  price,
-  imageUrl,
-  liked,
-}) => {
-  const src = useMemo(() => {
-    const imagePaths = [
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/11/3887_202411111613170833_42924.jpeg?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/10/29/25938_202410290925530134_28014.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/4/25938_202411041305120961_14186.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/4/25938_202411041311410464_93507.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/11/3887_202411111613450352_28116.jpeg?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/1/2833_202411011251590341_91132.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/1/30/4600_202401301106380411_71439.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/5/10213_202411051857430235_14188.jpeg?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/6/11864_202411060849430590_17808.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/9/20/92_202409201508010184_62129.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/c/12/842/622/128426225-4524107513318078167.gif?width=400&height=400&quality=80&format=jpeg",
-      "https://cf.product-image.s.zigzag.kr/original/d/2024/11/13/46030_202411131533480522_55776.gif?width=400&height=400&quality=80&format=jpeg",
-    ];
-    return imagePaths[Math.floor(Math.random() * imagePaths.length)];
-  }, []);
-
+const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, price, liked }) => {
   const queryClient = useQueryClient();
   const [isLiked, setIsLiked] = useState<boolean>(liked);
+  const src = useMemo(getRandomProdcutImage, []);
   const likeMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post(`/wishList/add?productId=${id}`),
     onSuccess: () => {
@@ -66,7 +41,7 @@ const Product: FC<IProduct> = ({
     <Link className="h-full block" to={`/products/${id}`}>
       <Flex className="h-full flex-col">
         <Flex className="w-fit relative flex-grow">
-          <img width="100%" height="100%" loading="lazy" alt={imageUrl} src={src} />
+          <img width="100%" height="100%" loading="lazy" alt="product" src={src} />
           {isLiked ? (
             <HeartFilled
               disabled

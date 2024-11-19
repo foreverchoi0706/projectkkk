@@ -139,9 +139,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
     detail: (id?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
-          `/order/order?orderId=${id}`,
-        );
+        const { data } = await axiosInstance.get<IResponse<IOrder>>(`/order/order?orderId=${id}`);
         return data.result;
       },
       queryKey: [id],
@@ -150,7 +148,7 @@ const queryKeyStore = createQueryKeyStore({
   shipping: {
     detail: (id?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IShipping>>(
           `/shipping/shipping?shippingId=${id}`,
         );
         return data.result;
