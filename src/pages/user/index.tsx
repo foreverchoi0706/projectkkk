@@ -114,7 +114,7 @@ const User: FC = () => {
             )}
             <Typography className="font-bold mt-2 text-xs">찜</Typography>
           </Link>
-          <Link to="/settings" className="flex-1 flex flex-col items-center">
+          <Link to="/my" className="flex-1 flex flex-col items-center">
             {pathname === "/setting" ? (
               <SettingFilled className="text-lg" />
             ) : (

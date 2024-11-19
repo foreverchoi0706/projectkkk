@@ -17,7 +17,7 @@ const Page: FC = () => {
   }) => {
     if (key !== "Enter") return;
     searchParams.set("keyword", value);
-    navigate(`/settings/coupons?${searchParams.toString()}`);
+    navigate(`/my/coupons?${searchParams.toString()}`);
   };
 
   const {

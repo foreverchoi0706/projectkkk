@@ -12,13 +12,13 @@ import Home from "@/pages/user/home";
 import Picks from "@/pages/user/picks";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
-import UserSetting from "@/pages/user/settings";
-import UserAccounts from "@/pages/user/settings/accounts";
-import UserCoupons from "@/pages/user/settings/coupons";
-import UserOrders from "@/pages/user/settings/orders";
-import UserOrdersDetail from "@/pages/user/settings/orders/[id]";
-import UserQnas from "@/pages/user/settings/qnas";
-import UserReviews from "@/pages/user/settings/reviews";
+import UserSetting from "@/pages/user/my";
+import UserAccounts from "@/pages/user/my/accounts";
+import UserCoupons from "@/pages/user/my/coupons";
+import UserOrders from "@/pages/user/my/orders";
+import UserOrdersDetail from "@/pages/user/my/orders/[id]";
+import UserQnas from "@/pages/user/my/qnas";
+import UserReviews from "@/pages/user/my/reviews";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
@@ -104,49 +104,49 @@ export const USER_SIGN_IN_ROUTES = [
   },
   {
     Page: UserSetting,
-    path: "settings",
+    path: "my",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserOrders,
-    path: "settings/orders",
+    path: "my/orders",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserOrdersDetail,
-    path: "settings/orders/:id",
+    path: "my/orders/:id",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserOrders,
-    path: "settings/orders",
+    path: "my/orders",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserReviews,
-    path: "settings/reviews",
+    path: "my/reviews",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserCoupons,
-    path: "settings/coupons",
+    path: "my/coupons",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserQnas,
-    path: "settings/qnas",
+    path: "my/qnas",
     requiredAuth: true,
     accessAbleAuth: true,
   },
   {
     Page: UserAccounts,
-    path: "settings/accounts",
+    path: "my/accounts",
     requiredAuth: true,
     accessAbleAuth: true,
   },
@@ -223,6 +223,12 @@ export const DELIVERY_TYPE = {
   STRAIGHT_DELIVERY: "STRAIGHT_DELIVERY",
   ORDINARY_DELIVERY: "ORDINARY_DELIVERY",
   REMOTE_DELIVERY: "REMOTE_DELIVERY",
+} as const;
+
+export const DELIVERY_STATUS_TYPE = {
+  ORDER_REQUESTED: "ORDER_REQUESTED",
+  REFUND_REQUESTED: "REFUND_REQUESTED",
+  CANCEL_REQUESTED: "CANCEL_REQUESTED",
 } as const;
 
 export const DELIVERY_ADDRESS_TYPE = {

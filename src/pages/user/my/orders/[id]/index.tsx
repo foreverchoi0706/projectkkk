@@ -1,26 +1,80 @@
 import user from "@/queryKeys/user.ts";
+import axiosInstance from "@/utils/axiosInstance";
+import { DELIVERY_STATUS_TYPE } from "@/utils/constants";
 import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
-import { useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { Button, Col, Divider, Flex, Row, Typography } from "antd";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const src = useMemo<string>(getRandomProdcutImage, []);
 
-  const queries = useQueries({
+  const [
+    { data: orderDetail, isError: isOrderDetailError },
+    { data: shippingDetail, isError: isShippingDetailError },
+  ] = useQueries({
     queries: [user.order.detail(id), user.shipping.detail(id)],
   });
 
+  const confirmMutation = useMutation({
+    mutationFn: () => axiosInstance.post(`/order/confirm?orderId=${id}`),
+    onSuccess: () => {
+      alert("구매확정되었습니다.");
+      queryClient.invalidateQueries(user.order.detail(id));
+      queryClient.invalidateQueries(user.shipping.detail(id));
+    },
+  });
+  const refundMutation = useMutation({
+    mutationFn: () => axiosInstance.post(`/order/refund?shippingId=${id}`),
+    onSuccess: () => {
+      alert("반품신청되었습니다.");
+      queryClient.invalidateQueries(user.order.detail(id));
+      queryClient.invalidateQueries(user.shipping.detail(id));
+    },
+  });
+  const changeMutation = useMutation({
+    mutationFn: () => axiosInstance.post(`/order/change?shippingId=${id}`),
+    onSuccess: () => {
+      alert("교환신청되었습니다.");
+      queryClient.invalidateQueries(user.order.detail(id));
+      queryClient.invalidateQueries(user.shipping.detail(id));
+    },
+  });
+  const cancelMutation = useMutation({
+    mutationFn: () => axiosInstance.delete(`/order/cancel?orderId=${id}`),
+    onSuccess: () => {
+      alert("주문취소되었습니다.");
+      queryClient.invalidateQueries(user.order.detail(id));
+      queryClient.invalidateQueries(user.shipping.detail(id));
+    },
+  });
+
+  const isDisabled = useMemo<boolean>(
+    () =>
+      shippingDetail?.deliveryStatusType === DELIVERY_STATUS_TYPE.ORDER_REQUESTED ||
+      cancelMutation.isPending ||
+      refundMutation.isPending ||
+      changeMutation.isPending ||
+      cancelMutation.isPending,
+    [
+      shippingDetail?.deliveryStatusType,
+      cancelMutation.isPending,
+      refundMutation.isPending,
+      changeMutation.isPending,
+      cancelMutation.isPending,
+    ],
+  );
+
   useEffect(() => {
-    if (queries.some(({ isError }) => isError)) {
+    if (isOrderDetailError || isShippingDetailError) {
       alert("해당 상품을 찾을 수 없습니다");
       navigate(-1);
     }
-  }, [queries]);
-
-  const [{ data: orderDetail }, { data: shippingDetail }] = queries;
+  }, [isOrderDetailError, isShippingDetailError]);
 
   if (!orderDetail || !shippingDetail) return null;
 
@@ -36,16 +90,10 @@ const Page: FC = () => {
           </Col>
         </Row>
         <Divider className="border-t-8" />
-        {orderDetail.products.map(({ productId, price }) => (
+        {orderDetail.products.map(({ productId, price, quantity }) => (
           <Flex key={productId} className="flex-col flex-grow border border-gray-200 p-4">
             <Flex className="justify-between items-center">
-              <img
-                className="rounded"
-                width="80"
-                height="80"
-                alt="img"
-                src={getRandomProdcutImage()}
-              />
+              <img className="rounded" width="80" height="80" alt="img" src={src} />
             </Flex>
             <Divider />
             <Flex className="justify-between">
@@ -55,6 +103,7 @@ const Page: FC = () => {
                   currency: "KRW",
                 }).format(price)}
               </Typography>
+              <Typography>수량 : {quantity}</Typography>
             </Flex>
           </Flex>
         ))}
@@ -118,8 +167,46 @@ const Page: FC = () => {
           </Flex>
         </Flex>
         <Flex className="gap-4">
-          <Button>환불</Button>
-          <Button>교체</Button>
+          <Button
+            disabled={isDisabled}
+            type="primary"
+            onClick={() => {
+              if (window.confirm("구매확정하시겠습니까?")) confirmMutation.mutate();
+            }}
+            className="flex-grow"
+          >
+            구매확정
+          </Button>
+          <Button
+            disabled={isDisabled}
+            className="flex-grow"
+            onClick={() => {
+              if (window.confirm("반품신청하시겠습니까?")) refundMutation.mutate();
+            }}
+            htmlType="button"
+          >
+            반품신청
+          </Button>
+          <Button
+            disabled={isDisabled}
+            className="flex-grow"
+            onClick={() => {
+              if (window.confirm("교환신청하시겠습니까?")) changeMutation.mutate();
+            }}
+            htmlType="button"
+          >
+            교환신청
+          </Button>
+          <Button
+            disabled={isDisabled}
+            className="flex-grow"
+            onClick={() => {
+              if (window.confirm("주문취소하시겠습니까?")) cancelMutation.mutate();
+            }}
+            htmlType="button"
+          >
+            주문취소
+          </Button>
         </Flex>
       </Flex>
     </main>

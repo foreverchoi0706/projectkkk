@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, price, liked }) => {
   const queryClient = useQueryClient();
   const [isLiked, setIsLiked] = useState<boolean>(liked);
-  const src = useMemo(getRandomProdcutImage, []);
+  const src = useMemo<string>(getRandomProdcutImage, []);
   const likeMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post(`/wishList/add?productId=${id}`),
     onSuccess: () => {

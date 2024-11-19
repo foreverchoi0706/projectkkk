@@ -40,7 +40,7 @@ const Page: FC = () => {
       </Flex>
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-8">
-        <Link to="/settings/orders">
+        <Link to="/my/orders">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">주문 배송</Typography>
             <Typography className="font-bold text-lg">
@@ -51,7 +51,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/settings/reviews">
+        <Link to="/my/reviews">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">리뷰</Typography>
             <Typography className="font-bold text-lg">
@@ -62,7 +62,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/settings/coupons">
+        <Link to="/my/coupons">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">쿠폰</Typography>
             <Typography className="font-bold text-lg">
@@ -73,7 +73,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/settings/qnas">
+        <Link to="/my/qnas">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">QnA</Typography>
             <Typography className="font-bold text-lg">
@@ -84,7 +84,7 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Link>
-        <Link to="/settings/accounts">
+        <Link to="/my/accounts">
           <Flex className="items-center justify-between">
             <Typography className="font-bold text-lg">회원정보 수정</Typography>
             <Typography className="font-bold text-lg">

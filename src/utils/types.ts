@@ -1,4 +1,9 @@
-import { DELIVERY_ADDRESS_TYPE, DELIVERY_TYPE, SHIPPING_MESSAGES } from "@/utils/constants";
+import {
+  DELIVERY_ADDRESS_TYPE,
+  DELIVERY_STATUS_TYPE,
+  DELIVERY_TYPE,
+  SHIPPING_MESSAGES,
+} from "@/utils/constants";
 
 export interface IResponse<T = unknown> {
   result: T;
@@ -131,12 +136,12 @@ export interface IBrand {
   description: string;
   imageUrl: string;
   productCouponResponse: {
-    id: 1;
-    productNum: "20231018BR반000100";
-    couponId: 1;
-    issuedAt: "2024-10-18T17:06:25";
-    usedAt: null;
-    used: false;
+    id: number;
+    productNum: string;
+    couponId: number;
+    issuedAt: string;
+    usedAt: string | null;
+    used: boolean;
   }[];
 }
 
@@ -199,7 +204,7 @@ export interface IShipping {
   deliveryType: string;
   arrivedDate: string | null;
   departureDate: string | null;
-  deliveryStatusType: string;
+  deliveryStatusType: TDeliveryStatusType;
   deliveryCost: number;
   memberEmail: string;
 }
@@ -218,6 +223,8 @@ export interface IReview {
 }
 
 export type TDeliveryType = keyof typeof DELIVERY_TYPE;
+
+export type TDeliveryStatusType = keyof typeof DELIVERY_STATUS_TYPE;
 
 export type TDeliveryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
 

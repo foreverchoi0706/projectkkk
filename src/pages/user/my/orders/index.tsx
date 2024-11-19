@@ -37,7 +37,7 @@ const Page: FC = () => {
         {orderPages.pages[0].content.length > 0 ? (
           orderPages.pages.map(({ content }) =>
             content.map(({ id, deliveryAddress, orderNum, totalAmount, orderDate }) => (
-              <Link key={id} to={`/settings/orders/${id}`}>
+              <Link key={id} to={`/my/orders/${id}`}>
                 <Flex className="flex-col flex-grow border border-gray-200 p-4">
                   <Flex className="justify-between items-center">
                     <img
