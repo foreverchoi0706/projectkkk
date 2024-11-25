@@ -1,34 +1,14 @@
-import user from "@/queryKeys/user";
-import axiosInstance from "@/utils/axiosInstance";
-import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
-import type { IProduct, TError } from "@/utils/types";
+import useLike from "@/hooks/useLike.ts";
+import getRandomProductImage from "@/utils/getRandomProductImage";
+import type { IProduct } from "@/utils/types";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Flex, Typography } from "antd";
-import { type FC, type MouseEventHandler, useMemo, useState } from "react";
+import { type FC, type MouseEventHandler, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, price, liked }) => {
-  const queryClient = useQueryClient();
-  const [isLiked, setIsLiked] = useState<boolean>(liked);
-  const src = useMemo<string>(getRandomProdcutImage, []);
-  const likeMutation = useMutation<unknown, TError>({
-    mutationFn: () => axiosInstance.post(`/wishList/add?productId=${id}`),
-    onSuccess: () => {
-      setIsLiked(!isLiked);
-      queryClient.invalidateQueries(user.products.wish());
-    },
-    onError: ({ responseMessage }) => alert(responseMessage),
-  });
-
-  const unlikeMutation = useMutation<unknown, TError>({
-    mutationFn: () => axiosInstance.delete(`/wishList/remove?productId=${id}`),
-    onSuccess: () => {
-      setIsLiked(!isLiked);
-      queryClient.invalidateQueries(user.products.wish());
-    },
-    onError: ({ responseMessage }) => alert(responseMessage),
-  });
+  const src = useMemo<string>(getRandomProductImage, []);
+  const { isLiked, likeMutation, unlikeMutation } = useLike(liked, id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();

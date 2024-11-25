@@ -1,13 +1,12 @@
 import Product from "@/components/Product";
 import useAuth from "@/hooks/useAuth";
+import useLike from "@/hooks/useLike.ts";
 import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
-import axiosInstance from "@/utils/axiosInstance.ts";
-import { TError } from "@/utils/types.ts";
 import { HeartFilled, HeartOutlined, RightOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,32 +15,14 @@ const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data } = useAuth();
-  const queryClient = useQueryClient();
-  const refReviewSection = useRef<HTMLElement>(null);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const refReviewSection = useRef<HTMLElement | null>(null);
   const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
 
-  const likeMutation = useMutation<unknown, TError>({
-    mutationFn: () => axiosInstance.post(`/wishList/add?productId=${id}`),
-    onSuccess: () => {
-      setIsLiked(!isLiked);
-      queryClient.invalidateQueries(user.products.wish());
-    },
-    onError: ({ responseMessage }) => alert(responseMessage),
-  });
-
-  const unlikeMutation = useMutation<unknown, TError>({
-    mutationFn: () => axiosInstance.delete(`/wishList/remove?productId=${id}`),
-    onSuccess: () => {
-      setIsLiked(!isLiked);
-      queryClient.invalidateQueries(user.products.wish());
-    },
-    onError: ({ responseMessage }) => alert(responseMessage),
-  });
-
   const { data: product, isError } = useQuery(user.products.detail(id));
   const { data: newProducts } = useQuery(user.products.new(1));
+
+  const { isLiked, likeMutation, unlikeMutation } = useLike(product.liked || false, product.id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();
@@ -59,7 +40,6 @@ const Page: FC = () => {
 
   useEffect(() => {
     if (!product) return;
-    setIsLiked(product.liked);
   }, [product]);
 
   if (!product) return null;

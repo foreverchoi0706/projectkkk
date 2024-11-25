@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
   const navigate = useNavigate();
-  const refInput = useRef<InputRef>(null);
+  const refInput = useRef<InputRef | null>(null);
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({

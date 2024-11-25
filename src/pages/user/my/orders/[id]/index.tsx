@@ -1,7 +1,7 @@
 import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance";
 import { DELIVERY_STATUS_TYPE } from "@/utils/constants";
-import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
+import getRandomProductImage from "@/utils/getRandomProductImage";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { Button, Col, Divider, Flex, Row, Typography } from "antd";
 import { type FC, useEffect, useMemo } from "react";
@@ -11,7 +11,7 @@ const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const src = useMemo<string>(getRandomProdcutImage, []);
+  const src = useMemo<string>(getRandomProductImage, []);
 
   const [
     { data: orderDetail, isError: isOrderDetailError },
