@@ -38,10 +38,6 @@ const Page: FC = () => {
     }
   }, [isError]);
 
-  useEffect(() => {
-    if (!product) return;
-  }, [product]);
-
   if (!product) return null;
 
   const {
