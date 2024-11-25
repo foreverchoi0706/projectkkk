@@ -1,23 +1,23 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IMember, IMemberSearchParams, TError } from "@/utils/types";
+import type { IMember, IMemberSearchParams, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Col,
   Flex,
   Form,
-  FormProps,
+  type FormProps,
   Input,
   Row,
   Select,
   Spin,
   Table,
-  TableProps,
+  type TableProps,
 } from "antd";
 import queryString from "query-string";
-import { FC } from "react";
+import type { FC } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

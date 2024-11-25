@@ -1,8 +1,8 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Modal, ModalProps, Typography } from "antd";
+import { Flex, Modal, type ModalProps, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { FC } from "react";
+import type { FC } from "react";
 
 const QnAModal: FC<ModalProps & { id: number }> = ({ id, ...rest }) => {
   const { data: qna } = useQuery(user.qnas.detail(id));

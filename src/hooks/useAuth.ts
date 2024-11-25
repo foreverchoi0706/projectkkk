@@ -1,7 +1,7 @@
 import common from "@/queryKeys/common";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/utils/constants";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "@/utils/cookie";
-import { IAuth } from "@/utils/types";
+import type { IAuth } from "@/utils/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useAuth = () => {

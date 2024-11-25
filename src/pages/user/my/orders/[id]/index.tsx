@@ -4,7 +4,7 @@ import { DELIVERY_STATUS_TYPE } from "@/utils/constants";
 import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { Button, Col, Divider, Flex, Row, Typography } from "antd";
-import { FC, useEffect, useMemo } from "react";
+import { type FC, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Page: FC = () => {

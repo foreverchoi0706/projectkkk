@@ -1,11 +1,11 @@
 import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance";
 import getRandomProdcutImage from "@/utils/getRandomProdcutImage";
-import { IProduct, TError } from "@/utils/types";
+import type { IProduct, TError } from "@/utils/types";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Flex, Typography } from "antd";
-import { FC, MouseEventHandler, useMemo, useState } from "react";
+import { type FC, type MouseEventHandler, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, price, liked }) => {

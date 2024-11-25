@@ -1,9 +1,9 @@
 import admin from "@/queryKeys/admin";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IShipping } from "@/utils/types";
+import type { IShipping } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Spin, Table, TableProps } from "antd";
-import { FC } from "react";
+import { Flex, Spin, Table, type TableProps } from "antd";
+import type { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

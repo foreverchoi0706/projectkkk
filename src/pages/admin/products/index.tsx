@@ -1,11 +1,11 @@
 import UpsertModal from "@/pages/admin/products/UpsertModal";
 import admin from "@/queryKeys/admin";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IProduct, IProductSearchParams } from "@/utils/types";
+import type { IProduct, IProductSearchParams } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Spin, Table, TableProps } from "antd";
+import { Button, Flex, Form, type FormProps, Input, Spin, Table, type TableProps } from "antd";
 import queryString from "query-string";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

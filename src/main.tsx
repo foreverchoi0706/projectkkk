@@ -10,14 +10,14 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: false,
-      gcTime: Infinity,
-      staleTime: Infinity,
+      gcTime: Number.POSITIVE_INFINITY,
+      staleTime: Number.POSITIVE_INFINITY,
       refetchOnWindowFocus: false,
     },
   },
 });
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ConfigProvider>
       <QueryClientProvider client={queryClient}>

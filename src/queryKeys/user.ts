@@ -1,6 +1,6 @@
 import axiosInstance from "@/utils/axiosInstance";
-import {
-  Coupon,
+import  type {
+  ICoupon,
   ICategory,
   IOrder,
   IPageList,
@@ -77,14 +77,14 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(`/coupon/search?size=1000`);
+          await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>("/coupon/search?size=1000");
         return data.result;
       },
       queryKey: [""],
     }),
     pages: (queryString?: string) => ({
       queryFn: async ({ pageParam = 1 }) => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<Coupon[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>(
           `/coupon/search?page=${pageParam}&${queryString || ""}`,
         );
         return data.result;

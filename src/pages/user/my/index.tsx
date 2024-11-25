@@ -4,7 +4,7 @@ import axiosInstance from "@/utils/axiosInstance.ts";
 import { RightOutlined } from "@ant-design/icons";
 import { useMutation, useQueries } from "@tanstack/react-query";
 import { Divider, Flex, Typography } from "antd";
-import { FC } from "react";
+import type { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {

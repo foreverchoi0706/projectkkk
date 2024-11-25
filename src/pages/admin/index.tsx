@@ -3,7 +3,7 @@ import useAuth from "@/hooks/useAuth";
 import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Flex, Layout, Menu, Spin } from "antd";
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {

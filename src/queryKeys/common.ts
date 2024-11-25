@@ -1,5 +1,5 @@
 import axiosInstance from "@/utils/axiosInstance";
-import { IToken, IResponse, IAuth, IMemberInfo } from "@/utils/types";
+import type { IToken, IResponse, IAuth, IMemberInfo } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
@@ -15,7 +15,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
     info: () => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IMemberInfo>>(`/member/member`);
+        const { data } = await axiosInstance.get<IResponse<IMemberInfo>>("/member/member");
         return data.result;
       },
       queryKey: [""],

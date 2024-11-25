@@ -2,7 +2,7 @@ import Product from "@/components/Product";
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Divider, Flex, Row, Typography } from "antd";
-import { FC } from "react";
+import type { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {

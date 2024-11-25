@@ -1,9 +1,9 @@
 import user from "@/queryKeys/user";
-import { ICategory } from "@/utils/types";
+import type { ICategory } from "@/utils/types";
 import { RightOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Flex, Row, Typography } from "antd";
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {

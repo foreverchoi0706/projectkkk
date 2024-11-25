@@ -7,12 +7,12 @@ import {
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
 import supabaseClient from "@/utils/supabaseClient.ts";
-import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
-import { User } from "@supabase/supabase-js";
+import type { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
+import type { User } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Typography } from "antd";
-import { AxiosResponse } from "axios";
-import { FC, useEffect, useRef } from "react";
+import { Button, Flex, Form, type FormProps, Input, Typography } from "antd";
+import type { AxiosResponse } from "axios";
+import { type FC, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

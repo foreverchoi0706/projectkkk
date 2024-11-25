@@ -1,11 +1,11 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { ANSWER_STATUS, DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IQnAWaiting, TError, TAnswer } from "@/utils/types";
+import type { IQnAWaiting, TAnswer, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Modal, Spin, Table, TableProps } from "antd";
+import { Button, Flex, Form, type FormProps, Modal, Spin, Table, type TableProps } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

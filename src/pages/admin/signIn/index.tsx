@@ -6,11 +6,11 @@ import {
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
-import { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
+import type { IAuth, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Layout, Typography } from "antd";
-import { AxiosResponse } from "axios";
-import { FC } from "react";
+import { Button, Flex, Form, type FormProps, Input, Layout, Typography } from "antd";
+import type { AxiosResponse } from "axios";
+import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Page: FC = () => {

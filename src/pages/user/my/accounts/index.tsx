@@ -7,11 +7,11 @@ import {
   REQUIRED_PASSWORD,
   REQUIRED_PHONE,
 } from "@/utils/constants";
-import { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
+import type { IMember, IResponse, ISignInParams, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input } from "antd";
-import { AxiosResponse } from "axios";
-import { FC, useEffect, useState } from "react";
+import { Button, Flex, Form, type FormProps, Input } from "antd";
+import type { AxiosResponse } from "axios";
+import { type FC, useEffect, useState } from "react";
 
 const Setting: FC = () => {
   const queryClient = useQueryClient();

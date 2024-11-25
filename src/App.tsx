@@ -4,8 +4,8 @@ import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
 import User from "@/pages/user";
 import { ADMIN_SIGN_IN_ROUTES, USER_SIGN_IN_ROUTES } from "@/utils/constants";
-import { IAuth } from "@/utils/types";
-import { FC } from "react";
+import type { IAuth } from "@/utils/types";
+import type { FC } from "react";
 import {
   Navigate,
   Route,
@@ -21,11 +21,11 @@ const getRoute = (data?: IAuth) =>
         <Route path="/" element={<User />}>
           {data
             ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
-                ({ Page, path }, index) => <Route key={index} path={path} element={<Page />} />,
+                ({ Page, path }, index) => <Route key={Page.displayName} path={path} element={<Page />} />,
               )
-            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
+            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, }, index) => (
                 <Route
-                  key={index}
+                  key={Page.displayName}
                   path={path}
                   element={requiredAuth ? <Navigate to="/signin" replace /> : <Page />}
                 />
@@ -36,7 +36,7 @@ const getRoute = (data?: IAuth) =>
           {data ? (
             <>
               {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
-                <Route key={index} element={<Page />} path={path} />
+                <Route key={Page.displayName} element={<Page />} path={path} />
               ))}
               <Route path="*" element={<Navigate replace to="/admin/products" />} />
             </>

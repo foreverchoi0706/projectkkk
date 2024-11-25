@@ -1,10 +1,10 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import { IAccount, TError, TRole } from "@/utils/types";
+import type { IAccount, TError, TRole } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Flex, Select, Spin, Table, TableProps } from "antd";
-import { FC } from "react";
+import { Flex, Select, Spin, Table, type TableProps } from "antd";
+import type { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {

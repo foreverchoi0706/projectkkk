@@ -1,14 +1,14 @@
 import user from "@/queryKeys/user";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Flex, Input, InputRef, Spin, Typography } from "antd";
-import { ChangeEvent, FC, KeyboardEventHandler, useEffect, useRef } from "react";
+import { Flex, Input, type InputRef, Spin, Typography } from "antd";
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 
 const Page: FC = () => {
-  const refFetchNextPageArea = useRef<HTMLElement>(null);
+  const refFetchNextPageArea = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
-  const refInput = useRef<InputRef>(null);
+  const refInput = useRef<InputRef | null>(null);
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
 
   const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({

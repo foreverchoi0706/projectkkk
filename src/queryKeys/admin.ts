@@ -1,5 +1,5 @@
 import axiosInstance from "@/utils/axiosInstance";
-import {
+import type {
   IAccount,
   IBrand,
   IMember,

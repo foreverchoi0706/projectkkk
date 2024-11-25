@@ -1,7 +1,7 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Typography } from "antd";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import QnAModal from "./QnAModal";
 

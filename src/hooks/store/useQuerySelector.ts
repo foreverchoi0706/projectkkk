@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { INITIAL_STORE } from "./useQueryStore";
+import type { INITIAL_STORE } from "./useQueryStore";
 
 type TStoreUnion = {
   [K in keyof typeof INITIAL_STORE]: {
@@ -11,7 +11,7 @@ type TStoreUnion = {
 const useQuerySelector = (key: keyof typeof INITIAL_STORE) => {
   const queryClient = useQueryClient();
 
-  return queryClient.getQueryData<TStoreUnion>(["store", key])?.value || null;
+  return (queryClient.getQueryData<TStoreUnion>(["store", key])?.value) || null;
 };
 
 export default useQuerySelector;

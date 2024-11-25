@@ -1,7 +1,7 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Input, InputRef, Typography } from "antd";
-import { ChangeEvent, FC, KeyboardEventHandler, useEffect, useRef } from "react";
+import { Flex, Input, type InputRef, Typography } from "antd";
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
 

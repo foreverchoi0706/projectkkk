@@ -1,4 +1,4 @@
-import {
+import type {
   ANSWER_STATUS,
   DELIVERY_ADDRESS_TYPE,
   DELIVERY_STATUS_TYPE,
@@ -9,17 +9,17 @@ import {
 
 export type TError = IResponse<{ errorMessage: string }>;
 
-export type TQnaType = keyof typeof QNA_TYPE;
+export type TQnaType = keyof QNA_TYPE;
 
-export type TAnswerStatus = keyof typeof ANSWER_STATUS;
+export type TAnswerStatus = keyof ANSWER_STATUS;
 
-export type TDeliveryType = keyof typeof DELIVERY_TYPE;
+export type TDeliveryType = keyof DELIVERY_TYPE;
 
-export type TDeliveryStatusType = keyof typeof DELIVERY_STATUS_TYPE;
+export type TDeliveryStatusType = keyof DELIVERY_STATUS_TYPE;
 
-export type TDeliveryAddressType = keyof typeof DELIVERY_ADDRESS_TYPE;
+export type TDeliveryAddressType = keyof DELIVERY_ADDRESS_TYPE;
 
-export type TShippingMessages = keyof typeof SHIPPING_MESSAGES;
+export type TShippingMessages = keyof SHIPPING_MESSAGES;
 
 export interface IResponse<T = unknown> {
   result: T;
@@ -161,11 +161,7 @@ export interface IBrand {
 
 export type TRole = "center" | "admin" | "user";
 
-export type INonNullable<T> = {
-  [K in keyof T]: NonNullable<K>;
-};
-
-export interface Coupon {
+export interface ICoupon {
   id: number;
   name: string;
   discountRate: number;

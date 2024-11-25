@@ -5,11 +5,11 @@ import {
   REQUIRED_CATEGORY_NAME,
   REQUIRED_PRODUCT_NAME,
 } from "@/utils/constants";
-import { IProduct, IResponse, TError } from "@/utils/types";
+import type { IProduct, IResponse, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Input, Modal, ModalProps, Spin } from "antd";
-import { AxiosError } from "axios";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Button, Flex, Form, type FormProps, Input, Modal, type ModalProps, Spin } from "antd";
+import type { AxiosError } from "axios";
+import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 
 interface IProps {
   productId: number | null;

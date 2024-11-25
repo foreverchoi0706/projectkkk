@@ -2,7 +2,7 @@ import Product from "@/components/Product";
 import user from "@/queryKeys/user.ts";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Flex, Row, Spin, Typography } from "antd";
-import { FC, useEffect, useRef } from "react";
+import { type FC, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
