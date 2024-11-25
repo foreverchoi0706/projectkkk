@@ -111,14 +111,14 @@ const Page: FC = () => {
           </Flex>
         </Form.Item>
         <Form.Item>
-          <img
-            className="my-0 mx-auto cursor-pointer hover:brightness-95"
-            width={183}
-            height={45}
-            alt="kakao_login_medium_narrow"
-            src="/kakao_login_medium_narrow.png"
-            onClick={onClickKakaoSignin}
-          />
+          <button className="block my-0 mx-auto hover:brightness-95" onClick={onClickKakaoSignin}>
+            <img
+              width={183}
+              height={45}
+              alt="kakao_login_medium_narrow"
+              src="/kakao_login_medium_narrow.png"
+            />
+          </button>
         </Form.Item>
       </Form>
     </main>

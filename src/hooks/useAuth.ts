@@ -9,8 +9,8 @@ const useAuth = () => {
 
   const query = useQuery({
     ...common.auth.verify({
-      accessToken: getCookie(ACCESS_TOKEN)!,
-      refreshToken: getCookie(REFRESH_TOKEN)!,
+      accessToken: getCookie(ACCESS_TOKEN) as string,
+      refreshToken: getCookie(REFRESH_TOKEN) as string,
     }),
     enabled: hasCookie(ACCESS_TOKEN) && hasCookie(REFRESH_TOKEN),
   });
@@ -18,8 +18,8 @@ const useAuth = () => {
   const { data: info } = useQuery({
     ...common.auth.info(),
     enabled: Boolean(query.data),
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
+    gcTime: Number.POSITIVE_INFINITY,
   });
 
   const login = ({ accessToken, refreshToken }: IAuth) => {
@@ -35,8 +35,8 @@ const useAuth = () => {
     queryClient.setQueryData<null>(common.auth.info().queryKey, null);
     queryClient.setQueryData<null>(
       common.auth.verify({
-        accessToken: getCookie(ACCESS_TOKEN)!,
-        refreshToken: getCookie(REFRESH_TOKEN)!,
+        accessToken: getCookie(ACCESS_TOKEN) as string,
+        refreshToken: getCookie(REFRESH_TOKEN) as string,
       }).queryKey,
       null,
     );
