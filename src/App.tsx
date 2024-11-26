@@ -68,7 +68,6 @@ const getRoute = (data?: IAuth) =>
 const App: FC = () => {
   const { data, isLoading } = useAuth();
   const userRoute = getRoute(data);
-  console.log(data);
 
   if (isLoading) return null;
   return <RouterProvider router={userRoute} />;
