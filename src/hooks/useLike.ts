@@ -2,7 +2,7 @@ import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance.ts";
 import type { TError } from "@/utils/types.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useLike = (initialLiked: boolean, id?: number) => {
   const queryClient = useQueryClient();
@@ -21,6 +21,10 @@ const useLike = (initialLiked: boolean, id?: number) => {
       queryClient.invalidateQueries(user.products.wish()).then(() => setIsLiked(!isLiked)),
     onError: ({ responseMessage }) => alert(responseMessage),
   });
+
+  useEffect(() => {
+    setIsLiked(initialLiked);
+  }, [initialLiked]);
 
   return { isLiked, likeMutation, unlikeMutation };
 };
