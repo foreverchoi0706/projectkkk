@@ -89,14 +89,17 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "deleteButton",
       key: "deleteButton",
-      onCell: ({ id }) => ({
-        onClick: () => {
-          if (!window.confirm("해당 멤버를 삭제하시겠습니까?")) return;
-          deleteMemberMutation.mutate(id);
-        },
-      }),
-      render: () => <Button>삭제</Button>,
       title: "삭제",
+      render: (_, { id }) => (
+        <Button
+          onClick={() => {
+            if (!window.confirm("해당 멤버를 삭제하시겠습니까?")) return;
+            deleteMemberMutation.mutate(id);
+          }}
+        >
+          삭제
+        </Button>
+      ),
     },
   ];
 

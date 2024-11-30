@@ -22,7 +22,7 @@ const Page: FC = () => {
   const { data: product, isError } = useQuery(user.products.detail(id));
   const { data: newProducts } = useQuery(user.products.new(1));
 
-  const { isLiked, likeMutation, unlikeMutation } = useLike(product.liked || false, product.id);
+  const { isLiked, likeMutation, unlikeMutation } = useLike(product?.liked || false, product?.id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();
