@@ -12,7 +12,7 @@ import {
   ShoppingCartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Client } from "@stomp/stompjs";
+import { CompatClient, Stomp } from "@stomp/stompjs";
 import { Button, Flex, Layout, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -21,31 +21,25 @@ import SockJS from "sockjs-client";
 
 const User: FC = () => {
   const { pathname } = useLocation();
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<CompatClient | null>(null);
 
   useEffect(() => {
     const sockJs = new SockJS("/ws");
-    const client = new Client({
-      webSocketFactory: () => sockJs,
-      onConnect: () => {
-        console.log("Connected to WebSocket");
-        // 서버 메시지 구독
-        client.subscribe("/topic/1", (message) => {
-          console.log(`Received: ${message.body}`);
+    const stompClient = Stomp.over(sockJs);
+
+    stompClient.connect(
+      null,
+      () => {
+        stompClient.subscribe("/topic/logs", (message) => {
+          console.log(message.body);
         });
       },
-      onStompError: console.error,
-      onDisconnect: () => console.log("Disconnected from WebSocket"),
-    });
-
-    client.activate();
-
-    setClient(client);
+      console.error,
+    );
+    setClient(stompClient);
 
     // 컴포넌트 언마운트 시 연결 해제
-    return () => {
-      client.deactivate();
-    };
+    return () => client?.disconnect();
   }, []);
 
   return (
@@ -57,9 +51,7 @@ const User: FC = () => {
         <Flex className="gap-4">
           <BellOutlined
             className="text-2xl"
-            onClick={() =>
-              client?.publish({ destination: "/app/chat/send", body: "First Message" })
-            }
+            onClick={() => client?.send("/app/log", {}, "Test log messagdasdasdase")}
           />
           <Link to="/search" className="flex items-center">
             <SearchOutlined className="text-2xl" />

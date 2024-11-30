@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
     if (config.url.includes("/auth/verify")) {
-      alert("로그아웃 되었습니다");
+      alert("로그아웃되었습니다");
       deleteCookie(ACCESS_TOKEN);
       deleteCookie(REFRESH_TOKEN);
       location.replace("/signIn");

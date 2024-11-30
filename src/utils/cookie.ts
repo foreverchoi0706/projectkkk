@@ -23,7 +23,8 @@ export const getCookie = (name: string) => {
 };
 
 export const deleteCookie = (name: string) => {
-  setCookie(name, "", { expires: new Date(0) });
+  setCookie(name, "", { expires: new Date(0), path: "/admin" });
+  setCookie(name, "", { expires: new Date(0), path: "/" });
 };
 
 export const hasCookie = (name: string) => {

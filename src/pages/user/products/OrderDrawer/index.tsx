@@ -27,16 +27,20 @@ import { FC, useEffect } from "react";
 const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest }) => {
   const { id, discountRate, price, size, color } = product;
   const { info } = useAuth();
-  const queryCient = useQueryClient();
+  const queryClient = useQueryClient();
   const [orderForm] = Form.useForm<IOrderParams>();
   const deliveryAddressType = Form.useWatch<TDeliveryAddressType>("deliveryAddressType", orderForm);
   const shippingMessages = Form.useWatch<TShippingMessages>("shippingMessages", orderForm);
   const orderMutation = useMutation<unknown, TError, unknown>({
     mutationFn: (orderParams) => axiosInstance.post(`/order/join`, orderParams),
     onSuccess: () => {
-      queryCient.invalidateQueries({
-        queryKey: user.shipping._def,
-      });
+      queryClient
+        .invalidateQueries({
+          queryKey: user.shipping._def,
+        })
+        .then(() => {
+          alert("구매가 완료되었습니다");
+        });
     },
     onError: ({ responseMessage }) => alert(responseMessage),
   });
