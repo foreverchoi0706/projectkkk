@@ -4,12 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body * {
   font-family: "Montserrat", sans-serif !important;
   word-break: keep-all !important;
 }
 
-body::-webkit-scrollbar { 
+body::-webkit-scrollbar {
   width: 0;
 }

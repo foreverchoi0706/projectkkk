@@ -4,6 +4,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Flex, Row, Spin, Typography } from "antd";
 import { type FC, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import module from "./index.module.css";
 
 const Page: FC = () => {
   const refFetchNextPageArea = useRef<HTMLElement>(null);
@@ -72,7 +73,7 @@ const Page: FC = () => {
 
         <Flex className="flex-col gap-4">
           <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
-          <Carousel arrows autoplay slidesToShow={2} dots={false}>
+          <Carousel className={module.carousel} arrows autoplay slidesToShow={2} dots={false}>
             {newProducts?.content.map((product) => (
               <Product {...product} key={product.id} />
             ))}

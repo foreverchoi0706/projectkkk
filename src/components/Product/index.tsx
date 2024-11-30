@@ -20,7 +20,7 @@ const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, pri
   return (
     <Link className="h-full block" to={`/products/${id}`}>
       <Flex className="h-full flex-col">
-        <Flex className="w-fit relative flex-grow">
+        <Flex className="relative flex-grow">
           <img width="100%" height="100%" loading="lazy" alt="product" src={src} />
           {isLiked ? (
             <HeartFilled

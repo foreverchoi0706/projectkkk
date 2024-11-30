@@ -5,6 +5,7 @@ import { ConfigProvider } from "antd";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "@/global.css";
+import { scan } from "react-scan";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,6 +17,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+if (import.meta.env.MODE === "development") {
+  scan();
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
