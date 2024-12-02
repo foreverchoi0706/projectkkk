@@ -21,13 +21,11 @@ const getRoute = (data?: IAuth) =>
         <Route path="/" element={<User />}>
           {data
             ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
-                ({ Page, path }, _index) => (
-                  <Route key={Page.displayName} path={path} element={<Page />} />
-                ),
+                ({ Page, path }, index) => <Route key={index} path={path} element={<Page />} />,
               )
-            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, _index) => (
+            : USER_SIGN_IN_ROUTES.map(({ Page, path, requiredAuth }, index) => (
                 <Route
-                  key={Page.displayName}
+                  key={index}
                   path={path}
                   element={requiredAuth ? <Navigate to="/signin" replace /> : <Page />}
                 />
@@ -37,8 +35,8 @@ const getRoute = (data?: IAuth) =>
         <Route path="/admin" element={<Admin />}>
           {data ? (
             <>
-              {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, _index) => (
-                <Route key={Page.displayName} element={<Page />} path={path} />
+              {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
+                <Route key={index} element={<Page />} path={path} />
               ))}
               <Route path="*" element={<Navigate replace to="/admin/products" />} />
             </>

@@ -74,14 +74,15 @@ const Page: FC = () => {
       title: "현재 재고",
     },
     {
+      title: "상세",
       align: "center",
       dataIndex: "detailButton",
       key: "detailButton",
-      onCell: ({ id }) => ({
-        onClick: () => setSelectedProductId(id),
-      }),
-      render: () => <Button type="primary">상세</Button>,
-      title: "상세",
+      render: (_, { id }) => (
+        <Button onClick={() => setSelectedProductId(id)} type="primary">
+          상세
+        </Button>
+      ),
     },
   ];
 

@@ -4,7 +4,7 @@ import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, Flex, Layout, Menu, Spin } from "antd";
 import { type FC, useEffect, useState } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {
   useQueryStore();
@@ -63,9 +63,7 @@ const Admin: FC = () => {
                 onClick={() => setCollapsed(!collapsed)}
               />
             </Flex>
-            <Link to="/admin/signin" onClick={logout}>
-              <Button type="text" icon={<LogoutOutlined />} />
-            </Link>
+            <Button onClick={logout} type="text" icon={<LogoutOutlined />} />
           </Layout.Header>
           <Layout.Content className="m-6 p-6">
             <Outlet />

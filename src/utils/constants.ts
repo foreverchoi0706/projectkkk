@@ -1,17 +1,14 @@
 import Accounts from "@/pages/admin/accounts";
 import Brands from "@/pages/admin/brands";
+import Dashboard from "@/pages/admin/dashboard";
 import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
 import AdminQnas from "@/pages/admin/qnas";
 import Setting from "@/pages/admin/setting";
-import Dashboard from "@/pages/admin/dashboard";
 import AdminShipping from "@/pages/admin/shippings";
 import Carts from "@/pages/user/carts";
 import UserCategories from "@/pages/user/categories";
 import Home from "@/pages/user/home";
-import Picks from "@/pages/user/picks";
-import UserProductsDetail from "@/pages/user/products/[id]";
-import Search from "@/pages/user/search";
 import UserSetting from "@/pages/user/my";
 import UserAccounts from "@/pages/user/my/accounts";
 import UserCoupons from "@/pages/user/my/coupons";
@@ -19,6 +16,9 @@ import UserOrders from "@/pages/user/my/orders";
 import UserOrdersDetail from "@/pages/user/my/orders/[id]";
 import UserQnas from "@/pages/user/my/qnas";
 import UserReviews from "@/pages/user/my/reviews";
+import Picks from "@/pages/user/picks";
+import UserProductsDetail from "@/pages/user/products/[id]";
+import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
 
 import SignUp from "@/pages/user/signUp";
@@ -227,6 +227,8 @@ export const QNA_TYPE = {
 };
 
 export const ANSWER_STATUS = {
+  ANSWERED: "ANSWERED",
+  DELETED: "DELETED",
   WAITING: "WAITING",
 };
 

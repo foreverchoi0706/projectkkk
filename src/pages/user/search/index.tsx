@@ -103,7 +103,7 @@ const Page: FC = () => {
         )}
 
         {productPages.pages[0].content.length > 0 ? (
-          <Row gutter={[16, 16]}>
+          <Row gutter={[8, 8]}>
             {productPages.pages.map(({ content }) =>
               content.map((product) => (
                 <Col key={product.id} xs={12} md={8}>

@@ -38,7 +38,7 @@ const queryKeyStore = createQueryKeyStore({
     pages: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IQnAWaiting[]>>>(
-          `/admin/qna/waiting?${queryString}`,
+          `/admin/qna/qnas?${queryString}`,
         );
         return data.result;
       },

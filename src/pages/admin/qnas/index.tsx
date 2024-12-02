@@ -1,10 +1,10 @@
+import QnAModal from "@/pages/admin/qnas/QnAModal";
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { ANSWER_STATUS, DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import type { IQnAWaiting, TAnswer, TError } from "@/utils/types";
+import type { IQnAWaiting, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, type FormProps, Modal, Spin, Table, type TableProps } from "antd";
-import TextArea from "antd/es/input/TextArea";
+import { Button, Flex, Spin, Table, type TableProps } from "antd";
 import { type FC, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -12,33 +12,9 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
-  const [answerForm] = Form.useForm<TAnswer>();
-  const [selectedQnAId, setSelectedQnAId] = useState<number | null>();
-  const isOpen = selectedQnAId !== undefined;
+  const [selectedQnAId, setSelectedQnAId] = useState<number | null>(null);
 
   const { data: qnaPages } = useQuery(admin.qnas.pages(searchParams.toString()));
-
-  const answerQnAMutation = useMutation<unknown, TError, TAnswer>({
-    mutationFn: ({ answer }) =>
-      axiosInstance.post(`/admin/qna/answer?qnAId=${selectedQnAId}&answer=${answer}`),
-    onSuccess: () => {
-      alert("QnA가 등록되었습니다");
-      queryClient
-        .invalidateQueries(admin.qnas.pages(searchParams.toString()))
-        .then(() => setSelectedQnAId(undefined));
-    },
-  });
-
-  const updateQnAMutation = useMutation<unknown, TError, TAnswer>({
-    mutationFn: ({ answer }) =>
-      axiosInstance.post(`/admin/qna/update?qnAId=${selectedQnAId}&answer=${answer}`),
-    onSuccess: () => {
-      alert("QnA가 수정되었습니다");
-      queryClient
-        .invalidateQueries(admin.qnas.pages(searchParams.toString()))
-        .then(() => setSelectedQnAId(undefined));
-    },
-  });
 
   const deleteQnAMutation = useMutation<unknown, TError, number>({
     mutationFn: (id) => axiosInstance.delete(`/admin/qna/delete?qnAId=${id}`),
@@ -47,14 +23,6 @@ const Page: FC = () => {
       queryClient.invalidateQueries(admin.qnas.pages(searchParams.toString()));
     },
   });
-
-  const onFinishAnswerQna: FormProps<TAnswer>["onFinish"] = (answer) => {
-    const qnA = qnaPages?.content.find(({ id }) => id === selectedQnAId);
-    if (!qnA) return;
-    const mutation =
-      qnA.answerStatus === ANSWER_STATUS.WAITING ? answerQnAMutation : updateQnAMutation;
-    mutation.mutate(answer);
-  };
 
   if (!qnaPages) return <Spin />;
   const columns: TableProps<IQnAWaiting>["columns"] = [
@@ -146,24 +114,25 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "button",
       key: "button",
-      title: "답변하기",
-      onCell: ({ id }) => ({
-        onClick: () => setSelectedQnAId(id),
-      }),
-      render: () => <Button>답변하기</Button>,
+      title: "상세",
+      render: (_, { id }) => <Button onClick={() => setSelectedQnAId(id)}>상세</Button>,
     },
     {
       align: "center",
       dataIndex: "button",
       key: "button",
       title: "삭제",
-      onCell: ({ id }) => ({
-        onClick: () => {
-          if (!window.confirm("해당 QnA를 삭제하시겠습니까?")) return;
-          deleteQnAMutation.mutate(id);
-        },
-      }),
-      render: () => <Button>삭제</Button>,
+      render: (_, { answerStatus, id }) => (
+        <Button
+          onClick={() => {
+            if (!window.confirm("해당 QnA를 삭제하시겠습니까?")) return;
+            deleteQnAMutation.mutate(id);
+          }}
+          disabled={answerStatus === ANSWER_STATUS.DELETED}
+        >
+          삭제
+        </Button>
+      ),
     },
   ];
 
@@ -184,43 +153,14 @@ const Page: FC = () => {
           showSizeChanger: false,
         }}
       />
-      {isOpen && (
-        <Modal
+      {selectedQnAId !== null && (
+        <QnAModal
+          id={selectedQnAId}
+          setSelectedQnAId={setSelectedQnAId}
           title="QnA 답변"
-          open={isOpen}
           footer={null}
-          okButtonProps={{}}
-          onCancel={() => setSelectedQnAId(undefined)}
-        >
-          <Form<TAnswer> onFinish={onFinishAnswerQna} form={answerForm}>
-            <Form.Item<TAnswer>
-              name="answer"
-              rules={[
-                {
-                  required: true,
-                  message: "답변을 입력해주세요",
-                },
-              ]}
-            >
-              <TextArea />
-            </Form.Item>
-            <Form.Item<TAnswer>>
-              <Flex className="gap-4">
-                <Button
-                  disabled={answerQnAMutation.isPending || updateQnAMutation.isPending}
-                  className="flex-grow"
-                  htmlType="submit"
-                  type="primary"
-                >
-                  답변
-                </Button>
-                <Button className="flex-grow" onClick={() => setSelectedQnAId(undefined)}>
-                  취소
-                </Button>
-              </Flex>
-            </Form.Item>
-          </Form>
-        </Modal>
+          onCancel={() => setSelectedQnAId(null)}
+        />
       )}
     </Flex>
   );

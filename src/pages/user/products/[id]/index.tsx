@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import module from "./index.module.css";
 
 const Page: FC = () => {
   const { id } = useParams();
@@ -22,7 +23,7 @@ const Page: FC = () => {
   const { data: product, isError } = useQuery(user.products.detail(id));
   const { data: newProducts } = useQuery(user.products.new(1));
 
-  const { isLiked, likeMutation, unlikeMutation } = useLike(product.liked || false, product.id);
+  const { isLiked, likeMutation, unlikeMutation } = useLike(product?.liked || false, product?.id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();
@@ -133,7 +134,7 @@ const Page: FC = () => {
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-4">
         <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
-        <Carousel arrows autoplay slidesToShow={2} dots={false}>
+        <Carousel className={module.carousel} arrows autoplay slidesToShow={2} dots={false}>
           {newProducts?.content.map((product) => (
             <Product {...product} key={product.id} />
           ))}
