@@ -24,7 +24,9 @@ const User: FC = () => {
   const [client, setClient] = useState<CompatClient | null>(null);
 
   useEffect(() => {
-    const sockJs = new SockJS("/ws");
+    const sockJs = new SockJS(
+      import.meta.env.MODE === "development" ? "/ws" : "https://www.projectkkk.com/ws/",
+    );
     const stompClient = Stomp.over(sockJs);
 
     stompClient.connect(
