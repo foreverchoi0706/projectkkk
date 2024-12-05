@@ -1,3 +1,5 @@
+import { ACCESS_TOKEN } from "@/utils/constants.ts";
+import { getCookie } from "@/utils/cookie.ts";
 import {
   BellOutlined,
   HeartFilled,
@@ -24,13 +26,15 @@ const User: FC = () => {
   const [client, setClient] = useState<CompatClient | null>(null);
 
   useEffect(() => {
+    const accessToken = getCookie(ACCESS_TOKEN);
+    if (!accessToken) return;
     const sockJs = new SockJS(
       import.meta.env.MODE === "development" ? "/ws" : "https://www.projectkkk.com/ws/",
     );
     const stompClient = Stomp.over(sockJs);
 
     stompClient.connect(
-      null,
+      { Authorization: `Bearer ${accessToken}` },
       () => {
         stompClient.subscribe("/user/queue/notifications", (message) => {
           console.log(message.body);
