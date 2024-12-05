@@ -32,7 +32,7 @@ const User: FC = () => {
     stompClient.connect(
       null,
       () => {
-        stompClient.subscribe("/topic/logs", (message) => {
+        stompClient.subscribe("/user/queue/notifications", (message) => {
           console.log(message.body);
         });
       },
