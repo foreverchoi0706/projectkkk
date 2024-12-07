@@ -31,7 +31,7 @@ const Page: FC = () => {
   const addCouponMutation = useMutation<unknown, TError, IProduct>({
     mutationFn: (product: IProduct) => axiosInstance.post("/admin/coupon/join", product),
     onSuccess: () => {
-      queryClient.invalidateQueries(admin.products.pages(searchParams.toString())).then(() => {
+      queryClient.invalidateQueries(admin.coupons.pages(searchParams.toString())).then(() => {
         alert("쿠폰이 추가되었습니다");
         setIsOpen(false);
       });
@@ -43,7 +43,7 @@ const Page: FC = () => {
     mutationFn: (id) => axiosInstance.delete(`/admin/coupon/delete?couponId=${id}`),
     onSuccess: () => {
       queryClient
-        .invalidateQueries(admin.qnas.pages(searchParams.toString()))
+        .invalidateQueries(admin.coupons.pages(searchParams.toString()))
         .then(() => alert("쿠폰이 삭제되었습니다"));
     },
   });
@@ -125,7 +125,7 @@ const Page: FC = () => {
       render: (_, { id }) => (
         <Button
           onClick={() => {
-            if (!window.confirm("해당 QnA를 삭제하시겠습니까?")) return;
+            if (!window.confirm("해당 쿠폰을 삭제하시겠습니까?")) return;
             deleteCouponMutation.mutate(id);
           }}
         >
@@ -146,7 +146,7 @@ const Page: FC = () => {
       </Row>
       <Table<ICoupon>
         scroll={{ y: 550 }}
-        title={() => "QnA관리"}
+        title={() => "쿠폰 관리"}
         rowKey={({ id }) => id}
         columns={columns}
         locale={{ emptyText: "검색결과가 없습니다" }}
