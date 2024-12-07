@@ -1,10 +1,22 @@
-import QnAModal from "@/pages/admin/qnas/QnAModal";
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import type { ICoupon, TError } from "@/utils/types";
+import type { ICoupon, IProduct, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Spin, Table, type TableProps } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Spin,
+  Table,
+  type TableProps,
+} from "antd";
 import { type FC, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -13,16 +25,36 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
-  const [selectedQnAId, setSelectedQnAId] = useState<number | null>(null);
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data: couponPages } = useQuery(admin.coupons.pages(searchParams.toString()));
+
+  const addCouponMutation = useMutation<unknown, TError, IProduct>({
+    mutationFn: (product: IProduct) => axiosInstance.post("/admin/coupon/join", product),
+    onSuccess: () => {
+      queryClient.invalidateQueries(admin.products.pages(searchParams.toString())).then(() => {
+        alert("쿠폰이 추가되었습니다");
+        setIsOpen(false);
+      });
+    },
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
 
   const deleteCouponMutation = useMutation<unknown, TError, number>({
     mutationFn: (id) => axiosInstance.delete(`/admin/coupon/delete?couponId=${id}`),
     onSuccess: () => {
-      alert("쿠폰이 삭제되었습니다");
-      queryClient.invalidateQueries(admin.qnas.pages(searchParams.toString()));
+      queryClient
+        .invalidateQueries(admin.qnas.pages(searchParams.toString()))
+        .then(() => alert("쿠폰이 삭제되었습니다"));
     },
+  });
+
+  const assignCouponMutation = useMutation<unknown, TError, number>({
+    mutationFn: (id) =>
+      axiosInstance.post(`/admin/coupon/assignCouponToMember`, {
+        couponId: id,
+        assignType: "ALL",
+      }),
+    onSuccess: () => alert("쿠폰이 지급되었습니다"),
   });
 
   if (!couponPages) return <Spin />;
@@ -73,6 +105,22 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "button",
       key: "button",
+      title: "지급",
+      render: (_, { id }) => (
+        <Button
+          onClick={() => {
+            if (!window.confirm("해당 쿠폰을 지급하시겠습니까?")) return;
+            assignCouponMutation.mutate(id);
+          }}
+        >
+          지급
+        </Button>
+      ),
+    },
+    {
+      align: "center",
+      dataIndex: "button",
+      key: "button",
       title: "삭제",
       render: (_, { id }) => (
         <Button
@@ -89,6 +137,13 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
+      <Row gutter={16}>
+        <Col span={4}>
+          <Form.Item>
+            <Button onClick={() => setIsOpen(true)}>쿠폰 생성</Button>
+          </Form.Item>
+        </Col>
+      </Row>
       <Table<ICoupon>
         scroll={{ y: 550 }}
         title={() => "QnA관리"}
@@ -104,14 +159,71 @@ const Page: FC = () => {
           showSizeChanger: false,
         }}
       />
-      {selectedQnAId !== null && (
-        <QnAModal
-          id={selectedQnAId}
-          setSelectedQnAId={setSelectedQnAId}
-          title="QnA 답변"
+      {isOpen && (
+        <Modal
+          title="쿠폰 생성"
+          open={isOpen}
           footer={null}
-          onCancel={() => setSelectedQnAId(null)}
-        />
+          okButtonProps={{}}
+          onCancel={() => setIsOpen(false)}
+        >
+          <Form onFinish={addCouponMutation.mutate}>
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "이름은 필수입니다",
+                },
+              ]}
+            >
+              <Input className="w-full" placeholder="name" />
+            </Form.Item>
+            <Form.Item
+              name="discountRate"
+              rules={[
+                {
+                  required: true,
+                  message: "할인율은 필수입니다",
+                },
+              ]}
+            >
+              <InputNumber className="w-full" placeholder="discountRate" />
+            </Form.Item>
+            <Form.Item
+              name="startDate"
+              rules={[
+                {
+                  required: true,
+                  message: "기간 시작일은 필수입니다",
+                },
+              ]}
+            >
+              <DatePicker className="w-full" placeholder="startDate" />
+            </Form.Item>
+            <Form.Item
+              name="endDate"
+              rules={[
+                {
+                  required: true,
+                  message: "기간 종료일은 필수입니다",
+                },
+              ]}
+            >
+              <DatePicker className="w-full" placeholder="endDate" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                disabled={addCouponMutation.isPending}
+                type="primary"
+                htmlType="submit"
+                className="w-full"
+              >
+                생성
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
       )}
     </Flex>
   );

@@ -32,7 +32,7 @@ const User: FC<IProps> = ({ data }) => {
   const navigate = useNavigate();
   const refNotificationBell = useRef<HTMLSpanElement>(null);
   const [client, setClient] = useState<CompatClient | null>(null);
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<unknown[]>([]);
   const [isOpenNotificationTour, setOpenNotificationTour] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,7 +47,8 @@ const User: FC<IProps> = ({ data }) => {
       { Authorization: `Bearer ${accessToken}` },
       () => {
         stompClient.subscribe("/user/queue/notifications", (message) => {
-          setNotifications([message.body]);
+          console.log("test", JSON.parse(message.body).body.result);
+          setNotifications([JSON.parse(message.body).body.result]);
         });
       },
       console.error,
@@ -62,13 +63,16 @@ const User: FC<IProps> = ({ data }) => {
     {
       title: "",
       cover: notifications.length ? (
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 overflow-y-auto  h-80">
           {notifications.map((notification) => (
             <li
-              onClick={() => navigate("/my/coupons")}
+              onClick={() => {
+                navigate("/my/coupons");
+                setOpenNotificationTour(false);
+              }}
               className="bg-white text-black px-4 py-2 rounded"
             >
-              {notification}
+              {JSON.stringify(notification)}
             </li>
           ))}
         </ul>
