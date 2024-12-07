@@ -4,9 +4,10 @@ import type { IBrand } from "@/utils/types";
 import { useQuery } from "@tanstack/react-query";
 import { Flex, Spin, Table, type TableProps } from "antd";
 import type { FC } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { data: brands } = useQuery(admin.brands.pages(searchParams.toString()));
@@ -95,7 +96,7 @@ const Page: FC = () => {
         locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={brands.content}
         pagination={{
-          onChange: (page) => navigate(`/admin/brands?page=${page}`, { replace: true }),
+          onChange: (page) => navigate(`${pathname}?page=${page}`, { replace: true }),
           pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: brands.page + 1,
           total: brands.totalCount,

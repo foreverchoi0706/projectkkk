@@ -1,7 +1,8 @@
 import axiosInstance from "@/utils/axiosInstance";
-import type {
+import {
   IAccount,
   IBrand,
+  ICoupon,
   IMember,
   IPageList,
   IProduct,
@@ -39,6 +40,17 @@ const queryKeyStore = createQueryKeyStore({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IQnAWaiting[]>>>(
           `/admin/qna/qnas?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+  },
+  coupons: {
+    pages: (queryString: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>(
+          `/admin/coupon/search?${queryString}`,
         );
         return data.result;
       },

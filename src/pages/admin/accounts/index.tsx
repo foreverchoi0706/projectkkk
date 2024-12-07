@@ -5,9 +5,10 @@ import type { IAccount, TError, TRole } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Flex, Select, Spin, Table, type TableProps } from "antd";
 import type { FC } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
@@ -74,7 +75,7 @@ const Page: FC = () => {
         locale={{ emptyText: "검색결과가 없습니다" }}
         dataSource={accounts.content}
         pagination={{
-          onChange: (page) => navigate(`/admin/accounts?page=${page}`, { replace: true }),
+          onChange: (page) => navigate(`${pathname}?page=${page}`, { replace: true }),
           pageSize: DEFAULT_LIST_PAGE_SIZE,
           current: accounts.page + 1,
           total: accounts.totalCount,

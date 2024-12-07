@@ -1,8 +1,8 @@
 import QnAModal from "@/pages/admin/qnas/QnAModal";
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
-import { ANSWER_STATUS, DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import type { IQnAWaiting, TError } from "@/utils/types";
+import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
+import type { ICoupon, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Flex, Spin, Table, type TableProps } from "antd";
 import { type FC, useState } from "react";
@@ -15,18 +15,18 @@ const Page: FC = () => {
   const queryClient = useQueryClient();
   const [selectedQnAId, setSelectedQnAId] = useState<number | null>(null);
 
-  const { data: qnaPages } = useQuery(admin.qnas.pages(searchParams.toString()));
+  const { data: couponPages } = useQuery(admin.coupons.pages(searchParams.toString()));
 
-  const deleteQnAMutation = useMutation<unknown, TError, number>({
-    mutationFn: (id) => axiosInstance.delete(`/admin/qna/delete?qnAId=${id}`),
+  const deleteCouponMutation = useMutation<unknown, TError, number>({
+    mutationFn: (id) => axiosInstance.delete(`/admin/coupon/delete?couponId=${id}`),
     onSuccess: () => {
-      alert("QnA가 삭제되었습니다");
+      alert("쿠폰이 삭제되었습니다");
       queryClient.invalidateQueries(admin.qnas.pages(searchParams.toString()));
     },
   });
 
-  if (!qnaPages) return <Spin />;
-  const columns: TableProps<IQnAWaiting>["columns"] = [
+  if (!couponPages) return <Spin />;
+  const columns: TableProps<ICoupon>["columns"] = [
     {
       align: "center",
       dataIndex: "id",
@@ -36,100 +36,50 @@ const Page: FC = () => {
     },
     {
       align: "center",
-      dataIndex: "qnAType",
-      key: "qnAType",
-      title: "qnAType",
+      dataIndex: "name",
+      key: "name",
+      title: "name",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
-      dataIndex: "subject",
-      key: "subject",
-      title: "subject",
+      dataIndex: "assignBy",
+      key: "assignBy",
+      title: "assignBy",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
-      dataIndex: "productNum",
-      key: "productNum",
-      title: "productNum",
+      dataIndex: "discountRate",
+      key: "discountRate",
+      title: "discountRate",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
-      dataIndex: "orderNum",
-      key: "orderNum",
-      title: "orderNum",
+      dataIndex: "startDate",
+      key: "startDate",
+      title: "startDate",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
-      dataIndex: "description",
-      key: "description",
-      title: "description",
+      dataIndex: "endDate",
+      key: "endDate",
+      title: "endDate",
       render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "memberEmail",
-      key: "memberEmail",
-      title: "memberEmail",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "createAt",
-      key: "createAt",
-      title: "createAt",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "answer",
-      key: "answer",
-      title: "answer",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "answerDate",
-      key: "answerDate",
-      title: "answerDate",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "answererEmail",
-      key: "answererEmail",
-      title: "answererEmail",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "answerStatus",
-      key: "answerStatus",
-      title: "answerStatus",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "button",
-      key: "button",
-      title: "상세",
-      render: (_, { id }) => <Button onClick={() => setSelectedQnAId(id)}>상세</Button>,
     },
     {
       align: "center",
       dataIndex: "button",
       key: "button",
       title: "삭제",
-      render: (_, { answerStatus, id }) => (
+      render: (_, { id }) => (
         <Button
           onClick={() => {
             if (!window.confirm("해당 QnA를 삭제하시겠습니까?")) return;
-            deleteQnAMutation.mutate(id);
+            deleteCouponMutation.mutate(id);
           }}
-          disabled={answerStatus === ANSWER_STATUS.DELETED}
         >
           삭제
         </Button>
@@ -139,18 +89,18 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
-      <Table<IQnAWaiting>
+      <Table<ICoupon>
         scroll={{ y: 550 }}
         title={() => "QnA관리"}
         rowKey={({ id }) => id}
         columns={columns}
         locale={{ emptyText: "검색결과가 없습니다" }}
-        dataSource={qnaPages.content}
+        dataSource={couponPages.content}
         pagination={{
           onChange: (page) => navigate(`${pathname}?page=${page}`, { replace: true }),
           pageSize: DEFAULT_LIST_PAGE_SIZE,
-          current: qnaPages.page + 1,
-          total: qnaPages.totalCount,
+          current: couponPages.page + 1,
+          total: couponPages.totalCount,
           showSizeChanger: false,
         }}
       />

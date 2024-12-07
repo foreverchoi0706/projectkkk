@@ -14,13 +14,14 @@ import UserAccounts from "@/pages/user/my/accounts";
 import UserCoupons from "@/pages/user/my/coupons";
 import UserOrders from "@/pages/user/my/orders";
 import UserOrdersDetail from "@/pages/user/my/orders/[id]";
-import UserQnas from "@/pages/user/my/qnas";
+import UserQnAs from "@/pages/user/my/qnas";
 import UserReviews from "@/pages/user/my/reviews";
 import Picks from "@/pages/user/picks";
 import UserProductsDetail from "@/pages/user/products/[id]";
 import Search from "@/pages/user/search";
 import SignIn from "@/pages/user/signIn";
 
+import AdminCoupons from "@/pages/admin/coupons";
 import SignUp from "@/pages/user/signUp";
 import {
   ApartmentOutlined,
@@ -28,6 +29,7 @@ import {
   MessageOutlined,
   ProductOutlined,
   SettingOutlined,
+  ShakeOutlined,
   TagsOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -139,7 +141,7 @@ export const USER_SIGN_IN_ROUTES = [
     accessAbleAuth: true,
   },
   {
-    Page: UserQnas,
+    Page: UserQnAs,
     path: "my/qnas",
     requiredAuth: true,
     accessAbleAuth: true,
@@ -203,6 +205,14 @@ export const ADMIN_SIGN_IN_ROUTES = [
   },
   {
     key: "6",
+    Icon: ShakeOutlined,
+    Page: AdminCoupons,
+    path: "coupons",
+    label: "쿠폰관리",
+    accessibleRoles: new Set(["center", "admin"]),
+  },
+  {
+    key: "7",
     Icon: SettingOutlined,
     Page: Setting,
     path: "setting",
@@ -210,7 +220,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "7",
+    key: "8",
     Icon: DashboardOutlined,
     Page: Dashboard,
     path: "dashboard",

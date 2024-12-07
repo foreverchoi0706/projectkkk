@@ -18,7 +18,7 @@ const getRoute = (data?: IAuth) =>
   createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<User />}>
+        <Route path="/" element={<User data={data} />}>
           {data
             ? USER_SIGN_IN_ROUTES.filter(({ accessAbleAuth }) => accessAbleAuth).map(
                 ({ Page, path }, index) => <Route key={index} path={path} element={<Page />} />,

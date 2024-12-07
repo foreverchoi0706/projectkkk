@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN } from "@/utils/constants.ts";
 import { getCookie } from "@/utils/cookie.ts";
+import { IAuth } from "@/utils/types.ts";
 import {
   BellOutlined,
   BellTwoTone,
@@ -22,11 +23,15 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 
-const User: FC = () => {
+interface IProps {
+  data?: IAuth;
+}
+
+const User: FC<IProps> = ({ data }) => {
   const { pathname } = useLocation();
   const refNotificationBell = useRef<HTMLSpanElement>(null);
   const [client, setClient] = useState<CompatClient | null>(null);
-  const [notifications, setNotifications] = useState<unknown[]>([]);
+  const [notifications, setNotifications] = useState<string[]>([]);
   const [isOpenNotificationTour, setOpenNotificationTour] = useState<boolean>(false);
 
   useEffect(() => {
@@ -41,7 +46,7 @@ const User: FC = () => {
       { Authorization: `Bearer ${accessToken}` },
       () => {
         stompClient.subscribe("/user/queue/notifications", (message) => {
-          setNotifications(JSON.parse(message.body));
+          setNotifications([message.body]);
         });
       },
       console.error,
@@ -57,8 +62,8 @@ const User: FC = () => {
       title: "",
       cover: notifications.length ? (
         <ul className="flex flex-col gap-4">
-          {notifications.map(() => (
-            <li className="bg-white text-black px-4 py-2 rounded">알림</li>
+          {notifications.map((notification) => (
+            <li className="bg-white text-black px-4 py-2 rounded">{notification}</li>
           ))}
         </ul>
       ) : (
@@ -79,30 +84,33 @@ const User: FC = () => {
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
         <Flex className="gap-4">
-          <>
-            {notifications.length > 0 ? (
-              <BellTwoTone
-                onClick={() => setOpenNotificationTour(true)}
-                className="text-2xl"
-                ref={refNotificationBell}
+          {data && (
+            <>
+              {notifications.length > 0 ? (
+                <BellTwoTone
+                  onClick={() => setOpenNotificationTour(true)}
+                  className="text-2xl"
+                  ref={refNotificationBell}
+                />
+              ) : (
+                <BellOutlined
+                  ref={refNotificationBell}
+                  className="text-2xl"
+                  onClick={() => setOpenNotificationTour(true)}
+                  // onClick={() => client?.send("/app/log", {}, "Test log messagdasdasdase")}
+                />
+              )}
+              <Tour
+                open={isOpenNotificationTour}
+                onClose={() => setOpenNotificationTour(false)}
+                mask={false}
+                type="primary"
+                steps={steps}
+                animated={true}
               />
-            ) : (
-              <BellOutlined
-                ref={refNotificationBell}
-                className="text-2xl"
-                onClick={() => setOpenNotificationTour(true)}
-                // onClick={() => client?.send("/app/log", {}, "Test log messagdasdasdase")}
-              />
-            )}
-            <Tour
-              open={isOpenNotificationTour}
-              onClose={() => setOpenNotificationTour(false)}
-              mask={false}
-              type="primary"
-              steps={steps}
-              animated={true}
-            />
-          </>
+            </>
+          )}
+
           <Link to="/search" className="flex items-center">
             <SearchOutlined className="text-2xl" />
           </Link>
