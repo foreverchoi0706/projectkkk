@@ -20,7 +20,7 @@ import { CompatClient, Stomp } from "@stomp/stompjs";
 import { Button, Flex, Layout, Tour, TourProps, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Link, Outlet, ScrollRestoration, useLocation } from "react-router-dom";
+import { Link, Outlet, ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 
 interface IProps {
@@ -29,6 +29,7 @@ interface IProps {
 
 const User: FC<IProps> = ({ data }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const refNotificationBell = useRef<HTMLSpanElement>(null);
   const [client, setClient] = useState<CompatClient | null>(null);
   const [notifications, setNotifications] = useState<string[]>([]);
@@ -63,7 +64,12 @@ const User: FC<IProps> = ({ data }) => {
       cover: notifications.length ? (
         <ul className="flex flex-col gap-4">
           {notifications.map((notification) => (
-            <li className="bg-white text-black px-4 py-2 rounded">{notification}</li>
+            <li
+              onClick={() => navigate("/my/coupons")}
+              className="bg-white text-black px-4 py-2 rounded"
+            >
+              {notification}
+            </li>
           ))}
         </ul>
       ) : (
