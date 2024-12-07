@@ -32,7 +32,7 @@ const getRoute = (data?: IAuth) =>
               ))}
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
-        <Route path="/admin" element={<Admin />}>
+        <Route path="/admin/*" element={<Admin />}>
           {data ? (
             <>
               {ADMIN_SIGN_IN_ROUTES.map(({ Page, path }, index) => (
