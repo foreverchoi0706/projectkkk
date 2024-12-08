@@ -1,9 +1,12 @@
+import user from "@/queryKeys/user.ts";
+import axiosInstance from "@/utils/axiosInstance.ts";
 import { ACCESS_TOKEN } from "@/utils/constants.ts";
 import { getCookie } from "@/utils/cookie.ts";
-import { IAuth } from "@/utils/types.ts";
+import { IAuth, type TError } from "@/utils/types.ts";
 import {
   BellOutlined,
   BellTwoTone,
+  DeleteOutlined,
   HeartFilled,
   HeartOutlined,
   HomeFilled,
@@ -17,6 +20,7 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import { CompatClient, Stomp } from "@stomp/stompjs";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Flex, Layout, Tour, TourProps, Typography } from "antd";
 import { FC, useEffect, useRef, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -30,14 +34,43 @@ interface IProps {
 const User: FC<IProps> = ({ data }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const refNotificationBell = useRef<HTMLSpanElement>(null);
   const [client, setClient] = useState<CompatClient | null>(null);
-  const [notifications, setNotifications] = useState<unknown[]>([]);
   const [isOpenNotificationTour, setOpenNotificationTour] = useState<boolean>(false);
+
+  const { data: notifications } = useQuery({
+    ...user.notification.all(),
+    enabled: Boolean(data),
+  });
+
+  const readNotificationMutation = useMutation<unknown, TError, number>({
+    mutationFn: (id) => axiosInstance.post(`/notification/read?notificationId=${id}`),
+    onSuccess: () => queryClient.invalidateQueries(user.notification.all()),
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
+  const deleteNotificationMutation = useMutation<unknown, TError, number>({
+    mutationFn: (id) => axiosInstance.delete(`/admin/notification/delete?notificationId=${id}`),
+    onSuccess: () => queryClient.invalidateQueries(user.notification.all()),
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
+  const onClickReadNotification = (id: number) => {
+    readNotificationMutation.mutateAsync(id).then(() => {
+      navigate("/my/coupons");
+      setOpenNotificationTour(false);
+    });
+  };
+
+  const onClickDeleteNotification = (id: number) => {
+    if (!window.confirm("알림을 삭제하시겠습니까?")) return;
+    deleteNotificationMutation.mutate(id);
+  };
 
   useEffect(() => {
     const accessToken = getCookie(ACCESS_TOKEN);
-    if (!accessToken) return;
+    if (!accessToken || !data) return;
     const sockJs = new SockJS(
       import.meta.env.MODE === "development" ? "/ws" : "https://www.projectkkk.com/ws/",
     );
@@ -46,10 +79,9 @@ const User: FC<IProps> = ({ data }) => {
     stompClient.connect(
       { Authorization: `Bearer ${accessToken}` },
       () => {
-        stompClient.subscribe("/user/queue/notifications", (message) => {
-          console.log("test", JSON.parse(message.body).body.result);
-          setNotifications([JSON.parse(message.body).body.result]);
-        });
+        stompClient.subscribe("/user/queue/notifications", (_message) =>
+          queryClient.invalidateQueries(user.notification.all()),
+        );
       },
       console.error,
     );
@@ -62,17 +94,24 @@ const User: FC<IProps> = ({ data }) => {
   const steps: TourProps["steps"] = [
     {
       title: "",
-      cover: notifications.length ? (
+      cover: notifications?.content.length ? (
         <ul className="flex flex-col gap-4 overflow-y-auto  h-80">
-          {notifications.map((notification) => (
+          {notifications?.content.map(({ id, description, isRead }) => (
             <li
-              onClick={() => {
-                navigate("/my/coupons");
-                setOpenNotificationTour(false);
-              }}
-              className="bg-white text-black px-4 py-2 rounded"
+              key={id}
+              className={`flex items-center text-xs cursor-pointer bg-white px-4 py-2 rounded `}
             >
-              {JSON.stringify(notification)}
+              <p
+                onClick={() => onClickReadNotification(id)}
+                className={`${isRead ? "text-gray-300 line-through" : "text-black"}`}
+              >
+                {description}
+              </p>
+              <Button
+                onClick={() => onClickDeleteNotification(id)}
+                type="text"
+                icon={<DeleteOutlined />}
+              />
             </li>
           ))}
         </ul>
@@ -84,6 +123,9 @@ const User: FC<IProps> = ({ data }) => {
       nextButtonProps: {
         children: "닫기",
       },
+      style: {
+        maxWidth: "300px",
+      },
     },
   ];
 
@@ -94,9 +136,9 @@ const User: FC<IProps> = ({ data }) => {
           <Typography className="text-2xl font-bold flex-shrink-0">KKK</Typography>
         </Link>
         <Flex className="gap-4">
-          {data && (
+          {notifications && (
             <>
-              {notifications.length > 0 ? (
+              {notifications.content.length > 0 ? (
                 <BellTwoTone
                   onClick={() => setOpenNotificationTour(true)}
                   className="text-2xl"

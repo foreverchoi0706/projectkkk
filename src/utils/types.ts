@@ -39,6 +39,15 @@ export interface IAuth {
   role: TRole;
 }
 
+export interface INotification {
+  createdAt: string;
+  description: string;
+  id: number;
+  isRead: boolean;
+  memberId: number;
+  notificationType: "Coupon";
+}
+
 export interface ISignInParams {
   email: string;
   password: string;

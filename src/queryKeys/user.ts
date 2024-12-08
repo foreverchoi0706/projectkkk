@@ -1,12 +1,13 @@
 import axiosInstance from "@/utils/axiosInstance";
-import  type {
-  ICoupon,
+import {
   ICategory,
+  ICoupon,
+  INotification,
   IOrder,
   IPageList,
   IProduct,
-  IQna,
   IQnAWaiting,
+  IQna,
   IResponse,
   IShipping,
   ITest,
@@ -14,11 +15,22 @@ import  type {
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 const queryKeyStore = createQueryKeyStore({
+  notification: {
+    all: () => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<INotification[]>>>(
+          `/notification/my_notification?page=1&size=9999`,
+        );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+  },
   brands: {
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
-          `/product/brands?page=1&size=1000`,
+          `/product/brands?page=1&size=9999`,
         );
         return data.result;
       },
@@ -29,7 +41,7 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<ICategory[]>>>(
-          `/category/categories?size=1000`,
+          `/category/categories?size=9999`,
         );
         return data.result;
       },
@@ -76,8 +88,9 @@ const queryKeyStore = createQueryKeyStore({
   coupons: {
     all: () => ({
       queryFn: async () => {
-        const { data } =
-          await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>("/coupon/search?size=1000");
+        const { data } = await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>(
+          "/coupon/search?size=9999",
+        );
         return data.result;
       },
       queryKey: [""],
@@ -96,7 +109,7 @@ const queryKeyStore = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/my_qna?size=1000`);
+          await axiosInstance.get<IResponse<IPageList<IQna[]>>>(`/qna/my_qna?size=9999`);
         return data.result;
       },
       queryKey: [queryString],
@@ -115,7 +128,7 @@ const queryKeyStore = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(
-          `/review/my_reiveiw?size=1000`,
+          `/review/my_reiveiw?size=9999`,
         );
         return data.result;
       },
@@ -126,7 +139,7 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<IOrder[]>>>(`/order/my_order?size=1000`);
+          await axiosInstance.get<IResponse<IPageList<IOrder[]>>>(`/order/my_order?size=9999`);
         return data.result;
       },
       queryKey: [""],
@@ -161,7 +174,7 @@ const queryKeyStore = createQueryKeyStore({
     all: () => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
-          `/admin/shipping/shippings?size=1000`,
+          `/admin/shipping/shippings?size=9999`,
         );
         return data.result;
       },
