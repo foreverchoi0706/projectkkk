@@ -5,10 +5,11 @@ import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
+import axiosInstance from "@/utils/axiosInstance";
+import { TError } from "@/utils/types";
 import {
   HeartFilled,
   HeartOutlined,
-  ProductFilled,
   RightOutlined,
   ShareAltOutlined,
   ShoppingCartOutlined,
@@ -18,8 +19,6 @@ import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "ant
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import module from "./index.module.css";
-import axiosInstance from "@/utils/axiosInstance";
-import { TError } from "@/utils/types";
 
 const Page: FC = () => {
   const { id } = useParams();
