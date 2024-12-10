@@ -18,8 +18,9 @@ const Page: FC = () => {
     mutationFn: ({ id, role }) =>
       axiosInstance.post(`/admin/auth/authorization?memberId=${id}&authority=${role}`),
     onSuccess: () => {
-      alert("권한이 변경되었습니다.");
-      queryClient.invalidateQueries(admin.accounts.all(searchParams.toString()));
+      queryClient
+        .invalidateQueries(admin.accounts.all(searchParams.toString()))
+        .then(() => alert("권한이 변경되었습니다."));
     },
     onError: ({ responseMessage }) => alert(responseMessage),
   });
@@ -57,8 +58,8 @@ const Page: FC = () => {
       title: "권한",
       render: (value, { id }) => (
         <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>
-          <Select.Option value="center">중앙관리자</Select.Option>
-          <Select.Option value="admin">관리자</Select.Option>
+          <Select.Option value="center">관리자</Select.Option>
+          <Select.Option value="admin">판매자</Select.Option>
           <Select.Option value="user">회원</Select.Option>
         </Select>
       ),

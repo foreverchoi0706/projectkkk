@@ -125,7 +125,7 @@ const Page: FC = () => {
           <Col span={4}>
             <Form.Item<IMemberSearchParams> name="role">
               <Select placeholder="권한">
-                <Select.Option value="center">중앙관리자</Select.Option>
+                <Select.Option value="center">관리자</Select.Option>
                 <Select.Option value="admin">관리자</Select.Option>
                 <Select.Option value="user">회원</Select.Option>
               </Select>

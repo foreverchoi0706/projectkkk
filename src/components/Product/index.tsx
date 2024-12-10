@@ -6,8 +6,17 @@ import { Flex, Typography } from "antd";
 import { type FC, type MouseEventHandler, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const Product: FC<IProduct> = ({ id, name, brand, description, discountRate, price, liked }) => {
-  const src = useMemo<string>(getRandomProductImage, []);
+const Product: FC<IProduct> = ({
+  id,
+  name,
+  brand,
+  description,
+  discountRate,
+  price,
+  liked,
+  imageUrl,
+}) => {
+  const src = useMemo<string>(() => imageUrl || getRandomProductImage(), [imageUrl]);
   const { isLiked, likeMutation, unlikeMutation } = useLike(liked, id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {

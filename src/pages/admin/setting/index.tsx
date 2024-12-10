@@ -95,7 +95,7 @@ const Setting: FC = () => {
             },
           ]}
         >
-          <Input placeholder="전화번호" />
+          <Input maxLength={11} placeholder="전화번호" />
         </Form.Item>
         <Form.Item<IMember>
           name="email"

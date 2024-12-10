@@ -79,7 +79,7 @@ const Page: FC = () => {
             },
           ]}
         >
-          <Input placeholder={REQUIRED_PHONE} />
+          <Input maxLength={11} placeholder={REQUIRED_PHONE} />
         </Form.Item>
 
         {!state && (

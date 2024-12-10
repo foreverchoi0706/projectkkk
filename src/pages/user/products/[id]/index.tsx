@@ -15,7 +15,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
+import { Button, Carousel, Col, Divider, Flex, Image, Row, Tabs, Typography } from "antd";
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import module from "./index.module.css";
@@ -76,7 +76,7 @@ const Page: FC = () => {
 
   return (
     <main>
-      <Carousel autoplay>
+      <Carousel arrows>
         <img
           className="rounded"
           alt="img"
@@ -131,13 +131,13 @@ const Page: FC = () => {
             currency: "KRW",
           }).format(Math.round((price * (100 - discountRate)) / 100))}
         </Typography>
-        <Typography>{description}</Typography>
         <Flex className="gap-4">
           <Button>{size}</Button>
         </Flex>
         <Flex className="gap-4">
           <Button>{color}</Button>
         </Flex>
+        <Image src={description} alt="description" />
         <Button
           type="default"
           onClick={() => {

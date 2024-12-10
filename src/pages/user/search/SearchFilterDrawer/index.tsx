@@ -12,7 +12,7 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
   const [searchParams] = useSearchParams();
   const [searchFilterForm] = Form.useForm<TProductSearchParams>();
   const brandName = Form.useWatch<string>("brand", searchFilterForm);
-  const categoryId = Form.useWatch<string>("category", searchFilterForm);
+  const categoryCode = Form.useWatch<string>("category", searchFilterForm);
 
   const queries = useQueries({
     queries: [
@@ -72,10 +72,10 @@ const SearchFilterDrawer: FC<DrawerProps> = ({ onClose, ...rest }) => {
           <Flex className="flex-col gap-4">
             <Typography>카테고리</Typography>
             <Flex className="gap-4 overflow-x-auto">
-              {categories?.content.map(({ id, name }) => (
+              {categories?.content.map(({ id, name, code }) => (
                 <Button
-                  type={+categoryId === id ? "primary" : "default"}
-                  onClick={() => searchFilterForm.setFieldValue("category", id)}
+                  type={categoryCode === code ? "primary" : "default"}
+                  onClick={() => searchFilterForm.setFieldValue("category", code)}
                   key={id}
                 >
                   {name}

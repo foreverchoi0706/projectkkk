@@ -78,8 +78,7 @@ const Page: FC = () => {
           onKeyDown={onKeyDownSearch}
         />
         <Flex className="gap-4">
-          <Button onClick={onClickSearchFilter}>브랜드</Button>
-          <Button onClick={onClickSearchFilter}>카테고리</Button>
+          <Button onClick={onClickSearchFilter}>필터</Button>
           <Button type="text" onClick={() => navigate("/search")} icon={<RollbackOutlined />} />
         </Flex>
         {recentSearchKeywords.length > 0 && (

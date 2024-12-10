@@ -9,6 +9,7 @@ import {
   IQnAWaiting,
   IQna,
   IResponse,
+  IReview,
   IShipping,
   ITest,
 } from "@/utils/types";
@@ -29,9 +30,8 @@ const queryKeyStore = createQueryKeyStore({
   cart: {
     all: () => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<INotification[]>>>(
-          `/cart/admin/products_in_cart`,
-        );
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<INotification[]>>>(`/cart/products_in_cart`);
         return data.result;
       },
       queryKey: [""],
@@ -63,7 +63,7 @@ const queryKeyStore = createQueryKeyStore({
     new: (pageParam?: number) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
-          `/product/newProduct?size=15&page=${pageParam}`,
+          `/product/newProduct?size=20&page=${pageParam}`,
         );
         return data.result;
       },
@@ -138,7 +138,7 @@ const queryKeyStore = createQueryKeyStore({
   reviews: {
     all: (queryString?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IQna[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<IReview[]>>>(
           `/review/my_reiveiw?size=9999`,
         );
         return data.result;

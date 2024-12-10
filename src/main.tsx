@@ -18,7 +18,9 @@ const queryClient = new QueryClient({
   },
 });
 if (import.meta.env.MODE === "development") {
-  scan();
+  scan({
+    showToolbar: false,
+  });
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

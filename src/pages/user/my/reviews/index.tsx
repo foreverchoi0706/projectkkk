@@ -41,9 +41,9 @@ const Page: FC = () => {
         <Input ref={refInput} placeholder="리뷰를 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col flex-grow">
           {reviews.content.length > 0 ? (
-            reviews.content.map((_, index) => (
+            reviews.content.map((review, index) => (
               <Flex key={index} className="border border-gray-200 p-4">
-                {index}
+                {JSON.stringify(review)}
               </Flex>
             ))
           ) : (

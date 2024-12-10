@@ -64,15 +64,15 @@ const Page: FC = () => {
           <Link to="/search">
             <Button>전체</Button>
           </Link>
-          {categories?.content.map(({ id, name }) => (
-            <Link to={`/search?category=${id}`} key={id}>
+          {categories?.content.map(({ id, name, code }) => (
+            <Link to={`/search?category=${code}`} key={id}>
               <Button>{name}</Button>
             </Link>
           ))}
         </Flex>
 
         <Flex className="flex-col gap-4">
-          <Typography className="font-bold text-lg">첫 구매 한정 특가</Typography>
+          <Typography className="font-bold text-lg">New TOP20💝</Typography>
           <Carousel className={module.carousel} arrows autoplay slidesToShow={2} dots={false}>
             {newProducts?.content.map((product) => (
               <Product {...product} key={product.id} />
