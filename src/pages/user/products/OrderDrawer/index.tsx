@@ -133,10 +133,10 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
             <Select placeholder="쿠폰">
               {coupons.content.map(({ id, name, startDate, discountRate, endDate }) => (
                 <Select.Option key={id}>
-                  <Flex key={id} className="flex-col gap-4 p-4 border border-gray-200 rounded">
-                    <Flex className="justify-between items-center">
-                      <Typography className="font-bold text-lg">{name}</Typography>
-                      <Typography className="text-pink-500 text-2xl font-bold">
+                  <Flex key={id} className="justify-between items-center">
+                    <Flex className="gap-2 items-center">
+                      <Typography className="font-bold text-xl">{name}</Typography>
+                      <Typography className="text-pink-500 text-xl font-bold">
                         {discountRate}%
                       </Typography>
                     </Flex>

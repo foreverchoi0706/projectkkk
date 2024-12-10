@@ -5,12 +5,21 @@ import OrderDrawer from "@/pages/user/products/OrderDrawer";
 import QnaSection from "@/pages/user/products/[id]/qna";
 import ReviewSection from "@/pages/user/products/[id]/review";
 import user from "@/queryKeys/user";
-import { HeartFilled, HeartOutlined, RightOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
+import {
+  HeartFilled,
+  HeartOutlined,
+  ProductFilled,
+  RightOutlined,
+  ShareAltOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Carousel, Col, Divider, Flex, Row, Tabs, Typography } from "antd";
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import module from "./index.module.css";
+import axiosInstance from "@/utils/axiosInstance";
+import { TError } from "@/utils/types";
 
 const Page: FC = () => {
   const { id } = useParams();
@@ -19,6 +28,13 @@ const Page: FC = () => {
   const refReviewSection = useRef<HTMLElement | null>(null);
   const [isOrderDrawerOpen, setIsOrderDrawerOpen] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
+
+  const addCardMutation = useMutation<unknown, TError, number>({
+    mutationFn: (productId) => axiosInstance.post(`/cart/join?productId=${productId}&quantity=1`),
+    onSuccess: () => {
+      alert("장바구니에 추가되었습니다");
+    },
+  });
 
   const { data: product, isError } = useQuery(user.products.detail(id));
   const { data: newProducts } = useQuery(user.products.new(1));
@@ -30,6 +46,11 @@ const Page: FC = () => {
     const mutation = liked ? unlikeMutation : likeMutation;
     if (mutation.isPending) return;
     mutation.mutate();
+  };
+
+  const onClickAddCart = (productId: number) => {
+    if (!window.confirm("해당 상품을 장바구니에 추가하시겠습니까?")) return;
+    addCardMutation.mutate(productId);
   };
 
   useEffect(() => {
@@ -191,11 +212,16 @@ const Page: FC = () => {
           onClick={onClickLike}
           icon={
             isLiked ? (
-              <HeartFilled className="text-pink-500 text-xl" />
+              <HeartFilled className="text-pink-500 text-3xl" />
             ) : (
-              <HeartOutlined className="text-pink-500 text-xl" />
+              <HeartOutlined className="text-pink-500 text-3xl" />
             )
           }
+        />
+        <Button
+          type="text"
+          onClick={() => onClickAddCart(product.id)}
+          icon={<ShoppingCartOutlined className="text-3xl" />}
         />
         <Button
           type="primary"

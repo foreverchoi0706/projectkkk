@@ -1,4 +1,4 @@
-import admin from "@/queryKeys/admin";
+import common from "@/queryKeys/common";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
@@ -19,7 +19,7 @@ const Setting: FC = () => {
   const queryClient = useQueryClient();
   const [memberVerifyForm] = Form.useForm<Pick<ISignInParams, "password">>();
   const [updateMemberForm] = Form.useForm<IMember>();
-  const { data: member } = useQuery(admin.members.detail());
+  const { data: member } = useQuery(common.auth.info());
   const [verificationToken, setVerificationToken] = useState<string | null>(null);
 
   const updateMemberMutation = useMutation<unknown, TError, IMember>({
@@ -31,7 +31,7 @@ const Setting: FC = () => {
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(admin.members.detail());
+      await queryClient.invalidateQueries(common.auth.info());
       alert("멤버가 수정되었습니다");
     },
     onError: ({ responseMessage }) => {

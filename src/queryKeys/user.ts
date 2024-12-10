@@ -26,6 +26,17 @@ const queryKeyStore = createQueryKeyStore({
       queryKey: [""],
     }),
   },
+  cart: {
+    all: () => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IPageList<INotification[]>>>(
+          `/cart/admin/products_in_cart`,
+        );
+        return data.result;
+      },
+      queryKey: [""],
+    }),
+  },
   brands: {
     all: () => ({
       queryFn: async () => {

@@ -6,7 +6,10 @@ import type { FC } from "react";
 import { Link } from "react-router-dom";
 
 const Page: FC = () => {
+  const { data: carts } = useQuery(user.cart.all());
   const { data: newProducts } = useQuery(user.products.new(1));
+  console.log(carts);
+
   return (
     <main>
       <Flex className="flex-col justify-center items-center gap-8 p-8">

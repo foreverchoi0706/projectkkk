@@ -78,13 +78,6 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [queryString],
     }),
-    detail: () => ({
-      queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IMember>>("/member/member");
-        return data.result;
-      },
-      queryKey: [""],
-    }),
   },
   products: {
     pages: (queryString: string) => ({
