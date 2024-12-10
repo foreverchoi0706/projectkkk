@@ -2,8 +2,8 @@ import useQueryStore from "@/hooks/store/useQueryStore";
 import useAuth from "@/hooks/useAuth";
 import { ADMIN_SIGN_IN_ROUTES } from "@/utils/constants";
 import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Flex, Layout, Menu, Spin } from "antd";
-import { type FC, useEffect, useState } from "react";
+import { Button, Flex, Layout, Menu, Spin, Typography } from "antd";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Admin: FC = () => {
@@ -14,6 +14,18 @@ const Admin: FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const selectedKeys =
     ADMIN_SIGN_IN_ROUTES.find(({ path }) => `/admin/${path}` === pathname)?.key ?? "0";
+
+  const roleName = useMemo<string>(() => {
+    if (!data) return "";
+    switch (data.role) {
+      case "admin":
+        return "판매자";
+      case "center":
+        return "관리자";
+      default:
+        return "";
+    }
+  }, [data]);
 
   useEffect(() => {
     let timeOut: number | null = null;
@@ -63,7 +75,10 @@ const Admin: FC = () => {
                 onClick={() => setCollapsed(!collapsed)}
               />
             </Flex>
-            <Button onClick={logout} type="text" icon={<LogoutOutlined />} />
+            <Flex className="gap-4 items-center">
+              <Typography>{roleName}</Typography>
+              <Button onClick={logout} type="text" icon={<LogoutOutlined />} />
+            </Flex>
           </Layout.Header>
           <Layout.Content className="m-6 p-6">
             <Outlet />

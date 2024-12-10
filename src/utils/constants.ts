@@ -44,15 +44,21 @@ export const DEFAULT_LIST_PAGE_SIZE = 10 as const;
 export const REQUIRED_NAME = "이름을 입력해주세요" as const;
 export const REQUIRED_EMAIL = "이메일을 입력해주세요" as const;
 export const REQUIRED_PASSWORD = "비밀번호를 입력해주세요" as const;
-export const REQUIRED_PHONE = "연락처를 입력해주세요" as const;
+export const REQUIRED_PHONE = "연락처를 입력해주세요 ex)01012345678" as const;
 export const REQUIRED_PRODUCT_NAME = "상품명을 입력해주세요" as const;
 export const REQUIRED_BRAND_NAME = "브랜드를 입력해주세요" as const;
 export const REQUIRED_SOLD_QUANTITY_NAME = "현재 판매량을 입력해주세요" as const;
 export const REQUIRED_CATEGORY_NAME = "카테고리를 입력해주세요" as const;
 export const REQUIRED_STOCK_NAME = "재고를 입력해주세요" as const;
 export const INVALID_FORMAT_EMAIL = "이메일형식이 올바르지 않습니다" as const;
-export const INVALID_FORMAT_PASSWORD = "비밀번호형식이 올바르지 않습니다" as const;
-export const INVALID_FORMAT_PHONE = "연락처형식이 올바르지 않습니다" as const;
+export const PASSWORD_REGEXP = {
+  PATTERN: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
+  MESSAGE: "비밀번호는 대문자, 소문자, 숫자, 특수문자를 포함한 12자 이상이어야 합니다",
+} as const;
+export const PHONE_REGEXP = {
+  PATTERN: /^01[0-9][0-9]{8,9}$/,
+  MESSAGE: "연락처형식이 올바르지 않습니다",
+} as const;
 export const INVALID_RE_PASSWORD = "비밀번호와 일치하지 않습니다" as const;
 
 export const USER_SIGN_IN_ROUTES = [

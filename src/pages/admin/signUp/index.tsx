@@ -3,9 +3,9 @@ import useAuth from "@/hooks/useAuth";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
-  INVALID_FORMAT_PASSWORD,
-  INVALID_FORMAT_PHONE,
   INVALID_RE_PASSWORD,
+  PASSWORD_REGEXP,
+  PHONE_REGEXP,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
@@ -59,12 +59,12 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PHONE },
             {
-              pattern: /^01[0-9][0-9]{8,9}$/,
-              message: INVALID_FORMAT_PHONE,
+              pattern: PHONE_REGEXP.PATTERN,
+              message: PHONE_REGEXP.MESSAGE,
             },
           ]}
         >
-          <Input type="number" placeholder={REQUIRED_PHONE} />
+          <Input placeholder={REQUIRED_PHONE} />
         </Form.Item>
 
         <Form.Item<ISignUpParams>
@@ -72,8 +72,8 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PASSWORD },
             {
-              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALID_FORMAT_PASSWORD,
+              pattern: PASSWORD_REGEXP.PATTERN,
+              message: PASSWORD_REGEXP.MESSAGE,
             },
           ]}
         >
@@ -86,8 +86,8 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PASSWORD },
             {
-              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALID_FORMAT_PASSWORD,
+              pattern: PASSWORD_REGEXP.PATTERN,
+              message: PASSWORD_REGEXP.MESSAGE,
             },
             ({ getFieldValue }) => ({
               validator(_, value) {

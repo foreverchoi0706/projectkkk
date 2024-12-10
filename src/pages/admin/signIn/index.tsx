@@ -2,7 +2,7 @@ import useAuth from "@/hooks/useAuth";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
-  INVALID_FORMAT_PASSWORD,
+  PASSWORD_REGEXP,
   REQUIRED_EMAIL,
   REQUIRED_PASSWORD,
 } from "@/utils/constants";
@@ -30,7 +30,7 @@ const Page: FC = () => {
   return (
     <Layout className="flex items-center justify-center h-screen">
       <Typography.Title>로그인</Typography.Title>
-      <Form onFinish={onFinish}>
+      <Form className="w-full" onFinish={onFinish}>
         <Form.Item<ISignInParams>
           name="email"
           rules={[
@@ -49,8 +49,8 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PASSWORD },
             {
-              pattern: /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-              message: INVALID_FORMAT_PASSWORD,
+              pattern: PASSWORD_REGEXP.PATTERN,
+              message: PASSWORD_REGEXP.MESSAGE,
             },
           ]}
         >

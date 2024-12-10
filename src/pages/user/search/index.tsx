@@ -32,7 +32,7 @@ const Page: FC = () => {
       setCookie(RECENT_SEARCH_KEYWORD, JSON.stringify(nextState));
       return nextState;
     });
-    searchParams.set("productName", value);
+    searchParams.set("content", value);
     navigate(`/search?${searchParams.toString()}`);
   };
 

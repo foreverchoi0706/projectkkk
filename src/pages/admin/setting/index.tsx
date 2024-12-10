@@ -2,6 +2,8 @@ import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
+  PASSWORD_REGEXP,
+  PHONE_REGEXP,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
@@ -66,7 +68,12 @@ const Setting: FC = () => {
 
   if (verificationToken && member)
     return (
-      <Form<IMember> initialValues={member} form={updateMemberForm} onFinish={onFinishUpdateMember}>
+      <Form<IMember>
+        className="w-96"
+        initialValues={member}
+        form={updateMemberForm}
+        onFinish={onFinishUpdateMember}
+      >
         <Form.Item<IMember>
           name="name"
           rules={[
@@ -81,13 +88,14 @@ const Setting: FC = () => {
         <Form.Item<IMember>
           name="phone"
           rules={[
+            { required: true, message: REQUIRED_PHONE },
             {
-              required: true,
-              message: REQUIRED_PHONE,
+              pattern: PHONE_REGEXP.PATTERN,
+              message: PHONE_REGEXP.MESSAGE,
             },
           ]}
         >
-          <Input type="number" placeholder="전화번호" />
+          <Input placeholder="전화번호" />
         </Form.Item>
         <Form.Item<IMember>
           name="email"
@@ -120,12 +128,18 @@ const Setting: FC = () => {
     );
 
   return (
-    <Form form={memberVerifyForm} onFinish={onFinishVerify}>
+    <Form className="w-96" form={memberVerifyForm} onFinish={onFinishVerify}>
       <Form.Item<Pick<ISignInParams, "password">>
         name="password"
-        rules={[{ required: true, message: REQUIRED_PASSWORD }]}
+        rules={[
+          { required: true, message: REQUIRED_PASSWORD },
+          {
+            pattern: PASSWORD_REGEXP.PATTERN,
+            message: PASSWORD_REGEXP.MESSAGE,
+          },
+        ]}
       >
-        <Input.Password placeholder="password" />
+        <Input.Password placeholder={REQUIRED_PASSWORD} />
       </Form.Item>
       <Form.Item>
         <Flex>

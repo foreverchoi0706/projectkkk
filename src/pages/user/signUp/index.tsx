@@ -3,9 +3,9 @@ import useAuth from "@/hooks/useAuth";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   INVALID_FORMAT_EMAIL,
-  INVALID_FORMAT_PASSWORD,
-  INVALID_FORMAT_PHONE,
   INVALID_RE_PASSWORD,
+  PASSWORD_REGEXP,
+  PHONE_REGEXP,
   REQUIRED_EMAIL,
   REQUIRED_NAME,
   REQUIRED_PASSWORD,
@@ -51,7 +51,7 @@ const Page: FC = () => {
   return (
     <main className="h-full flex flex-col items-center">
       <Typography.Title>회원가입</Typography.Title>
-      <Form form={signUpForm} onFinish={onFinish} autoComplete="off">
+      <Form className="w-full" form={signUpForm} onFinish={onFinish} autoComplete="off">
         <Form.Item<ISignUpParams>
           name="email"
           rules={[
@@ -74,12 +74,12 @@ const Page: FC = () => {
           rules={[
             { required: true, message: REQUIRED_PHONE },
             {
-              pattern: /^01[0-9][0-9]{8,9}$/,
-              message: INVALID_FORMAT_PHONE,
+              pattern: PHONE_REGEXP.PATTERN,
+              message: PHONE_REGEXP.MESSAGE,
             },
           ]}
         >
-          <Input type="number" placeholder={REQUIRED_PHONE} />
+          <Input placeholder={REQUIRED_PHONE} />
         </Form.Item>
 
         {!state && (
@@ -89,8 +89,8 @@ const Page: FC = () => {
               rules={[
                 { required: true, message: REQUIRED_PASSWORD },
                 {
-                  pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
-                  message: INVALID_FORMAT_PASSWORD,
+                  pattern: PASSWORD_REGEXP.PATTERN,
+                  message: PASSWORD_REGEXP.MESSAGE,
                 },
               ]}
             >
@@ -102,8 +102,8 @@ const Page: FC = () => {
               rules={[
                 { required: true, message: REQUIRED_PASSWORD },
                 {
-                  pattern: /^(?=.*[a-z])(?=.*[0-9])(?=.*[\W_])(?=.*[A-Z]).{12,}$/,
-                  message: INVALID_FORMAT_PASSWORD,
+                  pattern: PASSWORD_REGEXP.PATTERN,
+                  message: PASSWORD_REGEXP.MESSAGE,
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
@@ -131,7 +131,7 @@ const Page: FC = () => {
 
         <Form.Item<ISignUpParams>
           name="birthDate"
-          rules={[{ required: true, message: REQUIRED_PASSWORD }]}
+          rules={[{ required: true, message: "생년월일을 입력해주세요" }]}
         >
           <DatePicker className="w-full" placeholder="생년월일을 입력해주세요" />
         </Form.Item>
