@@ -52,9 +52,8 @@ const Page: FC = () => {
   } = useInfiniteQuery({
     queryKey: user.products.pages(searchParams.toString()).queryKey,
     queryFn: (context) => user.products.pages(searchParams.toString()).queryFn(context),
-    getNextPageParam: ({ content }, __, lastPageParam) => {
-      return content.length === 0 ? undefined : lastPageParam + 1;
-    },
+    getNextPageParam: ({ content }, __, lastPageParam) =>
+      content.length === 0 ? undefined : lastPageParam + 1,
     initialPageParam: 1,
   });
 
