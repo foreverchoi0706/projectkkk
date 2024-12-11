@@ -71,7 +71,7 @@ export interface IPageList<T> {
 }
 
 export interface ITest {
-  qnADetailResponses: IReview[];
+  qnADetailResponses: IQnAWaiting[];
   reviewDetailResponses: IReview[];
 }
 

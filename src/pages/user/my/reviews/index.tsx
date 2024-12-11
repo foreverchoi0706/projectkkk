@@ -1,6 +1,6 @@
 import user from "@/queryKeys/user";
 import { useQuery } from "@tanstack/react-query";
-import { Flex, Input, type InputRef, Typography } from "antd";
+import { Collapse, Flex, Input, type InputRef, Typography, Image } from "antd";
 import { type ChangeEvent, type FC, type KeyboardEventHandler, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
@@ -41,11 +41,42 @@ const Page: FC = () => {
         <Input ref={refInput} placeholder="리뷰를 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col flex-grow">
           {reviews.content.length > 0 ? (
-            reviews.content.map((review, index) => (
-              <Flex key={index} className="border border-gray-200 p-4">
-                {JSON.stringify(review)}
-              </Flex>
-            ))
+            <Collapse
+              items={reviews.content.map(
+                ({
+                  reviewId,
+                  description,
+                  helpful,
+                  imageUrl1,
+                  imageUrl2,
+                  imageUrl3,
+                  createAt,
+                }) => ({
+                  key: reviewId,
+                  label: (
+                    <Flex className="justify-between">
+                      <Typography>{description}</Typography>
+                      <Typography>👍{helpful}</Typography>
+                    </Flex>
+                  ),
+                  children: (
+                    <Flex className="flex-col gap-4">
+                      <Flex className="justify-between">
+                        <Typography>{description}</Typography>
+                        <Typography>
+                          {new Intl.DateTimeFormat("ko-KR").format(new Date(createAt))}
+                        </Typography>
+                      </Flex>
+                      <Flex className="gap-4">
+                        <Image src={imageUrl1} alt="imageUrl1" />
+                        <Image src={imageUrl2} alt="imageUrl2" />
+                        <Image src={imageUrl3} alt="imageUrl3" />
+                      </Flex>
+                    </Flex>
+                  ),
+                }),
+              )}
+            />
           ) : (
             <Flex className="flex-col gap-4 flex-grow justify-center items-center">
               <Typography className="text-5xl">😥</Typography>

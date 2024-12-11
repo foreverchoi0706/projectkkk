@@ -1,3 +1,4 @@
+import QnAModal from "@/pages/user/my/qnas/QnAModal";
 import axiosInstance from "@/utils/axiosInstance";
 import { IQnaParams, ITest, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ import { FC, useState } from "react";
 const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => {
   const [form] = Form.useForm<IQnaParams>();
   const [isOpenQnaDrawer, setIsOpenQnaDrawer] = useState<boolean>(false);
+  const [selectedQnAId, setSelectQnAId] = useState<number | null>(null);
 
   const addQnaMutation = useMutation<unknown, TError, IQnaParams>({
     mutationFn: (qnaParams: IQnaParams) => axiosInstance.post("/qna/join", qnaParams),
@@ -26,7 +28,29 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
   return (
     <section>
       {qnADetailResponses.length > 0 ? (
-        qnADetailResponses.map(() => <Flex>dsadd</Flex>)
+        qnADetailResponses.map(() => (
+          <Flex className="flex flex-col gap-4">
+            {qnADetailResponses.map(({ id, createAt, subject, answerStatus, qnAType }) => (
+              <Flex
+                key={id}
+                className="cursor-pointer flex-col gap-4 p-4 border border-gray-200 rounded"
+                onClick={() => setSelectQnAId(id)}
+              >
+                <Flex className="justify-between items-center">
+                  <Typography className="font-bold text-lg">
+                    [{qnAType}] {subject}
+                  </Typography>
+                  <Typography className="text-pink-500 text-2xl font-bold">
+                    {answerStatus}
+                  </Typography>
+                </Flex>
+                <Typography className="text-end font-medium">
+                  {new Intl.DateTimeFormat("ko-KR").format(new Date(createAt))}
+                </Typography>
+              </Flex>
+            ))}
+          </Flex>
+        ))
       ) : (
         <Flex className="flex-col gap-4 flex-grow justify-center items-center my-4">
           <Typography className="text-5xl">😥</Typography>
@@ -108,6 +132,15 @@ const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => 
           </Form.Item>
         </Form>
       </Drawer>
+      {selectedQnAId !== null && (
+        <QnAModal
+          title="QnA 상세"
+          open
+          id={selectedQnAId}
+          onCancel={() => setSelectQnAId(null)}
+          footer={false}
+        />
+      )}
     </section>
   );
 };
