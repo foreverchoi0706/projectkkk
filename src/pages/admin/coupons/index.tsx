@@ -160,13 +160,7 @@ const Page: FC = () => {
         }}
       />
       {isOpen && (
-        <Modal
-          title="쿠폰 생성"
-          open={isOpen}
-          footer={null}
-          okButtonProps={{}}
-          onCancel={() => setIsOpen(false)}
-        >
+        <Modal title="쿠폰 생성" open={isOpen} footer={null} onCancel={() => setIsOpen(false)}>
           <Form onFinish={addCouponMutation.mutate}>
             <Form.Item
               name="name"

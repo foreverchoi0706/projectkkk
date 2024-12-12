@@ -1,16 +1,19 @@
+import ReviewModal from "@/pages/user/my/orders/[id]/ReviewModal";
 import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance";
 import { DELIVERY_STATUS_TYPE } from "@/utils/constants";
 import getRandomProductImage from "@/utils/getRandomProductImage";
+import { TError } from "@/utils/types.ts";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { Button, Col, Divider, Flex, Row, Typography } from "antd";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [isOpenReviewModal, setIsOpenReviewModal] = useState<boolean>(false);
   const src = useMemo<string>(getRandomProductImage, []);
 
   const [
@@ -20,37 +23,45 @@ const Page: FC = () => {
     queries: [user.order.detail(id), user.shipping.detail(id)],
   });
 
-  const confirmMutation = useMutation({
+  const confirmMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post(`/order/confirm?orderId=${id}`),
     onSuccess: () => {
-      alert("구매확정되었습니다.");
-      queryClient.invalidateQueries(user.order.detail(id));
-      queryClient.invalidateQueries(user.shipping.detail(id));
+      Promise.all([
+        queryClient.invalidateQueries(user.order.detail(id)),
+        queryClient.invalidateQueries(user.shipping.detail(id)),
+      ]).then(() => alert("구매확정되었습니다"));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
-  const refundMutation = useMutation({
+  const refundMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post(`/order/refund?shippingId=${id}`),
     onSuccess: () => {
-      alert("반품신청되었습니다.");
-      queryClient.invalidateQueries(user.order.detail(id));
-      queryClient.invalidateQueries(user.shipping.detail(id));
+      Promise.all([
+        queryClient.invalidateQueries(user.order.detail(id)),
+        queryClient.invalidateQueries(user.shipping.detail(id)),
+      ]).then(() => alert("반품신청되었습니다"));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
-  const changeMutation = useMutation({
+  const changeMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post(`/order/change?shippingId=${id}`),
     onSuccess: () => {
-      alert("교환신청되었습니다.");
-      queryClient.invalidateQueries(user.order.detail(id));
-      queryClient.invalidateQueries(user.shipping.detail(id));
+      Promise.all([
+        queryClient.invalidateQueries(user.order.detail(id)),
+        queryClient.invalidateQueries(user.shipping.detail(id)),
+      ]).then(() => alert("교환신청되었습니다"));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
-  const cancelMutation = useMutation({
+  const cancelMutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.delete(`/order/cancel?orderId=${id}`),
     onSuccess: () => {
-      alert("주문취소되었습니다.");
-      queryClient.invalidateQueries(user.order.detail(id));
-      queryClient.invalidateQueries(user.shipping.detail(id));
+      Promise.all([
+        queryClient.invalidateQueries(user.order.detail(id)),
+        queryClient.invalidateQueries(user.shipping.detail(id)),
+      ]).then(() => alert("주문취소되었습니다"));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const isDisabled = useMemo<boolean>(
@@ -166,20 +177,20 @@ const Page: FC = () => {
             </Typography>
           </Flex>
         </Flex>
-        <Flex className="gap-4">
+        <Flex className="gap-2">
           <Button
             disabled={isDisabled}
             type="primary"
             onClick={() => {
               if (window.confirm("구매확정하시겠습니까?")) confirmMutation.mutate();
             }}
-            className="flex-grow"
+            className="flex-1"
           >
             구매확정
           </Button>
           <Button
             disabled={isDisabled}
-            className="flex-grow"
+            className="flex-1"
             onClick={() => {
               if (window.confirm("반품신청하시겠습니까?")) refundMutation.mutate();
             }}
@@ -189,7 +200,7 @@ const Page: FC = () => {
           </Button>
           <Button
             disabled={isDisabled}
-            className="flex-grow"
+            className="flex-1"
             onClick={() => {
               if (window.confirm("교환신청하시겠습니까?")) changeMutation.mutate();
             }}
@@ -199,7 +210,7 @@ const Page: FC = () => {
           </Button>
           <Button
             disabled={isDisabled}
-            className="flex-grow"
+            className="flex-1"
             onClick={() => {
               if (window.confirm("주문취소하시겠습니까?")) cancelMutation.mutate();
             }}
@@ -208,7 +219,21 @@ const Page: FC = () => {
             주문취소
           </Button>
         </Flex>
+        {shippingDetail.deliveryStatusType === DELIVERY_STATUS_TYPE.DELIVERY_COMPLETED && (
+          <Button type="primary" htmlType="button" onClick={() => setIsOpenReviewModal(true)}>
+            리뷰 작성
+          </Button>
+        )}
       </Flex>
+      {isOpenReviewModal && (
+        <ReviewModal
+          id={id}
+          title="리뷰 작성"
+          open
+          footer={null}
+          onCancel={() => setIsOpenReviewModal(false)}
+        />
+      )}
     </main>
   );
 };

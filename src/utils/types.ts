@@ -266,3 +266,11 @@ export interface IOrder {
   pointsEarned: number;
   products: { productId: number; price: number; quantity: number }[];
 }
+
+export interface IReviewParams {
+  description: string;
+  ratingType: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  imageUrl1: string;
+  imageUrl2: string;
+  imageUrl3: string;
+}

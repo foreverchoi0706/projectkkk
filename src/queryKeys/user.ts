@@ -28,10 +28,20 @@ const queryKeyStore = createQueryKeyStore({
     }),
   },
   cart: {
-    all: () => ({
+    pages: () => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<IResponse<IPageList<INotification[]>>>(`/cart/products_in_cart`);
+          await axiosInstance.get<
+            IResponse<
+              IPageList<
+                {
+                  price: number;
+                  productId: number;
+                  quantity: number;
+                }[]
+              >
+            >
+          >(`/cart/products_in_cart`);
         return data.result;
       },
       queryKey: [""],
@@ -139,7 +149,7 @@ const queryKeyStore = createQueryKeyStore({
     all: (queryString?: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IReview[]>>>(
-          `/review/my_reiveiw?size=9999`,
+          `/review/my_review?size=9999`,
         );
         return data.result;
       },

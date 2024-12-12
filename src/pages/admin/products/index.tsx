@@ -146,7 +146,6 @@ const Page: FC = () => {
           productId={selectedProductId}
           open={isOpen}
           footer={null}
-          okButtonProps={{}}
           onCancel={() => setSelectedProductId(undefined)}
           queryString={searchParams.toString()}
         />

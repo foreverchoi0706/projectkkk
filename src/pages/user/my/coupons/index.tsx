@@ -1,24 +1,12 @@
 import user from "@/queryKeys/user";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Flex, Input, type InputRef, Spin, Typography } from "antd";
-import { type ChangeEvent, type FC, type KeyboardEventHandler, useEffect, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { debounceTime, distinctUntilChanged, fromEvent, map } from "rxjs";
+import { Flex, Spin, Typography } from "antd";
+import { type FC, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
   const refFetchNextPageArea = useRef<HTMLElement | null>(null);
-  const navigate = useNavigate();
-  const refInput = useRef<InputRef | null>(null);
   const [searchParams] = useSearchParams({ size: "15", page: "1" });
-
-  const onKeyDownSearch: KeyboardEventHandler<HTMLInputElement> = ({
-    key,
-    currentTarget: { value },
-  }) => {
-    if (key !== "Enter") return;
-    searchParams.set("keyword", value);
-    navigate(`/my/coupons?${searchParams.toString()}`);
-  };
 
   const {
     data: couponsPages,
@@ -41,24 +29,11 @@ const Page: FC = () => {
     return () => intersectionObserver.disconnect();
   }, [hasNextPage]);
 
-  useEffect(() => {
-    if (!refInput.current?.input) return;
-    const subscription = fromEvent<ChangeEvent<HTMLInputElement>>(refInput.current.input, "input")
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        map(({ target }) => target.value),
-      )
-      .subscribe();
-    return () => subscription.unsubscribe();
-  }, []);
-
   if (!couponsPages) return null;
 
   return (
     <main className="h-full">
       <Flex className="h-full flex-col gap-4">
-        <Input ref={refInput} placeholder="쿠폰을 검색해보세요" onKeyDown={onKeyDownSearch} />
         <Flex className="gap-4 flex-col flex-grow">
           {couponsPages.pages[0].content.length > 0 ? (
             couponsPages.pages.map(({ content }) =>
@@ -84,9 +59,11 @@ const Page: FC = () => {
             </Flex>
           )}
         </Flex>
-        <Flex ref={refFetchNextPageArea}>
-          <Spin />
-        </Flex>
+        {hasNextPage && (
+          <Flex ref={refFetchNextPageArea}>
+            <Spin />
+          </Flex>
+        )}
       </Flex>
     </main>
   );
