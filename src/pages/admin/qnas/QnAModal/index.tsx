@@ -28,6 +28,7 @@ const QnAModal: FC<ModalProps & IProps> = ({ id, setSelectedQnAId, ...rest }) =>
         queryClient.invalidateQueries(user.qnas.detail(id)),
       ]).then(() => setSelectedQnAId(null));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const updateQnAMutation = useMutation<unknown, TError, TAnswer>({
@@ -39,6 +40,7 @@ const QnAModal: FC<ModalProps & IProps> = ({ id, setSelectedQnAId, ...rest }) =>
         queryClient.invalidateQueries(user.qnas.detail(id)),
       ]).then(() => setSelectedQnAId(null));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onFinishAnswerQna: FormProps<TAnswer>["onFinish"] = (answer) => {

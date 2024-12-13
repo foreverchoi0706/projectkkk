@@ -1,6 +1,7 @@
 import useAuth from "@/hooks/useAuth";
 import user from "@/queryKeys/user";
 import axiosInstance from "@/utils/axiosInstance.ts";
+import { TError } from "@/utils/types";
 import { RightOutlined } from "@ant-design/icons";
 import { useMutation, useQueries } from "@tanstack/react-query";
 import { Divider, Flex, Typography } from "antd";
@@ -10,12 +11,13 @@ import { Link } from "react-router-dom";
 const Page: FC = () => {
   const { info, logout } = useAuth();
 
-  const mutation = useMutation({
+  const mutation = useMutation<unknown, TError>({
     mutationFn: () => axiosInstance.post("/member/cancel"),
     onSuccess: () => {
       alert("탈퇴되었습니다");
       logout();
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onClickWithdrawButton = () => {

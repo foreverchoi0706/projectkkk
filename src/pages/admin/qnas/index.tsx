@@ -23,6 +23,7 @@ const Page: FC = () => {
       alert("QnA가 삭제되었습니다");
       queryClient.invalidateQueries(admin.qnas.pages(searchParams.toString()));
     },
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   if (!qnaPages) return <Spin />;

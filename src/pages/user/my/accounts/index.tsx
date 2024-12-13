@@ -34,9 +34,7 @@ const Setting: FC = () => {
       await queryClient.invalidateQueries(common.auth.info());
       alert("멤버가 수정되었습니다");
     },
-    onError: ({ responseMessage }) => {
-      alert(responseMessage);
-    },
+    onError: ({ result }) => alert(result.errorMessage),
   });
 
   const memberVerifyMutation = useMutation<

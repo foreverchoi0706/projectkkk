@@ -30,9 +30,8 @@ const Page: FC = () => {
 
   const addCardMutation = useMutation<unknown, TError, number>({
     mutationFn: (productId) => axiosInstance.post(`/cart/join?productId=${productId}&quantity=1`),
-    onSuccess: () => {
-      alert("장바구니에 추가되었습니다");
-    },
+    onSuccess: () => alert("장바구니에 추가되었습니다"),
+    onError: ({ result }) => alert(result.errorMessage),
   });
 
   const { data: product, isError } = useQuery(user.products.detail(id));

@@ -68,6 +68,10 @@ const User: FC<IProps> = ({ data }) => {
     deleteNotificationMutation.mutate(id);
   };
 
+  const onClickNotificationBell = () => {
+    setOpenNotificationTour(true);
+  };
+
   useEffect(() => {
     const accessToken = getCookie(ACCESS_TOKEN);
     if (!accessToken || !data) return;
@@ -79,9 +83,9 @@ const User: FC<IProps> = ({ data }) => {
     stompClient.connect(
       { Authorization: `Bearer ${accessToken}` },
       () => {
-        stompClient.subscribe("/user/queue/notifications", (_message) =>
-          queryClient.invalidateQueries(user.notification.all()),
-        );
+        stompClient.subscribe("/user/queue/notifications", (_message) => {
+          queryClient.invalidateQueries(user.notification.all());
+        });
       },
       console.error,
     );
@@ -138,18 +142,17 @@ const User: FC<IProps> = ({ data }) => {
         <Flex className="gap-4">
           {notifications && (
             <>
-              {notifications.content.length > 0 ? (
+              {notifications.content.some(({ isRead }) => !isRead) ? (
                 <BellTwoTone
-                  onClick={() => setOpenNotificationTour(true)}
+                  onClick={onClickNotificationBell}
                   className="text-2xl"
                   ref={refNotificationBell}
                 />
               ) : (
                 <BellOutlined
-                  ref={refNotificationBell}
+                  onClick={onClickNotificationBell}
                   className="text-2xl"
-                  onClick={() => setOpenNotificationTour(true)}
-                  // onClick={() => client?.send("/app/log", {}, "Test log messagdasdasdase")}
+                  ref={refNotificationBell}
                 />
               )}
               <Tour

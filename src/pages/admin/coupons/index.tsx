@@ -46,6 +46,7 @@ const Page: FC = () => {
         .invalidateQueries(admin.coupons.pages(searchParams.toString()))
         .then(() => alert("쿠폰이 삭제되었습니다"));
     },
+    onError: ({ result }) => alert(result.errorMessage),
   });
 
   const assignCouponMutation = useMutation<unknown, TError, number>({
@@ -55,6 +56,7 @@ const Page: FC = () => {
         assignType: "ALL",
       }),
     onSuccess: () => alert("쿠폰이 지급되었습니다"),
+    onError: ({ result }) => alert(result.errorMessage),
   });
 
   if (!couponPages) return <Spin />;

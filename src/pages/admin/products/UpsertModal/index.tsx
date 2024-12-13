@@ -91,15 +91,14 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const deleteProductMutation = useMutation({
-    mutationFn: (productId: number) =>
-      axiosInstance.delete(`/admin/product/delete?productId=${productId}`),
+  const deleteProductMutation = useMutation<unknown, TError, number>({
+    mutationFn: (productId) => axiosInstance.delete(`/admin/product/delete?productId=${productId}`),
     onSuccess: async () => {
       await queryClient.invalidateQueries(admin.products.pages(queryString));
       alert("상품이 삭제되었습니다");
       setSelectedProductId(undefined);
     },
-    onError: ({ response }: AxiosError<IResponse>) => alert(JSON.stringify(response?.data.result)),
+    onError: ({ responseMessage }) => alert(responseMessage),
   });
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
