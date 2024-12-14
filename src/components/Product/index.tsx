@@ -6,7 +6,7 @@ import { Flex, Typography } from "antd";
 import { type FC, type MouseEventHandler, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const Product: FC<Partial<IProduct>> = ({
+const Product: FC<Partial<IProduct> & { deletable?: boolean }> = ({
   id,
   name,
   brand,
@@ -16,7 +16,7 @@ const Product: FC<Partial<IProduct>> = ({
   liked,
   imageUrl,
 }) => {
-  const src = useMemo<string>(() => imageUrl || getRandomProductImage(), [imageUrl]);
+  const src = useMemo<string>(() => getRandomProductImage(), [imageUrl]);
   const { isLiked, likeMutation, unlikeMutation } = useLike(liked || false, id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
@@ -27,10 +27,15 @@ const Product: FC<Partial<IProduct>> = ({
   };
 
   return (
-    <Link className="h-full block" to={`/products/${id}`}>
+    <Link className="block" to={`/products/${id}`}>
       <Flex className="h-full flex-col">
         <Flex className="relative flex-grow">
-          <img width="100%" height="100%" loading="lazy" alt="product" src={src} />
+          <img
+            className="w-full h-full md:w-[188px] md:h-[255px]"
+            loading="lazy"
+            alt="product"
+            src={src}
+          />
           {isLiked ? (
             <HeartFilled
               disabled

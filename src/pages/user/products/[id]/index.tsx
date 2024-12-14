@@ -162,7 +162,7 @@ const Page: FC = () => {
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-4">
         <Typography className="font-bold text-lg">함께 보면 좋은 상품</Typography>
-        <Carousel arrows autoplay slidesToShow={2} dots={false}>
+        <Carousel className={module.carousel} arrows autoplay slidesToShow={2} dots={false}>
           {newProducts?.content.map((product) => (
             <Product {...product} key={product.id} />
           ))}
