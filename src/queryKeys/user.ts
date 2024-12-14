@@ -146,6 +146,15 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [queryString],
     }),
+    detail: (reviewId: string) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<IReview>>(
+          `/review/review?reviewId=${reviewId}`,
+        );
+        return data.result;
+      },
+      queryKey: [reviewId],
+    }),
   },
   order: {
     all: () => ({

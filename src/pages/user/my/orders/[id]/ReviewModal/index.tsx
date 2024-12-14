@@ -1,23 +1,25 @@
 import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance.ts";
 import { IReviewParams, TError } from "@/utils/types.ts";
+import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, FormProps, Modal, type ModalProps, Upload } from "antd";
+import { Button, Flex, Form, FormProps, Modal, type ModalProps, Upload, UploadFile } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 
 const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
   const queryClient = useQueryClient();
+  const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [reviewForm] = Form.useForm<IReviewParams>();
 
   const addReviewMutation = useMutation<unknown, TError, IReviewParams>({
     mutationFn: (reviewParams) =>
       axiosInstance.post(`/review/join?productId=${id}`, {
         ...reviewParams,
-        imageUrl1: "",
-        imageUrl2: "",
-        imageUrl3: "",
+        imageUrl1: uploadFiles[0]?.name || "",
+        imageUrl2: uploadFiles[1]?.name || "",
+        imageUrl3: uploadFiles[2]?.name || "",
       }),
     onSuccess: () => {
       queryClient
@@ -26,8 +28,12 @@ const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
         })
         .then(() => alert("리뷰가 작성되었습니다"));
     },
-    onError: ({ responseMessage }) => alert(responseMessage),
+    onError: (e) => {
+      console.log(e);
+    },
   });
+
+  console.log(uploadFiles);
 
   const onFinishAddReview: FormProps<IReviewParams>["onFinish"] = (reviewParams) => {
     addReviewMutation.mutate(reviewParams);
@@ -59,34 +65,12 @@ const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
               name="avatar"
               listType="picture-circle"
               className="avatar-uploader"
-              showUploadList={false}
+              maxCount={3}
+              openFileDialogOnClick={uploadFiles.length !== 3}
+              showUploadList
+              onChange={(e) => setUploadFiles(e.fileList)}
             >
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuXYtA-Ugbmj-gFWh7JEuYe68pmKvJg9yvGg&s"
-                alt="avatar"
-              />
-            </Upload>
-            <Upload
-              name="avatar"
-              listType="picture-circle"
-              className="avatar-uploader"
-              showUploadList={false}
-            >
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuXYtA-Ugbmj-gFWh7JEuYe68pmKvJg9yvGg&s"
-                alt="avatar"
-              />
-            </Upload>
-            <Upload
-              name="avatar"
-              listType="picture-circle"
-              className="avatar-uploader"
-              showUploadList={false}
-            >
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuXYtA-Ugbmj-gFWh7JEuYe68pmKvJg9yvGg&s"
-                alt="avatar"
-              />
+              <UploadOutlined />
             </Upload>
           </Flex>
         </Form.Item>
