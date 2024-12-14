@@ -14,8 +14,8 @@ const Page: FC = () => {
   return (
     <main>
       {cartPages.content.length > 0 ? (
-        <Flex className="flex-col justify-center items-center gap-8">
-          <Typography className="text-center font-bold text-2xl">장바구니</Typography>
+        <Flex className="flex-col gap-8">
+          <Typography className="font-bold text-xl">장바구니</Typography>
           <Row gutter={[8, 8]}>
             {cartPages.content.map((cart) => (
               <Col xs={12} md={8} key={cart.id}>
@@ -26,8 +26,8 @@ const Page: FC = () => {
         </Flex>
       ) : (
         <Flex className="flex-col justify-center items-center gap-8 p-8">
-          <Typography className="text-center font-bold text-2xl">장바구니</Typography>
-          <Typography className="text-center font-bold text-2xl">
+          <Typography className="font-bold text-xl">장바구니</Typography>
+          <Typography className="ext-center font-bold text-2xl">
             장바구니에 담긴 상품이 없어요
           </Typography>
           <Typography className="text-lg">원하는 상품을 담아보세요</Typography>
