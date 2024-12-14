@@ -1,9 +1,9 @@
-import { ITest } from "@/utils/types.ts";
-import { Collapse, Flex, Typography, Image } from "antd";
+import { IProductDetail } from "@/utils/types.ts";
+import { Collapse, Flex, Image, Typography } from "antd";
 
 import { forwardRef } from "react";
 
-const Page = forwardRef<HTMLElement, Pick<ITest, "reviewDetailResponses">>(
+const Page = forwardRef<HTMLElement, Pick<IProductDetail, "reviewDetailResponses">>(
   ({ reviewDetailResponses }, ref) => {
     return (
       <section ref={ref}>

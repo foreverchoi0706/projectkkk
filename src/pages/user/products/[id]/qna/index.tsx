@@ -1,12 +1,12 @@
 import QnAModal from "@/pages/user/my/qnas/QnAModal";
 import axiosInstance from "@/utils/axiosInstance";
-import { IQnaParams, ITest, TError } from "@/utils/types.ts";
+import { IProductDetail, IQnaParams, TError } from "@/utils/types.ts";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Drawer, Flex, Form, FormProps, Input, Select, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { FC, useState } from "react";
 
-const Page: FC<Pick<ITest, "qnADetailResponses">> = ({ qnADetailResponses }) => {
+const Page: FC<Pick<IProductDetail, "qnADetailResponses">> = ({ qnADetailResponses }) => {
   const [form] = Form.useForm<IQnaParams>();
   const [isOpenQnaDrawer, setIsOpenQnaDrawer] = useState<boolean>(false);
   const [selectedQnAId, setSelectQnAId] = useState<number | null>(null);

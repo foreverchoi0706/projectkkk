@@ -113,7 +113,6 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
           rules={[
             {
               validator(_, value) {
-                console.log(value, info?.point);
                 if ((info?.point || 0) < value)
                   return Promise.reject("사용 포인트는 잔여 포인트보다 많을 수 없습니다");
                 return Promise.resolve();

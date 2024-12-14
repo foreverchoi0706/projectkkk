@@ -70,7 +70,7 @@ export interface IPageList<T> {
   totalCount: number;
 }
 
-export interface ITest {
+export interface IProductDetail {
   qnADetailResponses: IQnAWaiting[];
   reviewDetailResponses: IReview[];
 }
@@ -273,4 +273,15 @@ export interface IReviewParams {
   imageUrl1: string;
   imageUrl2: string;
   imageUrl3: string;
+}
+
+export interface ICart {
+  id: number;
+  name: string;
+  brand: string;
+  price: number;
+  discountRate: number;
+  imageUrl: string;
+  quantity: number;
+  color: string;
 }

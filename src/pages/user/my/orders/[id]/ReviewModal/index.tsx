@@ -2,7 +2,7 @@ import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance.ts";
 import { IReviewParams, TError } from "@/utils/types.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, Modal, type ModalProps, Upload } from "antd";
+import { Button, Flex, Form, FormProps, Modal, type ModalProps, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { FC } from "react";
 import { Rating } from "react-simple-star-rating";
@@ -29,15 +29,13 @@ const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
+  const onFinishAddReview: FormProps<IReviewParams>["onFinish"] = (reviewParams) => {
+    addReviewMutation.mutate(reviewParams);
+  };
+
   return (
     <Modal {...rest}>
-      <Form<IReviewParams>
-        form={reviewForm}
-        onFinish={(v) => {
-          console.log(v);
-          addReviewMutation.mutate(v);
-        }}
-      >
+      <Form<IReviewParams> form={reviewForm} onFinish={onFinishAddReview}>
         <Form.Item<IReviewParams>
           name="description"
           rules={[{ required: true, message: "리뷰를 작성해주세요" }]}
@@ -51,7 +49,6 @@ const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
             SVGclassName="inline"
             onPointerMove={(value) => {
               const ratingType = ["ONE", "TWO", "THREE", "FOUR", "FIVE"];
-              console.log(ratingType[value - 1]);
               reviewForm.setFieldValue("ratingType", ratingType[value - 1]);
             }}
           />

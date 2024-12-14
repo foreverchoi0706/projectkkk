@@ -8,35 +8,36 @@ import { Link } from "react-router-dom";
 const Page: FC = () => {
   const { data: cartPages } = useQuery(user.cart.pages());
   const { data: newProducts } = useQuery(user.products.new(1));
-  console.log(cartPages);
 
   if (!cartPages) return null;
 
   return (
     <main>
-      <Flex className="flex-col justify-center items-center gap-8 p-8">
-        {cartPages.content.length > 0 ? (
-          cartPages.content.map(({ productId, price }) => (
-            <Flex content="border rounded" key={productId}>
-              {productId}
-              {price}
-            </Flex>
-          ))
-        ) : (
-          <>
-            {" "}
-            <Typography className="text-center font-bold text-2xl">
-              장바구니에 담긴 상품이 없어요
-            </Typography>
-            <Typography className="text-lg">원하는 상품을 담아보세요</Typography>
-            <Link to="/search">
-              <Button variant="solid" color="primary">
-                상품보러가기
-              </Button>
-            </Link>
-          </>
-        )}
-      </Flex>
+      {cartPages.content.length > 0 ? (
+        <Flex className="flex-col justify-center items-center gap-8">
+          <Typography className="text-center font-bold text-2xl">장바구니</Typography>
+          <Row gutter={[8, 8]}>
+            {cartPages.content.map((cart) => (
+              <Col xs={12} md={8} key={cart.id}>
+                <Product {...cart} />
+              </Col>
+            ))}
+          </Row>
+        </Flex>
+      ) : (
+        <Flex className="flex-col justify-center items-center gap-8 p-8">
+          <Typography className="text-center font-bold text-2xl">장바구니</Typography>
+          <Typography className="text-center font-bold text-2xl">
+            장바구니에 담긴 상품이 없어요
+          </Typography>
+          <Typography className="text-lg">원하는 상품을 담아보세요</Typography>
+          <Link to="/search">
+            <Button variant="solid" color="primary">
+              상품보러가기
+            </Button>
+          </Link>
+        </Flex>
+      )}
       <Divider className="border-t-8" />
       <Flex className="flex-col gap-8">
         <Typography className="font-bold text-xl">함께 구매하면 좋은 상품</Typography>

@@ -1,17 +1,18 @@
 import axiosInstance from "@/utils/axiosInstance";
 import {
+  ICart,
   ICategory,
   ICoupon,
   INotification,
   IOrder,
   IPageList,
   IProduct,
+  IProductDetail,
   IQnAWaiting,
   IQna,
   IResponse,
   IReview,
   IShipping,
-  ITest,
 } from "@/utils/types";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
@@ -31,17 +32,7 @@ const queryKeyStore = createQueryKeyStore({
     pages: () => ({
       queryFn: async () => {
         const { data } =
-          await axiosInstance.get<
-            IResponse<
-              IPageList<
-                {
-                  price: number;
-                  productId: number;
-                  quantity: number;
-                }[]
-              >
-            >
-          >(`/cart/products_in_cart`);
+          await axiosInstance.get<IResponse<IPageList<ICart[]>>>(`/cart/products_in_cart`);
         return data.result;
       },
       queryKey: [""],
@@ -90,7 +81,7 @@ const queryKeyStore = createQueryKeyStore({
     }),
     detail: (id?: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IProduct & ITest>>(
+        const { data } = await axiosInstance.get<IResponse<IProduct & IProductDetail>>(
           `/product/product?productId=${id}`,
         );
         return data.result;

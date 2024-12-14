@@ -7,8 +7,6 @@ import type { FC } from "react";
 const QnAModal: FC<ModalProps & { id: number }> = ({ id, ...rest }) => {
   const { data: qna } = useQuery(user.qnas.detail(id));
 
-  console.log(qna);
-
   if (qna === undefined) return null;
 
   return (
