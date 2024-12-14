@@ -13,12 +13,10 @@ const Page: FC = () => {
   const { data: newProducts } = useQuery(user.products.new(1));
 
   const deleteCartMutation = useMutation<unknown, TError, number>({
-    mutationFn: (cartId) => axiosInstance.delete(`/cart/delete?cartId=${cartId}`),
+    mutationFn: (productId) => axiosInstance.delete(`/cart/delete?productId=${productId}`),
     onSuccess: () =>
       queryClient
-        .invalidateQueries({
-          queryKey: user.cart.pages().queryKey,
-        })
+        .invalidateQueries({ queryKey: user.cart.pages().queryKey })
         .then(() => alert("장바구니에서 삭제되었습니다")),
     onError: ({ responseMessage }) => alert(responseMessage),
   });

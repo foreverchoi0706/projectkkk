@@ -14,13 +14,14 @@ import {
   ShareAltOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Carousel, Col, Divider, Flex, Image, Row, Tabs, Typography } from "antd";
 import { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import module from "./index.module.css";
 
 const Page: FC = () => {
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data } = useAuth();
@@ -30,7 +31,10 @@ const Page: FC = () => {
 
   const addCardMutation = useMutation<unknown, TError, number>({
     mutationFn: (productId) => axiosInstance.post(`/cart/join?productId=${productId}&quantity=1`),
-    onSuccess: () => alert("장바구니에 추가되었습니다"),
+    onSuccess: () =>
+      queryClient
+        .invalidateQueries({ queryKey: user.cart.pages().queryKey })
+        .then(() => alert("장바구니에 추가되었습니다")),
     onError: ({ result }) => alert(result.errorMessage),
   });
 
