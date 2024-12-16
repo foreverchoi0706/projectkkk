@@ -37,6 +37,7 @@ const Page: FC = () => {
             {cartPages.content.map((cart) => (
               <Col xs={12} md={8} key={cart.id}>
                 <Product {...cart} />
+                <Flex className="block p-2 text-end">담은 수량 : {cart.quantity}개</Flex>
                 <Button className="w-full" onClick={() => onClickDeleteCart(cart.id)}>
                   장바구니에서 삭제
                 </Button>
