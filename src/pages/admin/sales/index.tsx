@@ -4,7 +4,7 @@ import axiosInstance from "@/utils/axiosInstance.ts";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 import type { IProduct, IProductSearchParams, TError } from "@/utils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Flex, Form, type FormProps, Input, Spin, Table, type TableProps } from "antd";
+import { Button, Checkbox, Flex, Form, Spin, Table, type TableProps } from "antd";
 import queryString from "query-string";
 import { type FC, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -17,7 +17,7 @@ const Page: FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<number | null>();
   const isOpen = selectedProductId !== undefined;
 
-  const { data: products } = useQuery(admin.products.pages(searchParams.toString()));
+  const { data: sales } = useQuery(admin.products.sales(searchParams.toString()));
 
   const assignCouponMutation = useMutation<unknown, TError, number>({
     mutationFn: (id) =>
@@ -29,23 +29,13 @@ const Page: FC = () => {
     onError: ({ result }) => alert(result.errorMessage),
   });
 
-  const onFinish: FormProps<IProductSearchParams>["onFinish"] = (productSearchParams) => {
-    const page = searchParams.get("page");
-    navigate(
-      `${pathname}?${queryString.stringify({ ...productSearchParams, page }, { skipEmptyString: true })}`,
-      {
-        replace: true,
-      },
-    );
-  };
-
-  if (!products) return <Spin />;
+  if (!sales) return <Spin />;
   const columns: TableProps<IProduct>["columns"] = [
     {
       align: "center",
       dataIndex: "No.",
       key: "No.",
-      render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * products.page + index + 1}</>,
+      render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * sales.page + index + 1}</>,
       title: "No.",
     },
     {
@@ -128,43 +118,19 @@ const Page: FC = () => {
 
   return (
     <Flex vertical gap="middle">
-      <Form<IProductSearchParams> form={form} onFinish={onFinish}>
-        <Flex gap="middle">
-          <Form.Item<IProductSearchParams> name="id">
-            <Input min="0" type="number" placeholder="상품아이디" />
-          </Form.Item>
-          <Form.Item<IProductSearchParams> name="productName">
-            <Input placeholder="상품명" />
-          </Form.Item>
-          <Form.Item<IProductSearchParams> name="brand">
-            <Input placeholder="브랜드명" />
-          </Form.Item>
-          <Form.Item<IProductSearchParams> name="category">
-            <Input placeholder="카테고리" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              검색
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Link to={pathname} onClick={() => form.resetFields()}>
-              <Button>초기화</Button>
-            </Link>
-          </Form.Item>
-          <Form.Item>
-            <Button onClick={() => setSelectedProductId(null)}>상품 추가</Button>
-          </Form.Item>
-        </Flex>
-      </Form>
+      <Link to={searchParams.has("sort") ? pathname : `${pathname}?sort=selledcount`}>
+        <Checkbox type="primary" checked={searchParams.has("sort")}>
+          판매 순위 정렬
+        </Checkbox>
+      </Link>
 
       <Table<IProduct>
         scroll={{ y: 550 }}
-        title={() => "상품관리"}
+        title={() => "판매관리"}
         rowKey={({ id }) => id}
         columns={columns}
         locale={{ emptyText: "검색결과가 없습니다" }}
-        dataSource={products.content}
+        dataSource={sales.content}
         pagination={{
           onChange: (page) => {
             navigate(
@@ -175,8 +141,8 @@ const Page: FC = () => {
             );
           },
           pageSize: DEFAULT_LIST_PAGE_SIZE,
-          current: products.page + 1,
-          total: products.totalCount,
+          current: sales.page + 1,
+          total: sales.totalCount,
           showSizeChanger: false,
         }}
       />

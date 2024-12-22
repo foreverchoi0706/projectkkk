@@ -18,9 +18,10 @@ import {
 } from "antd";
 import queryString from "query-string";
 import type { FC } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [form] = Form.useForm<IMemberSearchParams>();
   const queryClient = useQueryClient();
@@ -39,7 +40,7 @@ const Page: FC = () => {
   const onFinish: FormProps<IMemberSearchParams>["onFinish"] = (memberSearchParams) => {
     const page = searchParams.get("page");
     navigate(
-      `/admin/members?${queryString.stringify({ ...memberSearchParams, page }, { skipEmptyString: true })}`,
+      `${pathname}?${queryString.stringify({ ...memberSearchParams, page }, { skipEmptyString: true })}`,
       {
         replace: true,
       },
@@ -139,7 +140,7 @@ const Page: FC = () => {
                 </Button>
               </Form.Item>
               <Form.Item>
-                <Link to="/admin/members" onClick={() => form.resetFields()}>
+                <Link to={pathname} onClick={() => form.resetFields()}>
                   <Button>초기화</Button>
                 </Link>
               </Form.Item>
@@ -158,7 +159,7 @@ const Page: FC = () => {
         pagination={{
           onChange: (page) => {
             navigate(
-              `/admin/members?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
+              `${pathname}?${queryString.stringify({ ...form.getFieldsValue(), page }, { skipEmptyString: true })}`,
               {
                 replace: true,
               },

@@ -38,10 +38,9 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       axiosInstance.put(`admin/product/increase_stock?productId=${productId}&stock=${stock}`),
     onSuccess: async () => {
       if (!hasProductId) return;
-      await Promise.allSettled([
-        queryClient.invalidateQueries(admin.products.pages(queryString)),
-        queryClient.invalidateQueries(admin.products.detail(productId)),
-      ]);
+      await queryClient.invalidateQueries({
+        queryKey: admin.products._def,
+      });
       alert("재고수량이 증가되었습니다");
     },
     onError: ({ responseMessage }) => alert(responseMessage),

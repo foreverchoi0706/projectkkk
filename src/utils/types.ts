@@ -149,23 +149,7 @@ export interface ICategory {
 }
 
 export interface IBrand {
-  id: number;
   name: string;
-  brand: string;
-  category: string;
-  productNum: string;
-  price: number;
-  discountRate: number;
-  description: string;
-  imageUrl: string;
-  productCouponResponse: {
-    id: number;
-    productNum: string;
-    couponId: number;
-    issuedAt: string;
-    usedAt: string | null;
-    used: boolean;
-  }[];
 }
 
 export type TRole = "center" | "admin" | "user";
@@ -227,6 +211,11 @@ export interface IShipping {
   deliveryCost: number;
   memberEmail: string;
 }
+
+export type TShippingSearchParams = Pick<
+  IShipping,
+  "deliveryNum" | "deliveryAddress" | "memberEmail"
+>;
 
 export interface IReview {
   createAt: string;

@@ -1,7 +1,6 @@
 import axiosInstance from "@/utils/axiosInstance";
 import {
   IAccount,
-  IBrand,
   ICoupon,
   IMember,
   IPageList,
@@ -27,10 +26,13 @@ const queryKeyStore = createQueryKeyStore({
   brands: {
     pages: (queryString: string) => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<IBrand[]>>>(
+        const { data } = await axiosInstance.get<IResponse<IPageList<string[]>>>(
           `/admin/product/brands?${queryString}`,
         );
-        return data.result;
+        return {
+          ...data.result,
+          content: data.result.content.map((name) => ({ name })),
+        };
       },
       queryKey: [queryString],
     }),
@@ -61,7 +63,7 @@ const queryKeyStore = createQueryKeyStore({
     pages: (queryString: string) => ({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IShipping[]>>>(
-          `/admin/shipping/shippings?${queryString}`,
+          `/admin/shipping/search?${queryString}`,
         );
         return data.result;
       },
@@ -84,6 +86,18 @@ const queryKeyStore = createQueryKeyStore({
       queryFn: async () => {
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
           `/admin/product/search?${queryString}`,
+        );
+        return data.result;
+      },
+      queryKey: [queryString],
+    }),
+    sales: (queryString?: string) => ({
+      queryFn: async () => {
+        console.log(queryString?.includes("sort"));
+        const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
+          queryString?.includes("sort")
+            ? "/admin/sales/sales_ranking"
+            : `/admin/sales/sold_products`,
         );
         return data.result;
       },

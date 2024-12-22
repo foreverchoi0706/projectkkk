@@ -3,6 +3,8 @@ import Brands from "@/pages/admin/brands";
 import Dashboard from "@/pages/admin/dashboard";
 import Categories from "@/pages/admin/members";
 import Products from "@/pages/admin/products";
+import AdminSales from "@/pages/admin/sales";
+
 import AdminQnas from "@/pages/admin/qnas";
 import Setting from "@/pages/admin/setting";
 import AdminShipping from "@/pages/admin/shippings";
@@ -27,6 +29,7 @@ import {
   ApartmentOutlined,
   DashboardOutlined,
   MessageOutlined,
+  MoneyCollectOutlined,
   ProductOutlined,
   SettingOutlined,
   ShakeOutlined,
@@ -171,6 +174,14 @@ export const ADMIN_SIGN_IN_ROUTES = [
   },
   {
     key: "1",
+    Icon: MoneyCollectOutlined,
+    Page: AdminSales,
+    path: "sales",
+    label: "판매관리",
+    accessibleRoles: new Set(["center", "admin"]),
+  },
+  {
+    key: "2",
     Icon: UserOutlined,
     Page: Categories,
     path: "members",
@@ -178,7 +189,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "2",
+    key: "3",
     Icon: ApartmentOutlined,
     Page: Accounts,
     path: "accounts",
@@ -186,7 +197,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center"]),
   },
   {
-    key: "3",
+    key: "4",
     Icon: TagsOutlined,
     Page: Brands,
     path: "brands",
@@ -194,7 +205,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "4",
+    key: "5",
     Icon: MessageOutlined,
     Page: AdminQnas,
     path: "qnas",
@@ -202,7 +213,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "5",
+    key: "6",
     Icon: ProductOutlined,
     Page: AdminShipping,
     path: "shippings",
@@ -210,7 +221,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "6",
+    key: "7",
     Icon: ShakeOutlined,
     Page: AdminCoupons,
     path: "coupons",
@@ -218,7 +229,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "7",
+    key: "8",
     Icon: SettingOutlined,
     Page: Setting,
     path: "setting",
@@ -226,7 +237,7 @@ export const ADMIN_SIGN_IN_ROUTES = [
     accessibleRoles: new Set(["center", "admin"]),
   },
   {
-    key: "8",
+    key: "9",
     Icon: DashboardOutlined,
     Page: Dashboard,
     path: "dashboard",
@@ -256,9 +267,22 @@ export const DELIVERY_TYPE = {
 
 export const DELIVERY_STATUS_TYPE = {
   ORDER_REQUESTED: "ORDER_REQUESTED",
-  REFUND_REQUESTED: "REFUND_REQUESTED",
-  CANCEL_REQUESTED: "CANCEL_REQUESTED",
+  ORDER_CANCELLATION_REQUESTED: "ORDER_CANCELLATION_REQUESTED",
+  ORDER_CANCELLED: "ORDER_CANCELLED",
+  ORDER_CANCELLATION_COMPLETED: "ORDER_CANCELLATION_COMPLETED",
+  READY_FOR_SHIPMENT: "READY_FOR_SHIPMENT",
+  DELIVERY_STARTED: "DELIVERY_STARTED",
+  IN_TRANSIT: "IN_TRANSIT",
   DELIVERY_COMPLETED: "DELIVERY_COMPLETED",
+  DELIVERY_DELAYED: "DELIVERY_DELAYED",
+  REFUND_REQUESTED: "REFUND_REQUESTED",
+  REFUND_IN_PROGRESS: "REFUND_IN_PROGRESS",
+  REFUND_COMPLETED: "REFUND_COMPLETED",
+  RETURN_CONFIRMED: "RETURN_CONFIRMED",
+  CHANGE_REQUESTED: "CHANGE_REQUESTED",
+  CHANGE_REQUEST_CONFIRMED: "CHANGE_REQUEST_CONFIRMED",
+  CANCEL_REQUESTED: "CANCEL_REQUESTED",
+  PURCHASE_CONFIRMED: "PURCHASE_CONFIRMED",
 } as const;
 
 export const DELIVERY_ADDRESS_TYPE = {

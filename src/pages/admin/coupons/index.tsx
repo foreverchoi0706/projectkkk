@@ -107,11 +107,11 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "button",
       key: "button",
-      title: "지급",
+      title: "쿠폰 지급",
       render: (_, { id }) => (
         <Button
           onClick={() => {
-            if (!window.confirm("해당 쿠폰을 지급하시겠습니까?")) return;
+            if (!window.confirm("전체 회원에게 쿠폰을 지급하시겠습니까?")) return;
             assignCouponMutation.mutate(id);
           }}
         >
