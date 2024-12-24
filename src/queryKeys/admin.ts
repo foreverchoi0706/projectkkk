@@ -96,8 +96,8 @@ const queryKeyStore = createQueryKeyStore({
         console.log(queryString?.includes("sort"));
         const { data } = await axiosInstance.get<IResponse<IPageList<IProduct[]>>>(
           queryString?.includes("sort")
-            ? "/admin/sales/sales_ranking"
-            : `/admin/sales/sold_products`,
+            ? `/admin/sales/sales_ranking?${queryString}`
+            : `/admin/sales/sold_products?${queryString}`,
         );
         return data.result;
       },
