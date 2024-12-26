@@ -64,49 +64,42 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "id",
-      key: "id",
       title: "id",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "name",
-      key: "name",
       title: "name",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "assignBy",
-      key: "assignBy",
       title: "assignBy",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "discountRate",
-      key: "discountRate",
       title: "discountRate",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "startDate",
-      key: "startDate",
       title: "startDate",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "endDate",
-      key: "endDate",
       title: "endDate",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "button",
-      key: "button",
       title: "쿠폰 지급",
       render: (_, { id }) => (
         <Button
@@ -122,7 +115,6 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "button",
-      key: "button",
       title: "삭제",
       render: (_, { id }) => (
         <Button

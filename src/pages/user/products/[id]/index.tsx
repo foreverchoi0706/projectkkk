@@ -140,7 +140,10 @@ const Page: FC = () => {
         <Flex className="gap-4">
           <Button>{color}</Button>
         </Flex>
-        <Image src={description} alt="description" />
+        {description.map((src) => (
+          <Image src={`https://www.projectkkk.com/${src}`} alt="description" />
+        ))}
+
         <Button
           type="default"
           onClick={() => {

@@ -83,7 +83,7 @@ export interface IProduct {
   productNum: string;
   price: number;
   discountRate: number;
-  description: string;
+  description: string[];
   imageUrl: string;
   liked: boolean;
   size: "XL" | "L" | "M" | "S";

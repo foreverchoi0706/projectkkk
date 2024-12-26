@@ -52,44 +52,36 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "No.",
-      key: "No.",
       render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * members.page + index + 1}</>,
       title: "No.",
     },
     {
       align: "center",
       dataIndex: "id",
-      key: "id",
       title: "회원아이디",
     },
     {
       align: "center",
       dataIndex: "name",
-      key: "name",
       title: "회원명",
     },
     {
       align: "center",
       dataIndex: "phone",
-      key: "phone",
       title: "전화번호",
     },
     {
       align: "center",
       dataIndex: "email",
-      key: "email",
       title: "이메일",
     },
     {
       align: "center",
       dataIndex: "role",
-      key: "role",
       title: "권한",
     },
     {
       align: "center",
-      dataIndex: "deleteButton",
-      key: "deleteButton",
       title: "삭제",
       render: (_, { id }) => (
         <Button

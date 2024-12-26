@@ -44,63 +44,53 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "No.",
-      key: "No.",
       render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * products.page + index + 1}</>,
       title: "No.",
     },
     {
       align: "center",
       dataIndex: "id",
-      key: "id",
       title: "상품번호",
       render: (value) => <>{value ?? "-"}</>,
     },
     {
       align: "center",
       dataIndex: "brand",
-      key: "brand",
       title: "브랜드",
       render: (value) => <>{value ?? "-"}</>,
     },
     {
       align: "center",
       dataIndex: "price",
-      key: "price",
       render: (value) => <>{value ?? "-"}</>,
       title: "가격",
     },
     {
       align: "center",
       dataIndex: "selledcount",
-      key: "selledcount",
       render: (value) => <>{value ?? "-"}</>,
       title: "판매량",
     },
     {
       align: "center",
       dataIndex: "category",
-      key: "category",
       title: "카테고리",
       render: (value) => <>{value ?? "-"}</>,
     },
     {
       align: "center",
       dataIndex: "name",
-      key: "name",
       title: "상품명",
       render: (value) => <>{value ?? "-"}</>,
     },
     {
       align: "center",
       dataIndex: "stock",
-      key: "stock",
       title: "현재 재고",
       render: (value) => <>{value ?? "-"}</>,
     },
     {
       align: "center",
-      dataIndex: "button",
-      key: "button",
       title: "쿠폰 지급",
       render: (_, { id }) => (
         <Button
@@ -116,8 +106,6 @@ const Page: FC = () => {
     {
       title: "상세",
       align: "center",
-      dataIndex: "detailButton",
-      key: "detailButton",
       render: (_, { id }) => (
         <Button onClick={() => setSelectedProductId(id)} type="primary">
           상세

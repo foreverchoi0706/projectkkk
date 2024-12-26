@@ -35,26 +35,22 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "No.",
-      key: "No.",
       render: (_, __, index) => <>{DEFAULT_LIST_PAGE_SIZE * accounts.page + index + 1}</>,
       title: "No.",
     },
     {
       align: "center",
       dataIndex: "id",
-      key: "id",
       title: "회원번호",
     },
     {
       align: "center",
       dataIndex: "name",
-      key: "name",
       title: "회원명",
     },
     {
       align: "center",
       dataIndex: "role",
-      key: "role",
       title: "권한",
       render: (value, { id }) => (
         <Select defaultValue={value} onChange={(role) => onChangeRole(role, id)}>

@@ -17,7 +17,6 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "name",
-      key: "name",
       title: "브랜드",
       render: (value) => <>{value || "-"}</>,
     },

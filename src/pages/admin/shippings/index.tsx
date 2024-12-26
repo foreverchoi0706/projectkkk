@@ -63,63 +63,54 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "id",
-      key: "id",
       title: "id",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "deliveryNum",
-      key: "deliveryNum",
       title: "배송번호",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "orderDate",
-      key: "orderDate",
       title: "주문일",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "deliveryAddress",
-      key: "deliveryAddress",
       title: "주소",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "totalAmount",
-      key: "totalAmount",
       title: "수량",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "deliveryType",
-      key: "deliveryType",
       title: "배송종류",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "arrivedDate",
-      key: "arrivedDate",
       title: "도착일",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "departureDate",
-      key: "departureDate",
       title: "출발일",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "deliveryStatusType",
-      key: "deliveryStatusType",
       title: "배송상태",
       render: (value, { id }) => (
         <Select
@@ -153,14 +144,12 @@ const Page: FC = () => {
     {
       align: "center",
       dataIndex: "deliveryCost",
-      key: "deliveryCost",
       title: "배송비",
       render: (value) => <>{value || "-"}</>,
     },
     {
       align: "center",
       dataIndex: "memberEmail",
-      key: "memberEmail",
       title: "주문자메일",
       render: (value) => <>{value || "-"}</>,
     },
