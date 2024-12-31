@@ -19,16 +19,21 @@ const Page: FC = () => {
 
   const { data: sales } = useQuery(admin.products.sales(searchParams.toString()));
 
-  const assignCouponMutation = useMutation<unknown, TError, number>({
-    mutationFn: (id) =>
+  const assignCouponMutation = useMutation<unknown, TError, IProduct>({
+    mutationFn: (product) =>
       axiosInstance.post(`/admin/coupon/assignCouponToProduct`, {
-        couponId: id,
-        assignType: "ALL",
+        couponId: product.id,
+        assignType: "SPECIFIC_PRODUCTS",
+        brand: product.brand,
+        category: product.category,
+        productName: product.name,
+        content: product.name,
+        color: product.color,
+        size: product.size,
       }),
     onSuccess: () => alert("쿠폰이 지급되었습니다"),
     onError: ({ result }) => alert(result.errorMessage),
   });
-
   if (!sales) return <Spin />;
   const columns: TableProps<IProduct>["columns"] = [
     {
@@ -81,11 +86,11 @@ const Page: FC = () => {
     {
       align: "center",
       title: "쿠폰 지급",
-      render: (_, { id }) => (
+      render: (_, product) => (
         <Button
           onClick={() => {
             if (!window.confirm("해당 상품에게 쿠폰을 지급하시겠습니까?")) return;
-            assignCouponMutation.mutate(id);
+            assignCouponMutation.mutate(product);
           }}
         >
           지급
