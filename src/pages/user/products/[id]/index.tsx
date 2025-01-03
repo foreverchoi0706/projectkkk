@@ -65,6 +65,7 @@ const Page: FC = () => {
   if (!product) return null;
 
   const {
+    imageUrl,
     name,
     description,
     discountRate,
@@ -80,26 +81,7 @@ const Page: FC = () => {
   return (
     <main>
       <Carousel arrows>
-        <img
-          className="rounded"
-          alt="img"
-          src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/09/27/202409270520214482_061783.jpg?width=1029&height=1029&quality=100&format=webp&transparent=true"
-        />
-        <img
-          className="rounded"
-          alt="img"
-          src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/10/02/202410021202530837_041069.jpg"
-        />
-        <img
-          className="rounded"
-          alt="img"
-          src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/10/04/202410040917163324_093565.jpg"
-        />
-        <img
-          className="rounded"
-          alt="img"
-          src="https://cf.image-farm.s.zigzag.kr/original/cms/2024/10/02/202410021202530837_041069.jpg"
-        />
+        <img className="rounded" alt="img" src={imageUrl} />
       </Carousel>
       <Divider className="border-t-8" />
       <Flex className="justify-between items-center">
