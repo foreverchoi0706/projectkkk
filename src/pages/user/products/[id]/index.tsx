@@ -141,7 +141,7 @@ const Page: FC = () => {
           <Button>{color}</Button>
         </Flex>
         {description.map((src) => (
-          <Image key={src} src={`https://www.projectkkk.com${src}`} alt="description" />
+          <Image key={src} src={src} alt="description" />
         ))}
 
         <Button
