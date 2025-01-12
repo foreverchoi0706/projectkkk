@@ -1,7 +1,7 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
 import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
-import type { ICoupon, IProduct, TError } from "@/utils/types";
+import type { ICoupon, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -17,7 +17,8 @@ import {
   Table,
   type TableProps,
 } from "antd";
-import { type FC, useState } from "react";
+import dayjs from "dayjs";
+import { type FC, useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 const Page: FC = () => {
@@ -25,15 +26,32 @@ const Page: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedCouponId, setSelectedCouponId] = useState<number | null | undefined>();
+  const [form] = Form.useForm();
   const { data: couponPages } = useQuery(admin.coupons.pages(searchParams.toString()));
+  const { data: coupon, isSuccess } = useQuery({
+    ...admin.coupons.detail(selectedCouponId as number),
+    enabled: Boolean(selectedCouponId),
+  });
 
-  const addCouponMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product: IProduct) => axiosInstance.post("/admin/coupon/join", product),
+  const addCouponMutation = useMutation<unknown, TError, ICoupon>({
+    mutationFn: (coupon) => axiosInstance.post("/admin/coupon/join", coupon),
     onSuccess: () => {
       queryClient.invalidateQueries(admin.coupons.pages(searchParams.toString())).then(() => {
         alert("쿠폰이 추가되었습니다");
-        setIsOpen(false);
+        setSelectedCouponId(null);
+      });
+    },
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
+  const updateCouponMutation = useMutation<unknown, TError, ICoupon>({
+    mutationFn: (coupon) =>
+      axiosInstance.put(`/admin/coupon/update?couponId=${selectedCouponId}`, coupon),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: admin.coupons._def }).then(() => {
+        alert("쿠폰이 수정되었습니다");
+        setSelectedCouponId(null);
       });
     },
     onError: ({ responseMessage }) => alert(responseMessage),
@@ -58,6 +76,15 @@ const Page: FC = () => {
     onSuccess: () => alert("쿠폰이 지급되었습니다"),
     onError: ({ result }) => alert(result.errorMessage),
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.setFieldValue("name", coupon.name);
+      form.setFieldValue("discountRate", coupon.discountRate);
+      form.setFieldValue("startDate", dayjs(coupon.startDate));
+      form.setFieldValue("endDate", dayjs(coupon.endDate));
+    }
+  }, [isSuccess]);
 
   if (!couponPages) return <Spin />;
   const columns: TableProps<ICoupon>["columns"] = [
@@ -99,7 +126,6 @@ const Page: FC = () => {
     },
     {
       align: "center",
-      dataIndex: "button",
       title: "쿠폰 지급",
       render: (_, { id }) => (
         <Button
@@ -114,7 +140,15 @@ const Page: FC = () => {
     },
     {
       align: "center",
-      dataIndex: "button",
+      title: "수정",
+      render: (_, { id }) => (
+        <Button id={String(id)} onClick={() => setSelectedCouponId(id)}>
+          수정
+        </Button>
+      ),
+    },
+    {
+      align: "center",
       title: "삭제",
       render: (_, { id }) => (
         <Button
@@ -134,7 +168,7 @@ const Page: FC = () => {
       <Row gutter={16}>
         <Col span={4}>
           <Form.Item>
-            <Button onClick={() => setIsOpen(true)}>쿠폰 생성</Button>
+            <Button onClick={() => setSelectedCouponId(null)}>쿠폰 생성</Button>
           </Form.Item>
         </Col>
       </Row>
@@ -153,9 +187,21 @@ const Page: FC = () => {
           showSizeChanger: false,
         }}
       />
-      {isOpen && (
-        <Modal title="쿠폰 생성" open={isOpen} footer={null} onCancel={() => setIsOpen(false)}>
-          <Form onFinish={addCouponMutation.mutate}>
+      {selectedCouponId !== undefined && (
+        <Modal
+          title={selectedCouponId === null ? "쿠폰생성" : "쿠폰 수정"}
+          open
+          footer={null}
+          onCancel={() => setSelectedCouponId(undefined)}
+        >
+          <Form
+            form={form}
+            onFinish={
+              selectedCouponId === null ? addCouponMutation.mutate : updateCouponMutation.mutate
+            }
+            disabled={addCouponMutation.isPending || updateCouponMutation.isPending}
+            initialValues={coupon}
+          >
             <Form.Item
               name="name"
               rules={[
@@ -201,13 +247,8 @@ const Page: FC = () => {
               <DatePicker className="w-full" placeholder="endDate" />
             </Form.Item>
             <Form.Item>
-              <Button
-                disabled={addCouponMutation.isPending}
-                type="primary"
-                htmlType="submit"
-                className="w-full"
-              >
-                생성
+              <Button type="primary" htmlType="submit" className="w-full">
+                {selectedCouponId === null ? "생성" : "수정"}
               </Button>
             </Form.Item>
           </Form>

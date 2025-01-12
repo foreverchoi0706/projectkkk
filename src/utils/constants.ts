@@ -90,6 +90,12 @@ export const USER_SIGN_IN_ROUTES = [
     accessAbleAuth: false,
   },
   {
+    Page: SignUp,
+    path: "reset-password",
+    requiredAuth: false,
+    accessAbleAuth: false,
+  },
+  {
     Page: UserCategories,
     path: "categories",
     requiredAuth: false,

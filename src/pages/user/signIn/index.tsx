@@ -19,7 +19,7 @@ const Page: FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const refOauthUser = useRef<User>();
+  const refOauthUser = useRef<User>(null);
   const [form] = Form.useForm<ISignInParams>();
 
   const signInMutation = useMutation<AxiosResponse<IResponse<IAuth>>, TError, ISignInParams>({

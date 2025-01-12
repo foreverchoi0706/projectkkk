@@ -58,6 +58,15 @@ const queryKeyStore = createQueryKeyStore({
       },
       queryKey: [queryString],
     }),
+    detail: (couponId: number) => ({
+      queryFn: async () => {
+        const { data } = await axiosInstance.get<IResponse<ICoupon>>(
+          `/admin/coupon/coupon?couponId=${couponId}`,
+        );
+        return data.result;
+      },
+      queryKey: [couponId],
+    }),
   },
   shippings: {
     pages: (queryString: string) => ({

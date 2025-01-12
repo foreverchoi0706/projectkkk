@@ -1,5 +1,6 @@
 import useAuth from "@/hooks/useAuth";
 import Admin from "@/pages/admin";
+import ResetPassword from "@/pages/admin/reset-password";
 import SignIn from "@/pages/admin/signIn";
 import SignUp from "@/pages/admin/signUp";
 import User from "@/pages/user";
@@ -44,6 +45,7 @@ const getRoute = (data?: IAuth) =>
             <>
               <Route path="signin" element={<SignIn />} />
               <Route path="signup" element={<SignUp />} />
+              <Route path="reset-password" element={<ResetPassword />} />
               <Route path="*" element={<Navigate replace to="/admin/signin" />} />
             </>
           )}

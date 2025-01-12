@@ -11,7 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, type FormProps, Input, Layout, Typography } from "antd";
 import type { AxiosResponse } from "axios";
 import type { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Page: FC = () => {
   const navigate = useNavigate();
@@ -74,6 +74,11 @@ const Page: FC = () => {
               회원가입
             </Button>
           </Flex>
+        </Form.Item>
+        <Form.Item>
+          <Link to="/admin/reset-password">
+            <Button className="w-full">비밀번호 재설정</Button>
+          </Link>
         </Form.Item>
       </Form>
     </Layout>

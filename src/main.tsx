@@ -5,7 +5,10 @@ import { ConfigProvider } from "antd";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "@/global.css";
-import { scan } from "react-scan";
+import locale from "antd/locale/ko_KR";
+import "@ant-design/v5-patch-for-react-19";
+import dayjs from "dayjs";
+dayjs.locale("ko_KR");
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,15 +20,10 @@ const queryClient = new QueryClient({
     },
   },
 });
-if (import.meta.env.MODE === "development") {
-  scan({
-    showToolbar: false,
-  });
-}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
-    <ConfigProvider>
+    <ConfigProvider locale={locale}>
       <QueryClientProvider client={queryClient}>
         <App />
         <ReactQueryDevtools client={queryClient} />

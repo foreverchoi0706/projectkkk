@@ -64,6 +64,10 @@ export interface ISignUpParams {
   defaultAddress: string;
 }
 
+export type TRequestResetPasswordTokenParams = Pick<ISignUpParams, "email">;
+
+export type TResetPasswordParams = Pick<ISignUpParams, "password" | "passwordConfirm">;
+
 export interface IPageList<T> {
   content: T;
   page: number;
@@ -84,10 +88,11 @@ export interface IProduct {
   price: number;
   discountRate: number;
   description: string[];
-  imageUrl: string;
+  mainImageFile: string;
   liked: boolean;
   size: "XL" | "L" | "M" | "S";
   color: string;
+  imageUrl: string;
 }
 
 export interface IProductSearchParams {
