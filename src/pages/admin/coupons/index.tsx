@@ -1,6 +1,5 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance";
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 import type { ICoupon, TError } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -92,37 +91,37 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "id",
       title: "id",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "name",
       title: "name",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "assignBy",
       title: "assignBy",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "discountRate",
       title: "discountRate",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "startDate",
       title: "startDate",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => dayjs(value).format("YYYY-MM-DD") || "-",
     },
     {
       align: "center",
       dataIndex: "endDate",
       title: "endDate",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => dayjs(value).format("YYYY-MM-DD") || "-",
     },
     {
       align: "center",
@@ -181,7 +180,7 @@ const Page: FC = () => {
         dataSource={couponPages.content}
         pagination={{
           onChange: (page) => navigate(`${pathname}?page=${page}`, { replace: true }),
-          pageSize: DEFAULT_LIST_PAGE_SIZE,
+          pageSize: 5,
           current: couponPages.page + 1,
           total: couponPages.totalCount,
           showSizeChanger: false,
