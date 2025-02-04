@@ -13,7 +13,7 @@ const Page: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isOpenReviewModal, setIsOpenReviewModal] = useState<boolean>(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const src = useMemo<string>(getRandomProductImage, []);
 
   const [
@@ -105,6 +105,15 @@ const Page: FC = () => {
           <Flex key={productId} className="flex-col flex-grow border border-gray-200 p-4">
             <Flex className="justify-between items-center">
               <img className="rounded" width="80" height="80" alt="img" src={src} />
+              {shippingDetail.deliveryStatusType === DELIVERY_STATUS_TYPE.DELIVERY_COMPLETED && (
+                <Button
+                  type="primary"
+                  htmlType="button"
+                  onClick={() => setSelectedProductId(productId)}
+                >
+                  리뷰 작성
+                </Button>
+              )}
             </Flex>
             <Divider />
             <Flex className="justify-between">
@@ -219,19 +228,14 @@ const Page: FC = () => {
             주문취소
           </Button>
         </Flex>
-        {shippingDetail.deliveryStatusType === DELIVERY_STATUS_TYPE.DELIVERY_COMPLETED && (
-          <Button type="primary" htmlType="button" onClick={() => setIsOpenReviewModal(true)}>
-            리뷰 작성
-          </Button>
-        )}
       </Flex>
-      {isOpenReviewModal && (
+      {selectedProductId && (
         <ReviewModal
-          id={id}
+          id={selectedProductId}
           title="리뷰 작성"
           open
           footer={null}
-          onCancel={() => setIsOpenReviewModal(false)}
+          onCancel={() => setSelectedProductId(null)}
         />
       )}
     </main>

@@ -22,7 +22,7 @@ import {
   Typography,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { FC, useEffect } from "react";
+import { FC, useEffect, type MouseEvent, type KeyboardEvent } from "react";
 
 const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest }) => {
   const { id, discountRate, price, size, color } = product;
@@ -40,6 +40,7 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
         })
         .then(() => {
           alert("구매가 완료되었습니다");
+          if (rest.onClose) rest.onClose({} as MouseEvent | KeyboardEvent);
         });
     },
     onError: ({ responseMessage }) => alert(responseMessage),
@@ -244,7 +245,7 @@ const OrderDrawer: FC<DrawerProps & { product: IProduct }> = ({ product, ...rest
         )}
         <Form.Item<IOrderParams>>
           <Flex className="gap-4 flex-col">
-            <Button htmlType="submit" type="primary">
+            <Button loading={orderMutation.isPending} htmlType="submit" type="primary">
               바로 구매
             </Button>
           </Flex>

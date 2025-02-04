@@ -8,7 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 import { FC, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 
-const ReviewModal: FC<ModalProps & { id?: string }> = ({ id, ...rest }) => {
+const ReviewModal: FC<ModalProps & { id: number }> = ({ id, ...rest }) => {
   const queryClient = useQueryClient();
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [reviewForm] = Form.useForm<IReviewParams>();
