@@ -25,7 +25,9 @@ const useAuth = () => {
   const login = ({ accessToken, refreshToken }: IAuth) => {
     setCookie(ACCESS_TOKEN, accessToken);
     setCookie(REFRESH_TOKEN, refreshToken);
-    queryClient.invalidateQueries();
+    queryClient.invalidateQueries({
+      queryKey: common.auth._def,
+    });
   };
 
   const logout = () => {
