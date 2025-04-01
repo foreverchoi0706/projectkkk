@@ -91,6 +91,8 @@ export interface IProduct {
   mainImageFile: string;
   liked: boolean;
   size: "XL" | "L" | "M" | "S";
+  soldQuantity: number;
+  stock: number;
   color: string;
   imageUrl: string;
 }

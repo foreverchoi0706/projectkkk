@@ -1,13 +1,32 @@
 import admin from "@/queryKeys/admin";
+import user from "@/queryKeys/user.ts";
 import axiosInstance from "@/utils/axiosInstance";
 import {
   REQUIRED_BRAND_NAME,
   REQUIRED_CATEGORY_NAME,
+  REQUIRED_COLOR_NAME,
+  REQUIRED_DISCOUNT_RATE_NAME,
+  REQUIRED_PRICE_NAME,
   REQUIRED_PRODUCT_NAME,
+  REQUIRED_SIZE_NAME,
+  REQUIRED_SOLD_QUANTITY_NAME,
+  REQUIRED_STOCK_NAME,
 } from "@/utils/constants";
 import type { IProduct, TError } from "@/utils/types";
+import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Flex, Form, type FormProps, Input, Modal, type ModalProps, Spin } from "antd";
+import {
+  Button,
+  Flex,
+  Form,
+  type FormProps,
+  Input,
+  Modal,
+  type ModalProps,
+  Select,
+  Spin,
+  Upload,
+} from "antd";
 import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 
 interface IProps {
@@ -24,7 +43,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
-  const [isEditableSelledCount, setIsEditableSelledCount] = useState<boolean>(false);
+  const mainImageFile = Form.useWatch("mainImageFile", form);
+  const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
   const hasProductId = productId !== null;
 
@@ -60,8 +80,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const addProductMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product: IProduct) => axiosInstance.post("/admin/product/create", product),
+  const addProductMutation = useMutation<unknown, TError, FormData>({
+    mutationFn: (formData) => axiosInstance.post("/admin/product/create", formData),
     onSuccess: async () => {
       await queryClient.invalidateQueries(admin.products.pages(queryString));
       alert("상품이 추가되었습니다");
@@ -70,13 +90,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const updateProductMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product) =>
-      axiosInstance.put("/admin/product/update", {
-        ...product,
-        id: productId,
-        productNum: productId,
-      }),
+  const updateProductMutation = useMutation<unknown, TError, FormData>({
+    mutationFn: (formData) => axiosInstance.put("/admin/product/update", formData),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -101,7 +116,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
-    mutate(product);
+    const formData = new FormData();
+    Object.entries(product).forEach(([name, value]) => {
+      formData.set(name, value);
+    });
+
+    if (hasProductId) {
+      formData.set("id", productId?.toString());
+      formData.set("productNum", productId?.toString());
+    }
+
+    mutate(formData);
   };
 
   const onClickIncreaseStock = () => {
@@ -116,12 +141,50 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     decreaseStockStockMutation.mutate(cancelSellCount);
   };
 
+  const { data: brands } = useQuery(admin.brands.pages("size=999"));
+  const { data: categories } = useQuery(user.categories.all());
+
   if (hasProductId && product === undefined) return <Spin fullscreen />;
+  console.log(
+    mainImageFile
+      ? [
+          {
+            uid: "-1",
+            name: "mainImageFile",
+            url: mainImageFile,
+          },
+        ]
+      : [],
+  );
   return (
-    <Modal {...rest} title={`상품 ${hasProductId ? "상세" : "추가"}`}>
-      <Form initialValues={product} form={form} onFinish={onFinish}>
+    <Modal
+      {...rest}
+      title={`상품 ${hasProductId ? "상세" : "추가"}`}
+      styles={{
+        body: { maxHeight: "600px", overflowY: "auto" }, // 새로운 방식
+      }}
+    >
+      <Form<IProduct> layout="vertical" initialValues={product} form={form} onFinish={onFinish}>
+        <Form.Item
+          label="상품이미지"
+          name="mainImageFile"
+          valuePropName="mainImageFile"
+          rules={[{ required: true }]}
+        >
+          <Upload
+            listType="picture-card"
+            defaultFileList={
+              mainImageFile ? [{ uid: "-1", name: "mainImageFile", url: mainImageFile }] : []
+            }
+            maxCount={1}
+            accept="image/*"
+          >
+            <UploadOutlined />
+          </Upload>
+        </Form.Item>
         <Form.Item<IProduct>
           name="name"
+          label="상품명"
           rules={[
             {
               required: true,
@@ -133,6 +196,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         </Form.Item>
         <Form.Item<IProduct>
           name="brand"
+          label="브랜드"
           rules={[
             {
               required: true,
@@ -140,21 +204,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
             },
           ]}
         >
-          <Input placeholder="브랜드" />
+          <Select placeholder="브랜드">
+            {brands?.content.map(({ name }) => (
+              <Select.Option key={name} value={name}>
+                {name}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-        {/*<Form.Item<IProduct>*/}
-        {/*  name="soldQuantity"*/}
-        {/*  rules={[*/}
-        {/*    {*/}
-        {/*      required: true,*/}
-        {/*      message: REQUIRED_SOLD_QUANTITY_NAME,*/}
-        {/*    },*/}
-        {/*  ]}*/}
-        {/*>*/}
-        {/*  <Input type="number" min="0" placeholder="현재 판매량" readOnly={hasProductId} />*/}
-        {/*</Form.Item>*/}
         <Form.Item<IProduct>
           name="category"
+          label="카테고리"
           rules={[
             {
               required: true,
@@ -162,33 +222,143 @@ const UpsertModal: FC<IProps & ModalProps> = ({
             },
           ]}
         >
-          <Input placeholder="카테고리" />
+          <Select placeholder="카테고리">
+            {categories?.content.map(({ id, name, code }) => (
+              <Select.Option key={id} value={code}>
+                {name}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-        <Flex gap="middle">
-          {/*<Form.Item<IProduct>*/}
-          {/*  name="stock"*/}
-          {/*  style={{ flexGrow: "1" }}*/}
-          {/*  rules={[*/}
-          {/*    {*/}
-          {/*      required: true,*/}
-          {/*      message: REQUIRED_STOCK_NAME,*/}
-          {/*    },*/}
-          {/*  ]}*/}
-          {/*>*/}
-          {/*  <Input type="number" min="0" placeholder="현재 재고" />*/}
-          {/*</Form.Item>*/}
+        <Form.Item<IProduct>
+          name="price"
+          label="가격"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_PRICE_NAME,
+            },
+          ]}
+        >
+          <Input placeholder="가격" />
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="size"
+          label="사이즈"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_COLOR_NAME,
+            },
+          ]}
+        >
+          <Select placeholder="사이즈">
+            <Select.Option value="SMALL">SMALL</Select.Option>
+            <Select.Option value="MEDIUM">MEDIUM</Select.Option>
+            <Select.Option value="LARGE">LARGE</Select.Option>
+            <Select.Option value="FREE">FREE</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="color"
+          label="색상"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_SIZE_NAME,
+            },
+          ]}
+        >
+          <Select placeholder="색상">
+            <Select.Option value="RED">RED</Select.Option>
+            <Select.Option value="BLUE">BLUE</Select.Option>
+            <Select.Option value="GREEN">GREEN</Select.Option>
+            <Select.Option value="YELLOW">YELLOW</Select.Option>
+            <Select.Option value="ORANGE">ORANGE</Select.Option>
+            <Select.Option value="PURPLE">PURPLE</Select.Option>
+            <Select.Option value="PINK">PINK</Select.Option>
+            <Select.Option value="BROWN">BROWN</Select.Option>
+            <Select.Option value="BLACK">BLACK</Select.Option>
+            <Select.Option value="WHITE">WHITE</Select.Option>
+            <Select.Option value="GRAY">GRAY</Select.Option>
+            <Select.Option value="CYAN">CYAN</Select.Option>
+            <Select.Option value="MAGENTA">MAGENTA</Select.Option>
+            <Select.Option value="LIME">LIME</Select.Option>
+            <Select.Option value="NAVY">NAVY</Select.Option>
+            <Select.Option value="TEAL">TEAL</Select.Option>
+            <Select.Option value="MAROON">MAROON</Select.Option>
+            <Select.Option value="OLIVE">OLIVE</Select.Option>
+            <Select.Option value="VIOLET">VIOLET</Select.Option>
+            <Select.Option value="GOLD">GOLD</Select.Option>
+            <Select.Option value="SILVER">SILVER</Select.Option>
+            <Select.Option value="INDIGO">INDIGO</Select.Option>
+            <Select.Option value="TURQUOISE">TURQUOISE</Select.Option>
+            <Select.Option value="BEIGE">BEIGE</Select.Option>
+            <Select.Option value="IVORY">IVORY</Select.Option>
+            <Select.Option value="CORAL">CORAL</Select.Option>
+            <Select.Option value="LAVENDER">LAVENDER</Select.Option>
+            <Select.Option value="CHARCOAL">CHARCOAL</Select.Option>
+            <Select.Option value="SALMON">SALMON</Select.Option>
+            <Select.Option value="PEACH">PEACH</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="discountRate"
+          label="할인율"
+          rules={[
+            {
+              required: true,
+              message: REQUIRED_DISCOUNT_RATE_NAME,
+            },
+          ]}
+        >
+          <Input placeholder="할인율" type="number" />
+        </Form.Item>
+        <Form.Item<IProduct>
+          name="soldQuantity"
+          label="현재 판매량"
+          rules={[
+            {
+              required: hasProductId,
+              message: REQUIRED_SOLD_QUANTITY_NAME,
+            },
+          ]}
+        >
+          <Input
+            type="number"
+            min="0"
+            placeholder="현재 판매량"
+            readOnly
+            disabled={!hasProductId}
+            defaultValue={0}
+          />
+        </Form.Item>
+        <Flex gap="middle" align="end">
+          <Form.Item<IProduct>
+            name="stock"
+            label="현재 재고"
+            style={{ flexGrow: "1" }}
+            rules={[
+              {
+                required: true,
+                message: REQUIRED_STOCK_NAME,
+              },
+            ]}
+          >
+            <Input type="number" min="0" placeholder="현재 재고" />
+          </Form.Item>
           <Form.Item>
             <Button
               type="primary"
               disabled={!hasProductId}
-              onClick={() => setIsEditableSelledCount((prevState) => !prevState)}
+              onClick={() => setIsEditableSoldCount((prevState) => !prevState)}
             >
-              {isEditableSelledCount ? "취소" : "재고관리"}
+              {isEditableSoldCount ? "취소" : "재고관리"}
             </Button>
           </Form.Item>
         </Flex>
 
-        {isEditableSelledCount && (
+        {isEditableSoldCount && (
           <Form.Item>
             <Flex gap="middle">
               <Input
