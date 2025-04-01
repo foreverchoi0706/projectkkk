@@ -1,6 +1,5 @@
 import admin from "@/queryKeys/admin";
 import axiosInstance from "@/utils/axiosInstance.ts";
-import { DEFAULT_LIST_PAGE_SIZE } from "@/utils/constants";
 import { IShipping, TDeliveryStatusType, TError, TShippingSearchParams } from "@/utils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -19,6 +18,7 @@ import {
 import queryString from "query-string";
 import type { FC } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import dayjs from "dayjs";
 
 const Page: FC = () => {
   const { pathname } = useLocation();
@@ -64,54 +64,67 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "id",
       title: "id",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "deliveryNum",
       title: "배송번호",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "orderDate",
       title: "주문일",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => (value ? dayjs(value).format("YYYY-MM-DD") : "-"),
     },
     {
       align: "center",
       dataIndex: "deliveryAddress",
       title: "주소",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
+    },
+    {
+      align: "center",
+      title: "수량",
+      render: (_, { products }) =>
+        products
+          .map(({ quantity }) => quantity)
+          .reduce((previousValue, currentValue) => previousValue + currentValue),
     },
     {
       align: "center",
       dataIndex: "totalAmount",
-      title: "수량",
-      render: (value) => <>{value || "-"}</>,
+      title: "금액",
+      render: (value) =>
+        new Intl.NumberFormat("ko-KR", {
+          style: "currency",
+          currency: "KRW",
+        }).format(value) || "-",
     },
     {
       align: "center",
       dataIndex: "deliveryType",
       title: "배송종류",
-      render: (value) => <>{value || "-"}</>,
-    },
-    {
-      align: "center",
-      dataIndex: "arrivedDate",
-      title: "도착일",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
     {
       align: "center",
       dataIndex: "departureDate",
       title: "출발일",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => (value ? dayjs(value).format("YYYY-MM-DD") : "-"),
+    },
+    {
+      align: "center",
+      dataIndex: "arrivedDate",
+      title: "도착일",
+      render: (value) => (value ? dayjs(value).format("YYYY-MM-DD") : "-"),
     },
     {
       align: "center",
       dataIndex: "deliveryStatusType",
       title: "배송상태",
+      ellipsis: true,
       render: (value, { id }) => (
         <Select
           defaultValue={value}
@@ -145,13 +158,17 @@ const Page: FC = () => {
       align: "center",
       dataIndex: "deliveryCost",
       title: "배송비",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) =>
+        new Intl.NumberFormat("ko-KR", {
+          style: "currency",
+          currency: "KRW",
+        }).format(value) || "-",
     },
     {
       align: "center",
       dataIndex: "memberEmail",
       title: "주문자메일",
-      render: (value) => <>{value || "-"}</>,
+      render: (value) => value || "-",
     },
   ];
 
@@ -200,7 +217,7 @@ const Page: FC = () => {
         dataSource={shippings.content}
         pagination={{
           onChange: (page) => navigate(`${pathname}?page=${page}`, { replace: true }),
-          pageSize: DEFAULT_LIST_PAGE_SIZE,
+          pageSize: 5,
           current: shippings.page + 1,
           total: shippings.totalCount,
           showSizeChanger: false,

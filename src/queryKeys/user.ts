@@ -100,9 +100,8 @@ const queryKeyStore = createQueryKeyStore({
   coupons: {
     all: () => ({
       queryFn: async () => {
-        const { data } = await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>(
-          "/coupon/search?size=9999",
-        );
+        const { data } =
+          await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>("/coupon/mycoupon");
         return data.result;
       },
       queryKey: [""],
@@ -110,7 +109,7 @@ const queryKeyStore = createQueryKeyStore({
     pages: (queryString?: string) => ({
       queryFn: async ({ pageParam = 1 }) => {
         const { data } = await axiosInstance.get<IResponse<IPageList<ICoupon[]>>>(
-          `/coupon/search?page=${pageParam}&${queryString || ""}`,
+          `/coupon/mycoupon?page=${pageParam}&${queryString || ""}`,
         );
         return data.result;
       },
