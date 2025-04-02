@@ -12,7 +12,7 @@ import {
   REQUIRED_SOLD_QUANTITY_NAME,
   REQUIRED_STOCK_NAME,
 } from "@/utils/constants";
-import type { IProduct, TError } from "@/utils/types";
+import type { IProduct, IResponse, TError } from "@/utils/types";
 import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -27,6 +27,7 @@ import {
   Spin,
   Upload,
 } from "antd";
+import type { AxiosResponse } from "axios";
 import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 
 interface IProps {
@@ -41,15 +42,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   queryString,
   ...rest
 }) => {
+  const hasProductId = productId !== null;
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
   const mainImageFile = Form.useWatch("mainImageFile", form);
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
-  const hasProductId = productId !== null;
+
+  console.log(mainImageFile);
 
   const { data: product } = useQuery({
-    ...admin.products.detail(productId!),
+    ...admin.products.detail(productId as number),
     enabled: hasProductId,
   });
 
@@ -80,8 +83,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const addProductMutation = useMutation<unknown, TError, FormData>({
-    mutationFn: (formData) => axiosInstance.post("/admin/product/create", formData),
+  const uploadImageMutation = useMutation<
+    AxiosResponse<IResponse<{ mainImageUrl: string; descriptionImageUrls: string[] }>>,
+    TError,
+    FormData
+  >({
+    mutationFn: (formData) => axiosInstance.post("/admin/product/create_image", formData),
+    onError: ({ responseMessage }) => alert(responseMessage),
+  });
+
+  const addProductMutation = useMutation<unknown, TError, IProduct>({
+    mutationFn: (product) => axiosInstance.post("/admin/product/create", product),
     onSuccess: async () => {
       await queryClient.invalidateQueries(admin.products.pages(queryString));
       alert("상품이 추가되었습니다");
@@ -90,8 +102,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     onError: ({ responseMessage }) => alert(responseMessage),
   });
 
-  const updateProductMutation = useMutation<unknown, TError, FormData>({
-    mutationFn: (formData) => axiosInstance.put("/admin/product/update", formData),
+  const updateProductMutation = useMutation<unknown, TError, IProduct>({
+    mutationFn: (product) => axiosInstance.put("/admin/product/update", product),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -116,17 +128,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
-    const formData = new FormData();
-    Object.entries(product).forEach(([name, value]) => {
-      formData.set(name, value);
-    });
-
-    if (hasProductId) {
-      formData.set("id", productId?.toString());
-      formData.set("productNum", productId?.toString());
-    }
-
-    mutate(formData);
+    mutate(product);
   };
 
   const onClickIncreaseStock = () => {
@@ -145,26 +147,19 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const { data: categories } = useQuery(user.categories.all());
 
   if (hasProductId && product === undefined) return <Spin fullscreen />;
-  console.log(
-    mainImageFile
-      ? [
-          {
-            uid: "-1",
-            name: "mainImageFile",
-            url: mainImageFile,
-          },
-        ]
-      : [],
-  );
+
   return (
     <Modal
       {...rest}
       title={`상품 ${hasProductId ? "상세" : "추가"}`}
-      styles={{
-        body: { maxHeight: "600px", overflowY: "auto" }, // 새로운 방식
-      }}
+      styles={{ body: { maxHeight: "600px", overflowY: "auto" } }}
     >
-      <Form<IProduct> layout="vertical" initialValues={product} form={form} onFinish={onFinish}>
+      <Form<IProduct>
+        layout="vertical"
+        initialValues={hasProductId ? product : { soldQuantity: 0 }}
+        form={form}
+        onFinish={onFinish}
+      >
         <Form.Item
           label="상품이미지"
           name="mainImageFile"
@@ -173,6 +168,17 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         >
           <Upload
             listType="picture-card"
+            customRequest={({ file, onSuccess }) => {
+              const formData = new FormData();
+              formData.append("mainImageFile", file);
+              uploadImageMutation.mutate(formData, {
+                onSuccess: ({ data: { result } }) => {
+                  if (onSuccess) onSuccess(result.mainImageUrl);
+                  form.setFieldValue("mainImageFile", result.mainImageUrl);
+                },
+              });
+            }}
+            disabled={uploadImageMutation.isPending}
             defaultFileList={
               mainImageFile ? [{ uid: "-1", name: "mainImageFile", url: mainImageFile }] : []
             }
@@ -330,7 +336,6 @@ const UpsertModal: FC<IProps & ModalProps> = ({
             placeholder="현재 판매량"
             readOnly
             disabled={!hasProductId}
-            defaultValue={0}
           />
         </Form.Item>
         <Flex gap="middle" align="end">
