@@ -14,9 +14,9 @@ const Product: FC<Partial<IProduct> & { deletable?: boolean }> = ({
   discountRate,
   price,
   liked,
-  mainImageFile,
+  mainImageUrl,
 }) => {
-  const src = useMemo<string>(() => mainImageFile || getRandomProductImage(), [mainImageFile]);
+  const src = useMemo<string>(() => mainImageUrl || getRandomProductImage(), [mainImageUrl]);
   const { isLiked, likeMutation, unlikeMutation } = useLike(liked || false, id);
 
   const onClickLike: MouseEventHandler<HTMLSpanElement> = (e) => {
