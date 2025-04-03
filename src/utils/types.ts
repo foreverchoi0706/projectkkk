@@ -86,9 +86,11 @@ export interface IProduct {
   category: string;
   productNum: string;
   price: number;
+  defectiveStock: number;
+  descriptionImageUrls: string[];
   discountRate: number;
   description: string[];
-  mainImageFile: string;
+  mainImageUrl: string;
   liked: boolean;
   size: "XL" | "L" | "M" | "S";
   soldQuantity: number;
@@ -210,7 +212,13 @@ export interface IShipping {
   orderDate: string;
   deliveryAddress: string;
   totalAmount: number;
-  products: { productId: number; price: number; quantity: number; size: string; color: string }[];
+  products: {
+    productId: number;
+    price: number;
+    quantity: number;
+    size: string;
+    color: string;
+  }[];
   deliveryType: string;
   arrivedDate: string | null;
   departureDate: string | null;

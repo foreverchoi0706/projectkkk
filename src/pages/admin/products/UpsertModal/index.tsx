@@ -45,11 +45,11 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasProductId = productId !== null;
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
-  const mainImageFile = Form.useWatch("mainImageFile", form);
+  const mainImageUrl = Form.useWatch("mainImageUrl", form);
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
 
-  console.log(mainImageFile);
+  console.log(mainImageUrl);
 
   const { data: product } = useQuery({
     ...admin.products.detail(productId as number),
@@ -128,7 +128,11 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
-    mutate(product);
+    mutate({
+      ...product,
+      descriptionImageUrls: ["image"],
+      defectiveStock: 0,
+    });
   };
 
   const onClickIncreaseStock = () => {
@@ -162,8 +166,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
       >
         <Form.Item
           label="상품이미지"
-          name="mainImageFile"
-          valuePropName="mainImageFile"
+          name="mainImageUrl"
+          valuePropName="mainImageUrl"
           rules={[{ required: true }]}
         >
           <Upload
@@ -174,13 +178,13 @@ const UpsertModal: FC<IProps & ModalProps> = ({
               uploadImageMutation.mutate(formData, {
                 onSuccess: ({ data: { result } }) => {
                   if (onSuccess) onSuccess(result.mainImageUrl);
-                  form.setFieldValue("mainImageFile", result.mainImageUrl);
+                  form.setFieldValue("mainImageUrl", result.mainImageUrl);
                 },
               });
             }}
             disabled={uploadImageMutation.isPending}
             defaultFileList={
-              mainImageFile ? [{ uid: "-1", name: "mainImageFile", url: mainImageFile }] : []
+              mainImageUrl ? [{ uid: "-1", name: "mainImageUrl", url: mainImageUrl }] : []
             }
             maxCount={1}
             accept="image/*"

@@ -33,8 +33,6 @@ const ReviewModal: FC<ModalProps & { id: number }> = ({ id, ...rest }) => {
     },
   });
 
-  console.log(uploadFiles);
-
   const onFinishAddReview: FormProps<IReviewParams>["onFinish"] = (reviewParams) => {
     addReviewMutation.mutate(reviewParams);
   };

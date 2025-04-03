@@ -45,8 +45,13 @@ const Admin: FC = () => {
 
   if (data) {
     return (
-      <Layout className="h-screen">
-        <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
+      <Layout>
+        <Layout.Sider
+          className="h-screen sticky top-0"
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+        >
           <Menu
             theme="dark"
             mode="inline"
