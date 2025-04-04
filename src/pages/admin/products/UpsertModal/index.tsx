@@ -45,11 +45,8 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasProductId = productId !== null;
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
-  const mainImageFile = Form.useWatch("mainImageFile", form);
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
-
-  console.log(mainImageFile);
 
   const { data: product } = useQuery({
     ...admin.products.detail(productId as number),
@@ -128,7 +125,10 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
-    mutate(product);
+    mutate({
+      ...product,
+      descriptionImageUrls: ["상품 이미지"],
+    });
   };
 
   const onClickIncreaseStock = () => {
@@ -160,12 +160,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         form={form}
         onFinish={onFinish}
       >
-        <Form.Item
-          label="상품이미지"
-          name="mainImageFile"
-          valuePropName="mainImageFile"
-          rules={[{ required: true }]}
-        >
+        <Form.Item label="상품이미지" name="mainImageUrl" rules={[{ required: true }]}>
           <Upload
             listType="picture-card"
             customRequest={({ file, onSuccess }) => {
@@ -174,13 +169,16 @@ const UpsertModal: FC<IProps & ModalProps> = ({
               uploadImageMutation.mutate(formData, {
                 onSuccess: ({ data: { result } }) => {
                   if (onSuccess) onSuccess(result.mainImageUrl);
-                  form.setFieldValue("mainImageFile", result.mainImageUrl);
+
+                  form.setFieldValue("mainImageUrl", result.mainImageUrl);
                 },
               });
             }}
             disabled={uploadImageMutation.isPending}
             defaultFileList={
-              mainImageFile ? [{ uid: "-1", name: "mainImageFile", url: mainImageFile }] : []
+              product?.mainImageUrl
+                ? [{ uid: "-1", name: "mainImageUrl", url: product.mainImageUrl }]
+                : []
             }
             maxCount={1}
             accept="image/*"

@@ -84,11 +84,12 @@ export interface IProduct {
   name: string;
   brand: string;
   category: string;
+  descriptionImageUrls: string[];
   productNum: string;
   price: number;
   discountRate: number;
   description: string[];
-  mainImageFile: string;
+  mainImageUrl: string;
   liked: boolean;
   size: "XL" | "L" | "M" | "S";
   soldQuantity: number;
