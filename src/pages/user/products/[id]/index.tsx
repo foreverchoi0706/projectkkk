@@ -65,7 +65,7 @@ const Page: FC = () => {
   if (!product) return null;
 
   const {
-    mainImageFile,
+    mainImageUrl,
     name,
     description,
     discountRate,
@@ -81,7 +81,7 @@ const Page: FC = () => {
   return (
     <main>
       <Carousel arrows>
-        <img className="rounded" alt="img" src={mainImageFile} />
+        <img className="rounded" alt="img" src={mainImageUrl} />
       </Carousel>
       <Divider className="border-t-8" />
       <Flex className="justify-between items-center">

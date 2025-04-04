@@ -87,6 +87,8 @@ export interface IProduct {
   descriptionImageUrls: string[];
   productNum: string;
   price: number;
+  defectiveStock: number;
+  descriptionImageUrls: string[];
   discountRate: number;
   description: string[];
   mainImageUrl: string;
@@ -211,7 +213,13 @@ export interface IShipping {
   orderDate: string;
   deliveryAddress: string;
   totalAmount: number;
-  products: { productId: number; price: number; quantity: number; size: string; color: string }[];
+  products: {
+    productId: number;
+    price: number;
+    quantity: number;
+    size: string;
+    color: string;
+  }[];
   deliveryType: string;
   arrivedDate: string | null;
   departureDate: string | null;

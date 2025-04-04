@@ -45,6 +45,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasProductId = productId !== null;
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
+  const mainImageUrl = Form.useWatch("mainImageUrl", form);
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
 
@@ -127,7 +128,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
     mutate({
       ...product,
-      descriptionImageUrls: ["상품 이미지"],
+      descriptionImageUrls: ["image"],
     });
   };
 
