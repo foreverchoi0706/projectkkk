@@ -45,7 +45,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const hasProductId = productId !== null;
   const queryClient = useQueryClient();
   const [form] = Form.useForm<IProduct>();
-  const mainImageUrl = Form.useWatch("mainImageUrl", form);
+  const [mainImageUrl, setMainImageUrl] = useState<string>();
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
 
@@ -101,7 +101,11 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const updateProductMutation = useMutation<unknown, TError, IProduct>({
-    mutationFn: (product) => axiosInstance.put("/admin/product/update", product),
+    mutationFn: (product) =>
+      axiosInstance.put("/admin/product/update", {
+        ...product,
+        id: productId,
+      }),
     onSuccess: async () => {
       if (!hasProductId) return;
       await Promise.allSettled([
@@ -125,9 +129,11 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
+    if (mainImageUrl === undefined) return;
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
     mutate({
       ...product,
+      mainImageUrl,
       descriptionImageUrls: ["image"],
     });
   };
@@ -170,8 +176,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
               uploadImageMutation.mutate(formData, {
                 onSuccess: ({ data: { result } }) => {
                   if (onSuccess) onSuccess(result.mainImageUrl);
-
-                  form.setFieldValue("mainImageUrl", result.mainImageUrl);
+                  setMainImageUrl(result.mainImageUrl);
                 },
               });
             }}

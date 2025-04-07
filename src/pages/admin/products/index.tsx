@@ -55,6 +55,12 @@ const Page: FC = () => {
     },
     {
       align: "center",
+      dataIndex: "name",
+      title: "상품명",
+      render: (value) => <>{value ?? "-"}</>,
+    },
+    {
+      align: "center",
       dataIndex: "id",
       title: "상품번호",
       render: (value) => <>{value ?? "-"}</>,
