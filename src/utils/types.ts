@@ -88,7 +88,6 @@ export interface IProduct {
   productNum: string;
   price: number;
   defectiveStock: number;
-  descriptionImageUrls: string[];
   discountRate: number;
   description: string[];
   mainImageUrl: string;
