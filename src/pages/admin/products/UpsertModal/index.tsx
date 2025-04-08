@@ -28,7 +28,7 @@ import {
   Upload,
 } from "antd";
 import type { AxiosResponse } from "axios";
-import { type Dispatch, type FC, type SetStateAction, useState } from "react";
+import { type Dispatch, type FC, type SetStateAction, useEffect, useState } from "react";
 
 interface IProps {
   productId: number | null;
@@ -48,11 +48,6 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   const [mainImageUrl, setMainImageUrl] = useState<string>();
   const [isEditableSoldCount, setIsEditableSoldCount] = useState<boolean>(false);
   const [cancelSellCount, setCancelSellCount] = useState<number>(0);
-
-  const { data: product } = useQuery({
-    ...admin.products.detail(productId as number),
-    enabled: hasProductId,
-  });
 
   const increaseStockMutation = useMutation<unknown, TError, number>({
     mutationFn: (stock) =>
@@ -129,7 +124,7 @@ const UpsertModal: FC<IProps & ModalProps> = ({
   });
 
   const onFinish: FormProps<IProduct>["onFinish"] = (product) => {
-    if (mainImageUrl === undefined) return;
+    if (mainImageUrl === undefined) return alert("상품 이미지를 등록해주세요");
     const { mutate } = hasProductId ? updateProductMutation : addProductMutation;
     mutate({
       ...product,
@@ -152,6 +147,14 @@ const UpsertModal: FC<IProps & ModalProps> = ({
 
   const { data: brands } = useQuery(admin.brands.pages("size=999"));
   const { data: categories } = useQuery(user.categories.all());
+  const { data: product } = useQuery({
+    ...admin.products.detail(productId as number),
+    enabled: hasProductId,
+  });
+
+  useEffect(() => {
+    if (product) setMainImageUrl(product.mainImageUrl);
+  }, [product]);
 
   if (hasProductId && product === undefined) return <Spin fullscreen />;
 
@@ -167,15 +170,21 @@ const UpsertModal: FC<IProps & ModalProps> = ({
         form={form}
         onFinish={onFinish}
       >
-        <Form.Item label="상품이미지" name="mainImageUrl" rules={[{ required: true }]}>
+        <Form.Item label="상품이미지" name="mainImageUrl">
           <Upload
+            name="mainImageUrl"
             listType="picture-card"
+            onRemove={() => {
+              setMainImageUrl(undefined);
+              form.setFieldValue("mainImageUrl", null);
+            }}
             customRequest={({ file, onSuccess }) => {
               const formData = new FormData();
               formData.append("mainImageFile", file);
               uploadImageMutation.mutate(formData, {
                 onSuccess: ({ data: { result } }) => {
                   if (onSuccess) onSuccess(result.mainImageUrl);
+                  form.setFieldValue("mainImageUrl", result.mainImageUrl);
                   setMainImageUrl(result.mainImageUrl);
                 },
               });
